@@ -1,5 +1,9 @@
 Coding project for the course DAT256/DIT543
 
+
+IMPORT FROM OLD COURSE
+
+
 # Scrum
 Syftet med denna text var att sammanställa mina anteckningar om scrum på ett mer lättillgängligt format än slack-chatt. Det har inte särsklt mycket relevans för eventuella examinatorer, men desto mer för nån som ska läsa kursen i framtiden, eller för någon i vår grupp som vill kolla tillbaka på tips för scrum. 
 
@@ -24,8 +28,6 @@ Några av de viktigaste förutsättningarna för ett lyckat scrumprojekt (enligt
 - En sprint borde vara 2-3 veckor för en grupp som jobbar heltid. I kursen är det 1 vecka för en grupp som jobbar halvtid. Detta skapar mycket overhead-arbete (möten, planering) för lite verkstad. 
 - Gruppen borde arbeta tillsammans i samma rum, och samtliga gruppens medlemmar borde jobba heltid på projektet. Detta för att underlätta kommunikation i gruppen, något som inte kan underskattas. 
 - Ett scrumteam borde vara 3-9 personer. I kursen 2017 var vi 12 personer, vilket gjorde allt mer rörigt och omständigt. 
-
-Kursen är inte optimal om det viktigaste hade varit att göra ett bra projekt. Det viktigaste är inte
 
 De viktigaste praktiska tipsen till scrum är: 
 - Kom överens om visionen/målet/syftet med projektet, så att ni arbetar mot samma sak.
