@@ -14,7 +14,9 @@ package alexa.projectcharizard.ViewModel;
  * You should have received a copy of the GNU Lesser General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -27,6 +29,12 @@ import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
+
+import org.mapsforge.map.layer.Layers;
+import org.mapsforge.map.layer.overlay.Marker;
+import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.android.util.MapViewerTemplate;
+import org.mapsforge.map.reader.MapFile;
 
 import java.io.File;
 
@@ -46,10 +54,15 @@ public class MapActivity extends Activity {
 
     private MapView mapView;
 
+    protected LatLong latLong1 = new LatLong(lat,lon);
+
+    TileCache tileCache;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_maps);
 
         /*
          * Before you make any calls on the mapsforge library, you need to initialize the
@@ -84,7 +97,7 @@ public class MapActivity extends Activity {
              * To avoid redrawing all the tiles all the time, we need to set up a tile cache with an
              * utility method.
              */
-            TileCache tileCache = AndroidUtil.createTileCache(this, "mapcache",
+            tileCache = AndroidUtil.createTileCache(this, "mapcache",
                     mapView.getModel().displayModel.getTileSize(), 1f,
                     mapView.getModel().frameBufferModel.getOverdrawFactor());
 
@@ -114,12 +127,37 @@ public class MapActivity extends Activity {
              */
             mapView.setCenter(new LatLong(lat, lon));
             mapView.setZoomLevel((byte) 12);
+            createLayers();
+
         } catch (Exception e) {
             /*
              * In case of map file errors avoid crash, but developers should handle these cases!
              */
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void addOverlayLayers(Layers layers) {
+        Marker marker1 = Utils.createTappableMarker(this,
+                R.drawable.marker_red, latLong1);
+        layers.add(marker1);
+
+    }
+
+    private MapDataStore getMapFile() {
+        return new MapFile(new File(Environment.getExternalStorageDirectory(),MAP_FILE));
+    }
+
+    protected void createLayers() {
+        TileRendererLayer tileRendererLayer = AndroidUtil.createTileRendererLayer(tileCache,
+                mapView.getModel().mapViewPosition, getMapFile(), InternalRenderTheme.DEFAULT);
+        this.mapView.getLayerManager().getLayers().add(tileRendererLayer);
+
+        // needed only for samples to hook into Settings.
+        // we just add a few more overlays
+        addOverlayLayers(mapView.getLayerManager().getLayers());
     }
 
     @Override
