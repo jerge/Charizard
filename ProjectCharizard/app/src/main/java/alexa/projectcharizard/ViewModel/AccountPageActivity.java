@@ -1,16 +1,19 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import alexa.projectcharizard.R;
 
-public class AccountPageActivity extends Activity {
+public class AccountPageActivity extends AppCompatActivity {
 
-    // Account model
-    // private Account userAccount;
+    // public constant key
+    public static final String EXTRA_MESSAGE = "alexa.projectcharizard.ViewModel.MESSAGE";
 
     // UI references
     private TextView userNameView;
@@ -39,6 +42,32 @@ public class AccountPageActivity extends Activity {
 
         userNameView.setText(userName);
         nameView.setText(name);
+    }
+
+    public void changeUserNameAction(View view) {
+        String message = "Trigger works for username";
+        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void changeNameAction(View view) {
+        String message = "Trigger works for name";
+        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void changeEmailAction(View view) {
+        Intent intent = new Intent(this, ChangeEmailActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, email);
+        startActivity(intent);
+    }
+
+    public void changePasswordAction(View view) {
+        String message = "Trigger works for password";
+        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void deleteAccountAction(View view) {
+        String message = "Trigger works for deleting account";
+        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
     }
 
 }
