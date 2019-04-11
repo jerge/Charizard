@@ -10,11 +10,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private List<Spot> spots = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Spot spot = new Spot("The träd", new LatLng(57.72, 11.98),
+                "bsaäldasöljd", true);
+        spots.add(spot);
     }
 
 
@@ -41,8 +49,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng gothenburg = new LatLng(57.7, 11.96);
-        mMap.addMarker(new MarkerOptions().position(gothenburg).title("Marker in Göttlaborg"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(gothenburg));
+        float zoomLevel = 10.0f; //This goes up to 21
+        mMap.moveCamera(CameraUpdateFactory.
+                newLatLngZoom(new LatLng(57.7, 11.96), zoomLevel));
+
+        for (Spot spot : spots) {
+            mMap.addMarker(new MarkerOptions().position(spot.getLocation()).title(spot.getName()));
+        }
+
+
     }
 }

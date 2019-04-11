@@ -1,15 +1,16 @@
 package alexa.projectcharizard.Model;
 
-import org.mapsforge.core.model.LatLong;
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class Spot {
     private String name;
-    private LatLong location;
+    private LatLng location;
     private String description;
     private Category category;
     private boolean visibility;
 
-    public Spot (String name, LatLong location, String description, Category category, boolean visibility) {
+    public Spot (String name, LatLng location, String description, Category category, boolean visibility) {
         this.name = name;
         this.location = location;
         this.description = description;
@@ -17,7 +18,7 @@ public class Spot {
         this.visibility = visibility;
     }
 
-    public Spot (String name, LatLong location, String description, boolean visibility) {
+    public Spot (String name, LatLng location, String description, boolean visibility) {
         this.name = name;
         this.location = location;
         this.description = description;
@@ -33,11 +34,11 @@ public class Spot {
         this.name = name;
     }
 
-    public LatLong getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(LatLong location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
