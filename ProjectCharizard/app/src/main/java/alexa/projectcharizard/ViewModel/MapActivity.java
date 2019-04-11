@@ -5,7 +5,7 @@ import android.app.Activity;
 
 import alexa.projectcharizard.R;
 
-public class SecondActivity extends Activity {
+public class MapActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
