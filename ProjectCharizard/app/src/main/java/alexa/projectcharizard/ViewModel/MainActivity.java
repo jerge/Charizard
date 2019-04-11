@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
     private EditText password;
     private Button loginButton;
     private TextView attemptsLeftText;
-    private int counter = 5;
+    private int counter = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,8 @@ public class MainActivity extends Activity {
         attemptsLeftText = (TextView)findViewById(R.id.AttemptsLeftText);
         loginButton = (Button)findViewById(R.id.LoginButton);
 
+        attemptsLeftText.setText("");
+
         loginButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -40,11 +42,13 @@ public class MainActivity extends Activity {
     }
 
     private void validate(String usernameInput, String passwordInput){
-        if ((usernameInput == "Admin") && (passwordInput == "1234")){
+        if ((usernameInput.equals("Admin")) && (passwordInput.equals("1234"))){
             Intent intent = new Intent(MainActivity.this, SecondActivity.class);
             startActivity(intent);
         } else {
             counter--;
+
+            attemptsLeftText.setText("Number of attempts remaining: " + String.valueOf(counter));
 
             if (counter <= 0){
                 loginButton.setEnabled(false);
