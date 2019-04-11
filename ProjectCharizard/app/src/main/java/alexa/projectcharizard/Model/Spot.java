@@ -2,7 +2,9 @@ package alexa.projectcharizard.Model;
 
 import com.google.android.gms.maps.model.LatLng;
 
-
+/**
+ * A class for saving the properties of a Spot
+ */
 public class Spot {
     private String name;
     private LatLng location;
