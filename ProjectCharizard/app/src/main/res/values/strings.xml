@@ -2,7 +2,11 @@
     <string name="app_name">Project Charizard</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="action_sign_in">Login</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="error_login_attempts_fail">Number of login attempts left: </string>
+    <!--
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -13,6 +17,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    -->
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_second">SecondActivity</string>
 </resources>
