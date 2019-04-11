@@ -6,6 +6,10 @@
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="error_login_attempts_fail">Number of login attempts left: </string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_email">E-mail</string>
+    <string name="promt_signUp_button">Sign me up!</string>
+    <string name="already_signed_up">Already signed up?</string>
     <!--
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -20,4 +24,10 @@
     -->
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_second">SecondActivity</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 </resources>
