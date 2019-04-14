@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import alexa.projectcharizard.R;
 
+// https://www.youtube.com/watch?v=zKBGjGoeid0&t=3s
+// https://www.youtube.com/watch?v=-r59HK5zyhk
+
 public class SignUpActivity extends Activity {
 
     private EditText signUpName, signUpPassword,signUpEmail;
@@ -20,7 +23,7 @@ public class SignUpActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signUp);
+        setContentView(R.layout.activity_signup);
         setUpUIViews();
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -28,6 +31,8 @@ public class SignUpActivity extends Activity {
             public void onClick(View view) {
                 if (validate()){
                     //TODO connect to database and upload
+                    Intent mapActivity = new Intent(SignUpActivity.this, MapActivity.class);
+                    startActivity(mapActivity);
                 }
             }
         });
@@ -56,12 +61,10 @@ public class SignUpActivity extends Activity {
         String password = signUpPassword.getText().toString();
         String email = signUpEmail.getText().toString();
 
-        if (name.isEmpty() && email.isEmpty() && password.isEmpty()){
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty())
             Toast.makeText(this, "Please enter details", Toast.LENGTH_SHORT).show();
-        } else {
+        else
             result = true;
-        }
-
         return result;
     }
 

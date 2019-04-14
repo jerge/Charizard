@@ -24,7 +24,7 @@ public class SignInActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_signin);
 
         username = findViewById(R.id.usernameField);
         password = findViewById(R.id.passwordField);
@@ -53,7 +53,7 @@ public class SignInActivity extends Activity {
 
     private void validate(String usernameInput, String passwordInput){
         if ((usernameInput.equals("Admin")) && (passwordInput.equals("1234"))){
-            Intent intent = new Intent(SignInActivity.this, MapActivity.class);
+            Intent intent = new Intent(this, MapActivity.class);
             startActivity(intent);
             attemptsLeftText.setVisibility(View.INVISIBLE);
         } else {
