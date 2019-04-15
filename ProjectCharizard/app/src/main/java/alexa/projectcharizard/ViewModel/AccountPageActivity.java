@@ -14,9 +14,17 @@ import android.widget.Toast;
 
 import alexa.projectcharizard.R;
 
+/**
+ * The Android Activity class for the account page where the user can manage their information
+ * such as username, email and password. Queries the user through dialogs for username and name,
+ * starts a new activity for when changing email or password.
+ *
+ * @author Stefan Chan
+ */
+
 public class AccountPageActivity extends AppCompatActivity {
 
-    // public constant key
+    // public constant key in order to identify which activity sent the messaged
     public static final String EXTRA_MESSAGE = "alexa.projectcharizard.ViewModel.MESSAGE";
 
     // UI references
@@ -26,7 +34,7 @@ public class AccountPageActivity extends AppCompatActivity {
     private ImageView passwordView;
     private ImageView deleteView;
 
-    // Hardcoded user informationA
+    // Hardcoded user information
     // TODO: Replace these with user information from userAccount
     private String userName = "Inte_Semlan_420";
     private String name = "Mathias Bammers";
@@ -48,6 +56,12 @@ public class AccountPageActivity extends AppCompatActivity {
         nameView.setText(name);
     }
 
+    /**
+     * Calls the account class to change the username with the argument, called
+     * by showChangeUserNameDialog
+     *
+     * @param newUserName the new username
+     */
     private void changeUserName(String newUserName) {
         // TODO: Add call to change username in backend, preferably before setting userNameView
         this.userName = newUserName;
@@ -56,6 +70,12 @@ public class AccountPageActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),newUserName, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Calls the account class to change the name with the argument, called by
+     * showChangeNameDialog
+     *
+     * @param newName the new name
+     */
     private void changeName(String newName) {
         // TODO: Add call to change name in backend, preferably before setting nameView
         this.name = newName;
@@ -64,6 +84,12 @@ public class AccountPageActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), newName, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Spawns a dialog where the user can enter in a new username and
+     * calls the method changeUserName in order to change user information
+     *
+     * @param c the context to show this dialog in
+     */
     private void showChangeUserNameDialog(Context c) {
         final EditText newUserNameField = new EditText(c);
         AlertDialog dialog = new AlertDialog.Builder(c)
@@ -82,6 +108,12 @@ public class AccountPageActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Spawns a dialog where the user can enter in a new name and
+     * calls the method changeName in order to change user information
+     *
+     * @param c the context to shoe this dialog in
+     */
     private void showChangeNameDialog(Context c) {
         final EditText newNameField = new EditText(c);
         AlertDialog dialog = new AlertDialog.Builder(c)
@@ -100,26 +132,47 @@ public class AccountPageActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * @param view the view which calls this method on click
+     */
     public void changeUserNameAction(View view) {
         showChangeUserNameDialog(this);
     }
 
+    /**
+     * @param view the view which calls this method on click
+     */
     public void changeNameAction(View view) {
         showChangeNameDialog(this);
     }
 
+    /**
+     * Opens a new activity for changing email by creating an Intent and passing
+     * the email to the newly started activity
+     *
+     * @param view the view which calls this method on click
+     */
     public void changeEmailAction(View view) {
         Intent intent = new Intent(this, ChangeEmailActivity.class);
         intent.putExtra(EXTRA_MESSAGE, email);
         startActivity(intent);
     }
 
+    /**
+     * Opens a new activity for changing password by creating an Intent and passing
+     * the password to the newly started activity
+     *
+     * @param view the view which calls this method on click
+     */
     public void changePasswordAction(View view) {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
         intent.putExtra(EXTRA_MESSAGE, password);
         startActivity(intent);
     }
 
+    /**
+     * @param view the view which calls this method in click
+     */
     public void deleteAccountAction(View view) {
         String message = "Execute Order 66";
         Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();

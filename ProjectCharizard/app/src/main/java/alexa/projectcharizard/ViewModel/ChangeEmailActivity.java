@@ -13,7 +13,10 @@ import org.apache.commons.validator.routines.EmailValidator;
 
 import alexa.projectcharizard.R;
 
-
+/**
+ * An Android activity class for changing the user email. Uses Apache commons validator
+ * in order to validate entered email-addresses. Started by AccountPageActivity.
+ */
 public class ChangeEmailActivity extends AppCompatActivity {
 
     private TextView currentEmailView;
@@ -38,6 +41,13 @@ public class ChangeEmailActivity extends AppCompatActivity {
         currentEmailView.setText(message);
     }
 
+    /**
+     * Checks so that the new email is valid, not the same as the current one and that
+     * the email entered in newEmailField and verifNewEmailField are the same. If the checks pass
+     * then calls backend to change the user email
+     *
+     * @param view
+     */
     public void changeEmailButtonAction(View view) {
         String newEmail = newEmailView.getText().toString();
         String verifMail = verifNewEmailView.getText().toString();
@@ -45,7 +55,8 @@ public class ChangeEmailActivity extends AppCompatActivity {
             // Return error message that the new email is the same as the old one
             Toast.makeText(getApplicationContext(), "New email is the same as the old email", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail) && newEmail.equals(verifMail)) {
-            // Change the users email address and notify the user
+            // Change the users email address and notify the user'
+            // TODO: Call backend to change the user email
             currentEmailView.setText(newEmail);
             Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail)) {
@@ -58,7 +69,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
     }
 
     /**
-     * Use Apache Commons Validator to determine if a email address is valid
+     * Uses Apache Commons Validator to determine if a email address is valid
      *
      * @param newEmail the email address to be validated
      * @return boolean
