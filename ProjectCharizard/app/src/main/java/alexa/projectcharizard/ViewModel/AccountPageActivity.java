@@ -1,9 +1,13 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,14 +48,64 @@ public class AccountPageActivity extends AppCompatActivity {
         nameView.setText(name);
     }
 
+    private void changeUserName(String newUserName) {
+        // TODO: Add call to change username in backend, preferably before setting userNameView
+        this.userName = newUserName;
+        userNameView.setText(newUserName);
+        // For debugging purposes
+        Toast.makeText(getApplicationContext(),newUserName, Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeName(String newName) {
+        // TODO: Add call to change name in backend, preferably before setting nameView
+        this.name = newName;
+        nameView.setText(newName);
+        // For debugging purposes
+        Toast.makeText(getApplicationContext(), newName, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showChangeUserNameDialog(Context c) {
+        final EditText newUserNameField = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Change username")
+                .setMessage("Type in new username")
+                .setView(newUserNameField)
+                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newUserName = newUserNameField.getText().toString();
+                        changeUserName(newUserName);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+    }
+
+    private void showChangeNameDialog(Context c) {
+        final EditText newNameField = new EditText(c);
+        AlertDialog dialog = new AlertDialog.Builder(c)
+                .setTitle("Change name")
+                .setMessage("Type in new username")
+                .setView(newNameField)
+                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newName = newNameField.getText().toString();
+                        changeName(newName);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+    }
+
     public void changeUserNameAction(View view) {
-        String message = "Trigger works for username";
-        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+        showChangeUserNameDialog(this);
     }
 
     public void changeNameAction(View view) {
-        String message = "Trigger works for name";
-        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+        showChangeNameDialog(this);
     }
 
     public void changeEmailAction(View view) {
@@ -61,12 +115,13 @@ public class AccountPageActivity extends AppCompatActivity {
     }
 
     public void changePasswordAction(View view) {
-        String message = "Trigger works for password";
-        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, password);
+        startActivity(intent);
     }
 
     public void deleteAccountAction(View view) {
-        String message = "Trigger works for deleting account";
+        String message = "Execute Order 66";
         Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
     }
 

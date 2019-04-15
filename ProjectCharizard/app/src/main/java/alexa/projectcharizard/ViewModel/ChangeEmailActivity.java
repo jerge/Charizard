@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
@@ -40,16 +41,20 @@ public class ChangeEmailActivity extends AppCompatActivity {
     public void changeEmailButtonAction(View view) {
         String newEmail = newEmailView.getText().toString();
         String verifMail = verifNewEmailView.getText().toString();
-        if (newEmail == intent.getStringExtra(AccountPageActivity.EXTRA_MESSAGE)) {
+        if (newEmail.equals(intent.getStringExtra(AccountPageActivity.EXTRA_MESSAGE))) {
             // Return error message that the new email is the same as the old one
+            Toast.makeText(getApplicationContext(), "New email is the same as the old email", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail) && newEmail.equals(verifMail)) {
             // Change the users email address and notify the user
+            currentEmailView.setText(newEmail);
+            Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail)) {
             // Return error message that the verification field does not match
+            Toast.makeText(getApplicationContext(), "Email does not match", Toast.LENGTH_SHORT).show();
         } else {
             // Return error message that the new email entered is not valid
+            Toast.makeText(getApplicationContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
         }
-        // Return general error message
     }
 
     /**
