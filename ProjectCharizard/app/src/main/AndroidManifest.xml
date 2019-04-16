@@ -52,7 +52,13 @@
             android:name=".ViewModel.ChangePasswordActivity"
             android:label="Project Charizard">
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
-    </application>
-
-</manifest>
+        <activity
+            android:name=".ViewModel.MapsActivity"
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity android:name=".ViewModel.LoginActivity" />
+    </application></manifest>
