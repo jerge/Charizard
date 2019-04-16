@@ -45,6 +45,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ViewModel.LoginActivity" />
+        <activity android:name=".ViewModel.DetailedSpotActivity"></activity>
     </application>
 
 </manifest>
