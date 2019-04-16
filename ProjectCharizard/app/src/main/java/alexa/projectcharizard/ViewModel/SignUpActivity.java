@@ -31,7 +31,7 @@ public class SignUpActivity extends Activity {
             public void onClick(View view) {
                 if (validate()){
                     //TODO connect to database and upload
-                    Intent mapActivity = new Intent(SignUpActivity.this, MapActivity.class);
+                    Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
                     startActivity(mapActivity);
                 }
             }
