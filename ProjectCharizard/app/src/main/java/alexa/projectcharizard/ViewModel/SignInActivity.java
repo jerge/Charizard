@@ -53,7 +53,7 @@ public class SignInActivity extends Activity {
 
     private void validate(String usernameInput, String passwordInput){
         if ((usernameInput.equals("Admin")) && (passwordInput.equals("1234"))){
-            Intent intent = new Intent(this, MapActivity.class);
+            Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
             attemptsLeftText.setVisibility(View.INVISIBLE);
         } else {
