@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@tools:sample/backgrounds/scenic[9]" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="3"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Spot name"
+            tools:fontFamily="@tools:sample/cities"
+            tools:textAlignment="center"
+            tools:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:paddingBottom="2sp"
+            android:background="#99A55A29"
+            tools:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            android:paddingTop="3sp"
+            android:paddingStart="5sp"
+            android:text="ADDRESS"
+            android:textColor="#AAA7A7"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            android:paddingStart="5sp"
+            android:text="placeholder"
+            android:maxLines="1"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            android:paddingTop="3sp"
+            android:paddingStart="5sp"
+            android:text="CATEGORY"
+            android:textColor="#AAA7A7"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            android:paddingStart="5sp"
+            android:text="placeholder"
+            android:maxLines="1"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="12sp"
+            android:paddingTop="3sp"
+            android:gravity="center"
+            android:text="RATING"
+            android:textColor="#AAA7A7"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:text="4.8/5.0"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:onClick="openDetailActivity"
+        android:id="@+id/detailButton"
+        android:layout_weight="1"
+        android:layout_width="19dp"
+        android:layout_height="match_parent"
+        android:background="@color/common_google_signin_btn_text_light_disabled"
+        android:scaleType="centerInside"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+</LinearLayout>

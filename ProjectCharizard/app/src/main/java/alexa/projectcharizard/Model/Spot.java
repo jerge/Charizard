@@ -1,5 +1,7 @@
 package alexa.projectcharizard.Model;
 
+import android.media.Image;
+
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -10,22 +12,46 @@ public class Spot {
     private LatLng location;
     private String description;
     private Category category;
+    private Image image;
     private boolean visibility;
+    private final String id;
 
-    public Spot (String name, LatLng location, String description, Category category, boolean visibility) {
+    public Spot (String name, LatLng location, String description, Category category, Image image, boolean visibility, String id) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.category = category;
         this.visibility = visibility;
+        this.image = image;
+        this.id = id;
     }
 
-    public Spot (String name, LatLng location, String description, boolean visibility) {
+    public Spot (String name, LatLng location, String description, Image image, boolean visibility, String id) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.category = Category.OTHER;
         this.visibility = visibility;
+        this.image = image;
+        this.id = id;
+    }
+
+    public Spot (String name, LatLng location, String description, Category category, boolean visibility, String id) {
+        this.name = name;
+        this.location = location;
+        this.description = description;
+        this.category = category;
+        this.visibility = visibility;
+        this.id = id;
+    }
+
+    public Spot (String name, LatLng location, String description, boolean visibility, String id) {
+        this.name = name;
+        this.location = location;
+        this.description = description;
+        this.category = Category.OTHER;
+        this.visibility = visibility;
+        this.id = id;
     }
 
     public String getName() {
@@ -67,4 +93,18 @@ public class Spot {
     public void setVisibility(boolean visibility) {
         this.visibility = visibility;
     }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+
 }

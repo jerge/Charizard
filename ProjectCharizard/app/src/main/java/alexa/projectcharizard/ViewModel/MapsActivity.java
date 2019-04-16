@@ -34,7 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Create temporary initial spot
         Spot spot = new Spot("The träd", new LatLng(57.72, 11.98),
-                "bsaäldasöljd", true);
+                "bsaäldasöljd", true, 123);
         spots.add(spot);
     }
 
@@ -63,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions()
                     .position(spot.getLocation())
                     .title(spot.getName())
-                    .snippet(spot.getDescription())
+                    .snippet(Long.toString(spot.getIdnr()))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         }
 
