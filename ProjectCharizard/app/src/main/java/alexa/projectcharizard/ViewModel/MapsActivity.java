@@ -26,7 +26,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Connect to layout file
-        setContentView(R.layout.activity_maps);
+        contentView();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -36,6 +36,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Spot spot = new Spot("The träd", new LatLng(57.72, 11.98),
                 "bsaäldasöljd", true);
         spots.add(spot);
+    }
+
+    protected void contentView(){
+        setContentView(R.layout.activity_maps);
     }
 
 
@@ -66,7 +70,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .snippet(spot.getDescription())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         }
-
-
     }
 }

@@ -36,8 +36,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ViewModel.MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:name=".ViewModel.AddSpotActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,6 +44,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ViewModel.LoginActivity" />
+        <activity android:name=".ViewModel.MapsActivity"
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>
