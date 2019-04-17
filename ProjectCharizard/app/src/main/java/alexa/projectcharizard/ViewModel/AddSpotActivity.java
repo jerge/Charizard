@@ -16,4 +16,9 @@ public class AddSpotActivity extends MapsActivity {
     protected void contentView() {
         setContentView(R.layout.activity_add);
     }
+
+    @Override
+    protected float initZoom(){
+        return 17.0f;
+    }
 }

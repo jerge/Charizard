@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -43,6 +44,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         spots.add(spot);
     }
 
+    protected float initZoom(){
+        return 10.0f;
+    }
+
     protected void contentView(){
         setContentView(R.layout.activity_maps);
     }
@@ -61,8 +66,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        float initialZoomLevel = 10.0f; //This goes up to 21
-        LatLng initialLocation = new LatLng(57.7, 11.96);
+        float initialZoomLevel = initZoom();
+        LatLng initialLocation = new LatLng(57.7,11.96);
 
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngZoom(initialLocation, initialZoomLevel));
@@ -77,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void showUserLocation() {
+    protected void showUserLocation() {
         // Check if app has permission to access fine location
         if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
             // If not request permission to access fine location
