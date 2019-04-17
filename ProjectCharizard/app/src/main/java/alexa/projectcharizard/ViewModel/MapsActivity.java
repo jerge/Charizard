@@ -1,7 +1,11 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private List<Spot> spots = new ArrayList<>();
+    final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngZoom(initialLocation, initialZoomLevel));
-
+        showUserLocation();
         // Add marker on all 'spot's in spots
         for (Spot spot : spots) {
             mMap.addMarker(new MarkerOptions()
@@ -66,7 +71,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .snippet(spot.getDescription())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         }
+    }
 
+    private void showUserLocation() {
+        // Check if app has permission to access fine location
+        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    MY_PERMISSIONS_ACCESS_FINE_LOCATION );
+        } else {
+            mMap.setMyLocationEnabled(true);
+            //mMap.setOnMyLocationButtonClickListener(this);
+            //mMap.setOnMyLocationClickListener(this);
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        mMap.setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+        }
     }
 }
