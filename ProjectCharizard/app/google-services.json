@@ -23,22 +23,6 @@
           }
         },
         {
-          "client_id": "773446104029-1kan015r9ojhkg38aegu1cs8f52ju5cc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "alexa.projectcharizard",
-            "certificate_hash": "1c9434836340319a5356a632943dcc5ba26d5568"
-          }
-        },
-        {
-          "client_id": "773446104029-9ph05r5gicrao94njupp54aidf0dd64e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "alexa.projectcharizard",
-            "certificate_hash": "8e17acb7e181f6b7d20e95489d0bfed8427c811c"
-          }
-        },
-        {
           "client_id": "773446104029-j2v2peobrn95aj25lkvi42jqh063lhm0.apps.googleusercontent.com",
           "client_type": 3
         }
