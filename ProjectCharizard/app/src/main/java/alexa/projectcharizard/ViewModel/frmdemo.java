@@ -26,6 +26,7 @@ public class frmdemo extends AppCompatActivity {
 
         myRef.setValue("Hello, World 4!");
 
+
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
