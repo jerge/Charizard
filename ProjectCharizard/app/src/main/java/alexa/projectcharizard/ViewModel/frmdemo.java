@@ -24,7 +24,7 @@ public class frmdemo extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
 
-        myRef.setValue("Hello, World 4!");
+       // myRef.setValue("Hello, World 4!");
 
 
         // Read from the database
