@@ -61,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add marker on all 'spot's in spots
         for (Spot spot : spots) {
             mMap.addMarker(new MarkerOptions()
-                    .position(spot.getLocation())
+                    .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
                     .snippet(spot.getDescription())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
