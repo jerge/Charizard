@@ -1,6 +1,7 @@
 package alexa.projectcharizard.Model;
 
 public class EasySpot {
+    private String spotId;
     private String name;
     private String latitude;
     private String longitude;
@@ -12,7 +13,8 @@ public class EasySpot {
 
     }
 
-    public EasySpot (String name, String latitude, String longitude, String description, String category, String visibility) {
+    public EasySpot (String spotId, String name, String latitude, String longitude, String description, String category, String visibility) {
+        this.spotId = spotId;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -21,7 +23,8 @@ public class EasySpot {
         this.visibility = visibility;
     }
 
-    public EasySpot (String name, String latitude, String longitude, String description, String visibility) {
+    public EasySpot (String spotId, String name, String latitude, String longitude, String description, String visibility) {
+        this.spotId = spotId;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -29,6 +32,10 @@ public class EasySpot {
         this.category = "Standard";
         this.visibility = visibility;
     }
+
+    public  String getSpotId() {return  spotId; }
+
+    public void  setSpotId(String spotId) { this.spotId = spotId; }
 
     public String getName() {
         return name;
@@ -42,7 +49,7 @@ public class EasySpot {
         return latitude;
     }
 
-    public void setLatitude(String latitud) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
@@ -50,7 +57,7 @@ public class EasySpot {
         return longitude;
     }
 
-    public void setLongitude(String latitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
@@ -70,7 +77,7 @@ public class EasySpot {
         this.category = category;
     }
 
-    public String isVisibility() {
+    public String getVisibility() {
         return visibility;
     }
 

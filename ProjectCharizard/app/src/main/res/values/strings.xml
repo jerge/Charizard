@@ -16,5 +16,5 @@
     <string name="title_activity_maps">Map</string>
 
     <!--Strings related to insert data for a spot -->
-   <!-- <string name="spot_name">Spot name</string> -->
+    <!-- <string name="spot_name">Spot name</string> -->
 </resources>
