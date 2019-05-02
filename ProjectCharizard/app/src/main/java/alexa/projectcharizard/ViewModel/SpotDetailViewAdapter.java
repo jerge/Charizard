@@ -2,15 +2,12 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
@@ -79,18 +76,24 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
     /**
-     * Opens the detailed activity
-     * @param view
+     * Renders the window and returns the view
+     * @param marker the marker from which we create the info window
+     * @return the info window view
      */
-    public void openDetailActivity(View view) {
-
-    }
-
     public View getInfoWindow(Marker marker) {
          renderWindowText(marker, detailView);
          return detailView;
     }
 
+
+    /**
+     * Should return custom content, but without any custom view elements.
+     *
+     *                   *****Currently not usable*****
+     *
+     * @param marker
+     * @return
+     */
     @Override
     public View getInfoContents(Marker marker) {
         return null;
