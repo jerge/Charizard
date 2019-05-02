@@ -9,9 +9,9 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Add new spot"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,18 +20,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="353dp"
         android:layout_height="567dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="12dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="96dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.87">
 
         <android.support.constraint.ConstraintLayout
@@ -39,11 +40,11 @@
             android:layout_height="41dp">
 
             <EditText
-                android:id="@+id/txtLong"
+                android:id="@+id/txtLat"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
                 android:hint="Lat..."
                 android:inputType="numberDecimal"
                 android:textSize="20sp"
@@ -53,7 +54,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/txtLat"
+                android:id="@+id/txtLong"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -63,7 +64,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/txtLong"
+                app:layout_constraintStart_toStartOf="@+id/txtLat"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
         </android.support.constraint.ConstraintLayout>
@@ -82,33 +83,31 @@
             android:hint="Description..."
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/textView9"
+        <CheckBox
+            android:id="@+id/visibilityCheckbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Visibility..."
-            android:textSize="20sp" />
+            android:text="Show only to yourself?" />
 
         <EditText
             android:id="@+id/textView8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Add Image..."
+            android:hint="Add Image (Optional)"
             android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/textView7"
+        <Spinner
+            android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Category..."
-            android:textSize="20sp" />
+            android:entries="@array/spot_category"
+            android:spinnerMode="dropdown" />
 
-        <EditText
-            android:id="@+id/textView2"
+        <Spinner
+            android:id="@+id/propertySpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Property type..."
-            android:textSize="20sp" />
+            android:entries="@array/property_category" />
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -120,4 +119,19 @@
             tools:context=".ViewModel.MapsActivity" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="162dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="addNewSpot"
+        android:text="Save spot"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </android.support.constraint.ConstraintLayout>
