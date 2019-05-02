@@ -98,6 +98,10 @@ public class AddSpotActivity extends MapsActivity {
         initLocationOnClickListener();
     }
 
+    /**
+     * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
+      */
+
     private void initLocationOnClickListener() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -125,6 +129,11 @@ public class AddSpotActivity extends MapsActivity {
         return 17.0f;
     }
 
+    /**
+     * Saves a new spot to the database
+     * starts by checking if fields are empty
+     * @param view the view that contains the values for the spot
+     */
     public void addNewSpot(View view) {
         if (txtLat.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Fill in latitude", Toast.LENGTH_SHORT).show();

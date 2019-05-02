@@ -23,11 +23,18 @@ import java.util.List;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
+/**
+ * The activity for the MapView
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    // The GoogleMap instance
     protected GoogleMap mMap;
+    // All spots that will be added upon map refresh
     private List<Spot> spots = new ArrayList<>();
-    private ImageButton addButton;
+    // The button for redirecting to Add Spot Activity
+    private ImageButton plsBtn;
+
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
     @Override
@@ -39,16 +46,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         initPlsBtn();
+
         // Create temporary initial spot
         Spot spot = new Spot("Äppelträd i stan", 57.72, 11.98,
                 "Gives red apples", true);
         spots.add(spot);
     }
 
+    // Initializes the plus button to redirect to the AddSpotActivity
     protected void initPlsBtn() {
-        addButton = (ImageButton) findViewById(R.id.plsbtn);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        // Find the plus button
+        plsBtn = (ImageButton) findViewById(R.id.plsbtn);
+        // Set a listener
+        plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MapsActivity.this, AddSpotActivity.class));
