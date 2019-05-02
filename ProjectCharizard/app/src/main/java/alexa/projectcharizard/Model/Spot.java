@@ -17,6 +17,17 @@ public class Spot {
     private Bitmap image;
     private boolean visibility;
 
+    /**
+     * Constructor for when all variables are present
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param category
+     * @param image
+     * @param visibility
+     * @param id
+     */
     public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id) {
         this.name = name;
         this.latitude = latitude;
@@ -27,6 +38,16 @@ public class Spot {
         this.id = id;
     }
 
+    /**
+     * Constructor for when category is not present
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param image
+     * @param visibility
+     * @param id
+     */
     public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility, String id) {
         this.name = name;
         this.latitude = latitude;
@@ -38,6 +59,16 @@ public class Spot {
         this.id = id;
     }
 
+    /**
+     * Constructor for when image is not present
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param category
+     * @param visibility
+     * @param id
+     */
     public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean visibility, String id) {
         this.name = name;
         this.latitude = latitude;
@@ -48,6 +79,15 @@ public class Spot {
         this.id = id;
     }
 
+    /**
+     * Constructor for when neither image nor category is present
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param visibility
+     * @param id
+     */
     public Spot(String name, Double latitude, Double longitude, String description, boolean visibility, String id) {
         this.name = name;
         this.latitude = latitude;
