@@ -23,18 +23,12 @@
         android:id="@+id/plsbtn"
         android:layout_width="55dp"
         android:layout_height="54dp"
-        android:layout_marginStart="400dp"
-        android:layout_marginTop="592dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="81dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="128dp"
         android:background="@null"
         android:scaleType="fitCenter"
         android:src="@drawable/plus_button"
-        app:layout_constraintBottom_toTopOf="@+id/map"
-        app:layout_constraintEnd_toStartOf="@+id/map"
-        app:layout_constraintHorizontal_bias="0.215"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.016" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
