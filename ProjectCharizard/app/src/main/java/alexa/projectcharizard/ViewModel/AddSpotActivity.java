@@ -1,6 +1,5 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,14 +10,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
-import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
+/**
+ * An android activity class for adding a spot through an user interface defined
+ * by activity_add.xml. Gets the data from the user interface, verifies that it is not
+ * empty, creates a new spot from the data and adds it to the database.
+ */
 public class AddSpotActivity extends MapsActivity {
 
     private CheckBox visibilityCheckbox;
@@ -38,25 +40,22 @@ public class AddSpotActivity extends MapsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //contentView();
-
-        /*mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
-
         txtLat = findViewById(R.id.txtLat);
         txtLong = findViewById(R.id.txtLong);
         txtName = findViewById(R.id.txtName);
         txtDescription = findViewById(R.id.txtDescription);
 
+        // Set default parameters
         currentCategory = "Other";
         currentProperty = "Public";
 
+        // Set checkbox default
         visibilityCheckbox = findViewById(R.id.visibilityCheckbox);
         if (visibilityCheckbox.isChecked()) {
             visibilityCheckbox.setChecked(false);
         }
 
+        // Set listeners to spinners
         categorySpinner = findViewById(R.id.categorySpinner);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -92,6 +91,9 @@ public class AddSpotActivity extends MapsActivity {
 
     }
 
+    /**
+     * Called when the map has loaded and is ready for use.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
@@ -101,7 +103,6 @@ public class AddSpotActivity extends MapsActivity {
     /**
      * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
       */
-
     private void initLocationOnClickListener() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -165,8 +166,6 @@ public class AddSpotActivity extends MapsActivity {
         Database database = Database.getInstance();
         database.saveSpot(name, lat, lng, description, visibility);
         finish();
-        //startActivity(new Intent(AddSpotActivity.this, MapsActivity.class));
-        // Send the return to user model
     }
 
 
