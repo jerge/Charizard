@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import alexa.projectcharizard.R;
 
-public class DetailedSpotActivity extends AppCompatActivity {
+public class Test2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailed_spot);
+        setContentView(R.layout.test2);
     }
 }

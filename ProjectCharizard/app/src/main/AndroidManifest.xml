@@ -42,7 +42,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewModel.DetailedSpotActivity"/>
+        <activity android:name=".ViewModel.Test1" />
+        <activity android:name=".ViewModel.Test2" />
+        <activity
+            android:name=".ViewModel.TestActivity"
+            android:label="@string/title_activity_test" />
+        <activity android:name=".ViewModel.DetailedViewActivity"></activity>
     </application>
 
 </manifest>
