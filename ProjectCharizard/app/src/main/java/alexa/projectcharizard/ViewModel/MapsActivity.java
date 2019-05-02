@@ -1,13 +1,14 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.ImageButton;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,8 +25,9 @@ import alexa.projectcharizard.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+    protected GoogleMap mMap;
     private List<Spot> spots = new ArrayList<>();
+    private ImageButton addButton;
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
     @Override
@@ -37,11 +39,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        initPlsBtn();
         // Create temporary initial spot
         Spot spot = new Spot("The träd", new LatLng(57.72, 11.98),
                 "bsaäldasöljd", true);
         spots.add(spot);
+    }
+
+    protected void initPlsBtn() {
+        addButton = (ImageButton) findViewById(R.id.plsbtn);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MapsActivity.this, AddSpotActivity.class));
+            }
+        });
     }
 
     protected float initZoom(){
@@ -92,7 +104,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
             //mMap.setOnMyLocationButtonClickListener(this);
             //mMap.setOnMyLocationClickListener(this);
-
         }
     }
 
