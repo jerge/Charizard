@@ -16,6 +16,24 @@ public class AddSpotActivity extends MapsActivity {
 
     }
 
+    private void initLocationOnClickListener() {
+        System.out.println(mMap == null);
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                EditText lat = (EditText) findViewById(R.id.txtLat);
+                lat.setText(Double.toString(latLng.latitude));
+                EditText lng = (EditText) findViewById(R.id.txtLong);
+                lng.setText(Double.toString(latLng.longitude));
+            }
+        });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        super.onMapReady(googleMap);
+        initLocationOnClickListener();
+    }
 
     // Do not create plsBtn
     @Override

@@ -43,7 +43,6 @@
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name=".ViewModel.LoginActivity" />
         <activity android:name=".ViewModel.MapsActivity"
             android:label="@string/title_activity_maps">
             <intent-filter>
@@ -52,9 +51,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewModel.LoginActivity" />
-        <activity android:name=".ViewModel.MapsActivity"
-            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>
