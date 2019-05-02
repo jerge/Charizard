@@ -41,8 +41,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         initPlsBtn();
         // Create temporary initial spot
-        Spot spot = new Spot("The träd", 57.72, 11.98,
-                "bsaäldasöljd", true);
+        Spot spot = new Spot("Äppelträd i stan", 57.72, 11.98,
+                "Gives red apples", true);
         spots.add(spot);
     }
 
