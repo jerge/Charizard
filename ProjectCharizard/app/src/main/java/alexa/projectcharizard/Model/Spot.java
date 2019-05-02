@@ -1,7 +1,6 @@
 package alexa.projectcharizard.Model;
 
 
-
 /**
  * A class for saving the properties of a Spot
  */
