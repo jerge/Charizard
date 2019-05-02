@@ -89,6 +89,16 @@ public class AddSpotActivity extends MapsActivity {
     }
 
     @Override
+    public void onMapReady(GoogleMap googleMap) {
+        super.onMapReady(googleMap);
+        initLocationOnClickListener();
+    }
+
+    // Do not create plsBtn
+    @Override
+    protected void initPlsBtn() {}
+
+    @Override
     protected void contentView() {
         setContentView(R.layout.activity_add);
     }
