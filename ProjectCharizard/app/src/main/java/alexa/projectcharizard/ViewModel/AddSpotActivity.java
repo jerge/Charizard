@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
@@ -145,18 +147,18 @@ public class AddSpotActivity extends MapsActivity {
         String description = txtDescription.getText().toString();
         if (currentCategory == null) {
             Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
+            return;
         }
         Category category = getCategoryEnum(currentCategory);
         boolean visibility = visibilityCheckbox.isChecked();
 
-        createSpot(name, lat, lng, description, category, visibility);
+        Database database = Database.getInstance();
+        database.saveSpot(name, lat, lng, description, visibility);
+        finish();
+        //startActivity(new Intent(AddSpotActivity.this, MapsActivity.class));
         // Send the return to user model
     }
 
-    private Spot createSpot (String name, Double lat, Double lng, String desc, Category cat, boolean vis) {
-        Toast.makeText(getApplicationContext(), "This works I swear", Toast.LENGTH_SHORT).show();
-        return new Spot(name, lat, lng, desc, cat, vis);
-    }
 
     private Category getCategoryEnum(String currentCategory) {
         if (currentCategory.equals("Apple Tree")) {

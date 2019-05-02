@@ -34,5 +34,4 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
 
 }
-
-
+    apply plugin: 'com.google.gms.google-services'
