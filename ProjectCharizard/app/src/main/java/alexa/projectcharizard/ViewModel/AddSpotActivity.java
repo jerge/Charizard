@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -94,6 +95,19 @@ public class AddSpotActivity extends MapsActivity {
         initLocationOnClickListener();
     }
 
+    private void initLocationOnClickListener() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                EditText lat = (EditText) findViewById(R.id.txtLat);
+                lat.setText(Double.toString(latLng.latitude));
+                EditText lng = (EditText) findViewById(R.id.txtLong);
+                lng.setText(Double.toString(latLng.longitude));
+            }
+        });
+    }
+
+
     // Do not create plsBtn
     @Override
     protected void initPlsBtn() {}
@@ -119,7 +133,6 @@ public class AddSpotActivity extends MapsActivity {
             return;
         }
         Double lng = Double.valueOf(txtLong.getText().toString());
-        LatLng latLng = new LatLng(lat,lng);
         if (txtName.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
             return;
@@ -136,13 +149,13 @@ public class AddSpotActivity extends MapsActivity {
         Category category = getCategoryEnum(currentCategory);
         boolean visibility = visibilityCheckbox.isChecked();
 
-        createSpot(name, latLng, description, category, visibility);
+        createSpot(name, lat, lng, description, category, visibility);
         // Send the return to user model
     }
 
-    private Spot createSpot (String name, LatLng latLng, String desc, Category cat, boolean vis) {
+    private Spot createSpot (String name, Double lat, Double lng, String desc, Category cat, boolean vis) {
         Toast.makeText(getApplicationContext(), "This works I swear", Toast.LENGTH_SHORT).show();
-        return new Spot(name, latLng, desc, cat, vis);
+        return new Spot(name, lat, lng, desc, cat, vis);
     }
 
     private Category getCategoryEnum(String currentCategory) {
