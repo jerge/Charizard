@@ -35,17 +35,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".ViewModel.MapsActivity"
-            android:label="@string/title_activity_maps">
+        <activity android:name=".ViewModel.MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewModel.LoginActivity" />
-        <activity android:name=".ViewModel.DetailedSpotActivity"></activity>
     </application>
 
 </manifest>
