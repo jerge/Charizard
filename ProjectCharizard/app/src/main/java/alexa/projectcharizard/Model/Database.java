@@ -19,8 +19,8 @@ public class Database{
         databaseReference = firebaseDatabase.getReference("CHARIZARD_DATABASE");
     }
 
-    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Boolean visibility){
-        Spot spot = new Spot(name, dblLat, dblLng, description, visibility);
+    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Boolean visibility, String id){
+        Spot spot = new Spot(name, dblLat, dblLng, description, visibility, id);
         databaseReference.push().setValue(spot);
     }
 }

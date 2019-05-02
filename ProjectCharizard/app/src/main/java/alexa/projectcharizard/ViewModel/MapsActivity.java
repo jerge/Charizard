@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Create temporary initial spot
         Spot spot = new Spot("The träd", 57.72, 11.98,
-                "bsaäldasöljd", true);
+                "bsaäldasöljd", true, "123");
         spots.add(spot);
     }
 
@@ -58,13 +60,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngZoom(initialLocation, initialZoomLevel));
 
+        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, spots);
+        mMap.setInfoWindowAdapter(infoWindowAdapter);
+
         // Add marker on all 'spot's in spots
         for (Spot spot : spots) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .snippet(spot.getDescription())
+                    .snippet(spot.getId())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(MapsActivity.this, DetailedSpotActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
 
 

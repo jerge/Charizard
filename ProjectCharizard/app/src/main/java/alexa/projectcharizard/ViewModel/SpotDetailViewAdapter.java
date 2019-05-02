@@ -1,6 +1,8 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
 
+import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
@@ -52,13 +56,25 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
         if (!spotTitle.equals(""))
             title.setText(marker.getTitle());
 
-        Image spotImage = spot.getImage();
+        Bitmap spotImage = spot.getImage();
         ImageView image = (ImageView) view.findViewById(R.id.image);
-        if (!spotImage.equals(null))
+        if (spotImage == null) {
             image.setImageResource(R.drawable.default_smultron);
-        
+        } else {
+            image.setImageBitmap(spotImage);
+        }
 
+        Category spotCategory = spot.getCategory();
+        TextView category = (TextView) view.findViewById(R.id.category);
+        if (spotCategory != null)
+            switch (spotCategory) {
+                case OTHER:
+                    category.setText("Other");
+                    break;
 
+                case APPLE_TREE:
+                    category.setText("Apple tree");
+            }
 
     }
 
@@ -71,7 +87,8 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
     public View getInfoWindow(Marker marker) {
-        return null;
+         renderWindowText(marker, detailView);
+         return detailView;
     }
 
     @Override
