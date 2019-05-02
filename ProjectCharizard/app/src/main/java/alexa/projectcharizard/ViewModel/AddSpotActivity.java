@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -22,8 +23,8 @@ public class AddSpotActivity extends MapsActivity {
 
     private CheckBox visibilityCheckbox;
 
-    private EditText txtLat;
-    private EditText txtLong;
+    private TextView txtLat;
+    private TextView txtLong;
     private EditText txtName;
     private EditText txtDescription;
 
@@ -101,10 +102,10 @@ public class AddSpotActivity extends MapsActivity {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                EditText lat = (EditText) findViewById(R.id.txtLat);
-                lat.setText(Double.toString(latLng.latitude));
-                EditText lng = (EditText) findViewById(R.id.txtLong);
-                lng.setText(Double.toString(latLng.longitude));
+                txtLat = (TextView) findViewById(R.id.txtLat);
+                txtLat.setText(Double.toString(latLng.latitude));
+                txtLong = (TextView) findViewById(R.id.txtLong);
+                txtLong.setText(Double.toString(latLng.longitude));
             }
         });
     }
