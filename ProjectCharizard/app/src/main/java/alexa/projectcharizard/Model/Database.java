@@ -40,7 +40,7 @@ public class Database{
      */
     private Database (){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("CHARIZARD_DATABASE");
+        databaseReference = firebaseDatabase.getReference("Spots");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
