@@ -1,6 +1,8 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -107,10 +109,15 @@ public class AddSpotActivity extends MapsActivity {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                txtLat = (TextView) findViewById(R.id.txtLat);
                 txtLat.setText(Double.toString(latLng.latitude));
-                txtLong = (TextView) findViewById(R.id.txtLong);
                 txtLong.setText(Double.toString(latLng.longitude));
+            }
+        });
+        mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
+                txtLat.setText(Double.toString(location.getLatitude()));
+                txtLong.setText(Double.toString(location.getLongitude()));
             }
         });
     }
