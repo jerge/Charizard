@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import android.os.Bundle;
@@ -93,10 +94,11 @@ public class AddSpotActivity extends MapsActivity {
         }
         Category category = getCategoryEnum(currentCategory);
         boolean visibility = visibilityCheckbox.isChecked();
+        Bitmap image = null;
 
         //Open connection to database and save the spot on the database.
         Database database = Database.getInstance();
-        database.saveSpot(name, lat, lng, description, category, visibility);
+        database.saveSpot(name, lat, lng, description, category, image, visibility);
         finish();
     }
 

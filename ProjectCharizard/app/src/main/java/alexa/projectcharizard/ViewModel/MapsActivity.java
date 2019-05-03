@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -89,6 +91,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
+     * It also creates the custom info window for the markers.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -117,6 +120,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
+        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, database.getSpots());
+        mMap.setInfoWindowAdapter(infoWindowAdapter);
 
         // Add marker on all 'spot's in spots
         updateMarkers();
@@ -168,12 +174,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
-        for (Spot spot : database.getSpots()) {
+        for (final Spot spot : database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .snippet(spot.getDescription())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                    intent.putExtra("SpotLatitude", spot.getLatitude());
+                    intent.putExtra("SpotLongitude", spot.getLongitude());
+                    intent.putExtra("SpotDescription", spot.getDescription());
+                    intent.putExtra("SpotName", spot.getName());
+                    startActivity(intent);
+                }
+            });
         }
     }
 
