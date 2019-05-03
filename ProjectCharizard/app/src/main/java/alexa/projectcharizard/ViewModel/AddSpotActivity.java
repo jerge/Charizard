@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,6 +10,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -88,7 +93,6 @@ public class AddSpotActivity extends MapsActivity {
                 propertySpinner.setSelection(0);
             }
         });
-
     }
 
     /**
@@ -107,9 +111,7 @@ public class AddSpotActivity extends MapsActivity {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                txtLat = (TextView) findViewById(R.id.txtLat);
                 txtLat.setText(Double.toString(latLng.latitude));
-                txtLong = (TextView) findViewById(R.id.txtLong);
                 txtLong.setText(Double.toString(latLng.longitude));
             }
         });
