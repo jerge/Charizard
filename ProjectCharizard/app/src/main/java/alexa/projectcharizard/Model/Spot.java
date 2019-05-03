@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
  * A class for saving the properties of a Spot
  */
 public class Spot {
-    private String spotId;
     private String name;
     private Double latitude;
     private Double longitude;
@@ -32,6 +31,7 @@ public class Spot {
         this.longitude = longitude;
         this.description = description;
         this.visibility = visibility;
+        this.category = category;
         this.image = image;
     }
 
@@ -49,69 +49,40 @@ public class Spot {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
-        this.category = category;
+        this.category = Category.OTHER;
         this.visibility = visibility;
         this.image = image;
     }
 
-    public Spot() {
-    }
+    public Spot() {}
 
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Double getLatitude() {
         return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
     }
 
     public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
     public boolean isVisibility() {
         return visibility;
     }
 
-    public void setVisibility(boolean visibility) {
-        this.visibility = visibility;
-    }
-
     public Bitmap getImage() {
         return image;
-    }
-
-    public void setImage(Bitmap image) {
-        this.image = image;
     }
 
 }

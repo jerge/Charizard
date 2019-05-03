@@ -174,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
-        for (Spot spot : database.getSpots()) {
+        for (final Spot spot : database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
@@ -183,6 +183,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onInfoWindowClick(Marker marker) {
                     Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                    intent.putExtra("SpotLatitude", spot.getLatitude());
+                    intent.putExtra("SpotLongitude", spot.getLongitude());
+                    intent.putExtra("SpotDescription", spot.getDescription());
+                    intent.putExtra("SpotName", spot.getName());
                     startActivity(intent);
                 }
             });
