@@ -2,7 +2,15 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,34 +20,68 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
+/**
+ * The activity for the MapView
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private List<Spot> spots = new ArrayList<>();
+    Database database = Database.getInstance();
+    // The GoogleMap instance
+    protected GoogleMap mMap;
+    // All spots that will be added upon map refresh
+    // The button for redirecting to Add Spot Activity
+    private ImageButton plsBtn;
+
+    final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
+
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Connect to layout file
-        setContentView(R.layout.activity_maps);
+        contentView();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Create temporary initial spot
-        Spot spot = new Spot("The träd", 57.72, 11.98,
-                "bsaäldasöljd", true, "123");
-        spots.add(spot);
+        initPlsBtn();
+
+        //Open connection to database and add all existing spots to the spotlist.
+        final Database databaseReference = Database.getInstance();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                databaseReference.getSpots().clear();
+
+                for (DataSnapshot spotSnapshot : dataSnapshot.getChildren()) {
+                    Spot spot = spotSnapshot.getValue(Spot.class);
+                    databaseReference.getSpots().add(spot);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 
     /**
      * Manipulates the map once available.
@@ -55,17 +97,84 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        float initialZoomLevel = 10.0f; //This goes up to 21
-        LatLng initialLocation = new LatLng(57.7, 11.96);
+        float initialZoomLevel = initZoom();
+        LatLng initialLocation = initLoc();
 
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngZoom(initialLocation, initialZoomLevel));
+        showUserLocation();
+
+        database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                database.getSpots().clear();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    Spot spot = data.getValue(Spot.class);
+                    database.getSpots().add(spot);
+                }
+                updateMarkers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, spots);
         mMap.setInfoWindowAdapter(infoWindowAdapter);
 
         // Add marker on all 'spot's in spots
-        for (Spot spot : spots) {
+        updateMarkers();
+
+    }
+
+    /**
+     * A method for showing the user's location on the map
+     */
+    protected void showUserLocation() {
+        // Check if app has permission to access fine location
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_ACCESS_FINE_LOCATION);
+        } else {
+            mMap.setMyLocationEnabled(true);
+            //mMap.setOnMyLocationButtonClickListener(this);
+            //mMap.setOnMyLocationClickListener(this);
+        }
+    }
+
+    /**
+     * A method which is called upon getting a result from a permissions request
+     * And then it does the thing that required permission
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
+     * @param permissions
+     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
+     *                     a location in the array if that specific permission is granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        mMap.setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void updateMarkers() {
+        for (Spot spot : database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
@@ -79,7 +188,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
-
-
     }
+
+    protected void contentView() {
+        setContentView(R.layout.activity_maps);
+    }
+
+    /**
+     * Initializes the plus button to redirect to the AddSpotActivity
+     */
+    protected void initPlsBtn() {
+        // Find the plus button
+        plsBtn = (ImageButton) findViewById(R.id.plsbtn);
+        // Set a listener
+        plsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
+                intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
+                intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
+                intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
+                startActivity(intent);
+            }
+        });
+    }
+
+    protected float initZoom() {
+        return 10.0f;
+    }
+
+    protected LatLng initLoc() {
+        return new LatLng(57.7, 11.96);
+    }
+
+
 }

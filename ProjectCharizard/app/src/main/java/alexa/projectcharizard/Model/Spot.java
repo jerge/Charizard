@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
  * A class for saving the properties of a Spot
  */
 public class Spot {
+    private String spotId;
     private String name;
     private Double latitude;
     private Double longitude;
@@ -59,24 +60,7 @@ public class Spot {
         this.id = id;
     }
 
-    /**
-     * Constructor for when image is not present
-     * @param name
-     * @param latitude
-     * @param longitude
-     * @param description
-     * @param category
-     * @param visibility
-     * @param id
-     */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean visibility, String id) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.description = description;
-        this.category = category;
-        this.visibility = visibility;
-        this.id = id;
+    public Spot() {
     }
 
     /**
