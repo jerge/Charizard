@@ -2,9 +2,10 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,6 +17,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +43,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
+    DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         initPlsBtn();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Spots");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                spots.clear();
+
+                for(DataSnapshot spotSnapshot : dataSnapshot.getChildren()){
+                    Spot spot = spotSnapshot.getValue(Spot.class);
+                    spots.add(spot);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         // Create temporary initial spot
         Spot spot = new Spot("Äppelträd i stan", 57.72, 11.98,
