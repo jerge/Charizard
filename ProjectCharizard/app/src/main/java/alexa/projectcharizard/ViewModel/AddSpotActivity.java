@@ -63,6 +63,7 @@ public class AddSpotActivity extends MapsActivity {
     /**
      * Saves a new spot to the database
      * starts by checking if fields are empty
+     *
      * @param view the view that contains the values for the spot
      */
     public void addNewSpot(View view) {
@@ -165,7 +166,7 @@ public class AddSpotActivity extends MapsActivity {
 
     /**
      * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
-      */
+     */
     private void initLocationOnClickListener() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -191,7 +192,7 @@ public class AddSpotActivity extends MapsActivity {
                     currentMarker.remove();
                 }
                 currentMarker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                        .position(new LatLng(location.getLatitude(), location.getLongitude()))
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
             }
         });
@@ -200,18 +201,21 @@ public class AddSpotActivity extends MapsActivity {
 
     /**
      * Removes functionality of overridden parent class
-      */
+     */
     @Override
-    protected void initPlsBtn() {}
-
-    @Override
-    protected float initZoom(){
-        return getIntent().getFloatExtra("ViewedLocationZoom",15.0f);
+    protected void initPlsBtn() {
     }
 
     @Override
-    protected LatLng initLoc() { return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat",57),
-            getIntent().getDoubleExtra("ViewedLocationLong",12));}
+    protected float initZoom() {
+        return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
+    }
+
+    @Override
+    protected LatLng initLoc() {
+        return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat", 57),
+                getIntent().getDoubleExtra("ViewedLocationLong", 12));
+    }
 
 
     @Override

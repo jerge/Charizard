@@ -29,7 +29,7 @@ public class Spot {
         this.visibility = visibility;
     }
 
-    public Spot (){
+    public Spot() {
     }
 
 

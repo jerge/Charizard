@@ -62,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 databaseReference.getSpots().clear();
 
-                for(DataSnapshot spotSnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot spotSnapshot : dataSnapshot.getChildren()) {
                     Spot spot = spotSnapshot.getValue(Spot.class);
                     databaseReference.getSpots().add(spot);
                 }
@@ -105,7 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 database.getSpots().clear();
-                for (DataSnapshot data: dataSnapshot.getChildren()){
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
                     database.getSpots().add(spot);
                 }
@@ -128,10 +128,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     protected void showUserLocation() {
         // Check if app has permission to access fine location
-        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // If not request permission to access fine location
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    MY_PERMISSIONS_ACCESS_FINE_LOCATION );
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_ACCESS_FINE_LOCATION);
         } else {
             mMap.setMyLocationEnabled(true);
             //mMap.setOnMyLocationButtonClickListener(this);
@@ -142,10 +142,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * A method which is called upon getting a result from a permissions request
      * And then it does the thing that required permission
-     * @param requestCode The int corresponding to the permission that's being regarded
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
      * @param permissions
      * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
-     *                    a location in the array if that specific permission is granted
+     *                     a location in the array if that specific permission is granted
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -166,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void updateMarkers(){
+    private void updateMarkers() {
         for (Spot spot : database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
@@ -176,11 +177,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected void contentView(){
+    protected void contentView() {
         setContentView(R.layout.activity_maps);
     }
 
-    // Initializes the plus button to redirect to the AddSpotActivity
+    /**
+     * Initializes the plus button to redirect to the AddSpotActivity
+     */
     protected void initPlsBtn() {
         // Find the plus button
         plsBtn = (ImageButton) findViewById(R.id.plsbtn);
@@ -197,17 +200,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    protected float initZoom(){
+    protected float initZoom() {
         return 10.0f;
     }
 
     protected LatLng initLoc() {
-        return new LatLng(57.7,11.96);
+        return new LatLng(57.7, 11.96);
     }
-
-
-
-
 
 
 }
