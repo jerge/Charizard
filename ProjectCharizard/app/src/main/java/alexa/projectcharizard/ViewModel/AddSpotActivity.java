@@ -11,11 +11,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import alexa.projectcharizard.Model.Category;
-import alexa.projectcharizard.Model.Spot;
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
 
 /**
@@ -37,9 +35,6 @@ public class AddSpotActivity extends MapsActivity {
 
     private Spinner categorySpinner;
     private Spinner propertySpinner;
-
-    DatabaseReference databaseReference;
-    Spot spot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,11 +163,9 @@ public class AddSpotActivity extends MapsActivity {
         Category category = getCategoryEnum(currentCategory);
         boolean visibility = visibilityCheckbox.isChecked();
 
-       // Database database = Database.getInstance();
-     //   database.saveSpot(name, lat, lng, description, visibility);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Spots");
-        spot = new Spot(name, lat, lng, description, visibility);
-        databaseReference.setValue(spot);
+        //Open connection to database and save the spot on the database.
+        Database database = Database.getInstance();
+        database.saveSpot(name, lat, lng, description, category, visibility);
         finish();
     }
 
