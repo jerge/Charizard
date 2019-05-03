@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -47,55 +48,7 @@ public class AddSpotActivity extends MapsActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        txtLat = findViewById(R.id.txtLat);
-        txtLong = findViewById(R.id.txtLong);
-        txtName = findViewById(R.id.txtName);
-        txtDescription = findViewById(R.id.txtDescription);
-
-        // Set default parameters
-        currentCategory = "Other";
-        currentProperty = "Public";
-
-        // Set checkbox default
-        visibilityCheckbox = findViewById(R.id.visibilityCheckbox);
-        if (visibilityCheckbox.isChecked()) {
-            visibilityCheckbox.setChecked(false);
-        }
-
-        // Set listeners to spinners
-        categorySpinner = findViewById(R.id.categorySpinner);
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedCategory = (String) parent.getItemAtPosition(position);
-                if (position > 0) {
-                    currentCategory = selectedCategory;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                categorySpinner.setSelection(0);
-            }
-        });
-
-        propertySpinner = findViewById(R.id.propertySpinner);
-        propertySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedProperty = (String) parent.getItemAtPosition(position);
-                if (position > 0) {
-                    currentProperty = selectedProperty;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                propertySpinner.setSelection(0);
-            }
-        });
+        initView();
     }
 
     /**
@@ -105,55 +58,6 @@ public class AddSpotActivity extends MapsActivity {
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
         initLocationOnClickListener();
-    }
-
-    /**
-     * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
-      */
-    private void initLocationOnClickListener() {
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                txtLat.setText(Double.toString(latLng.latitude));
-                txtLong.setText(Double.toString(latLng.longitude));
-                // Set out a marker on the spot selected
-                if (currentMarker != null) {
-                    currentMarker.remove();
-                }
-                currentMarker = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
-            }
-        });
-        mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
-            @Override
-            public void onMyLocationClick(@NonNull Location location) {
-                txtLat.setText(Double.toString(location.getLatitude()));
-                txtLong.setText(Double.toString(location.getLongitude()));
-                // Set out a marker on the spot selected
-                if (currentMarker != null) {
-                    currentMarker.remove();
-                }
-                currentMarker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
-            }
-        });
-    }
-
-
-    // Do not create plsBtn
-    @Override
-    protected void initPlsBtn() {}
-
-    @Override
-    protected void contentView() {
-        setContentView(R.layout.activity_add);
-    }
-
-    @Override
-    protected float initZoom(){
-        return 15.0f;
     }
 
     /**
@@ -203,4 +107,117 @@ public class AddSpotActivity extends MapsActivity {
             return Category.OTHER;
         }
     }
+
+    private void initView() {
+        txtLat = findViewById(R.id.txtLat);
+        txtLong = findViewById(R.id.txtLong);
+        txtName = findViewById(R.id.txtName);
+        txtDescription = findViewById(R.id.txtDescription);
+
+        // Set default parameters
+        currentCategory = "Other";
+        currentProperty = "Public";
+
+        // Set checkbox default
+        visibilityCheckbox = findViewById(R.id.visibilityCheckbox);
+        if (visibilityCheckbox.isChecked()) {
+            visibilityCheckbox.setChecked(false);
+        }
+        initSpinner();
+    }
+
+    private void initSpinner() {
+        // Set listeners to spinners
+        categorySpinner = findViewById(R.id.categorySpinner);
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = (String) parent.getItemAtPosition(position);
+                if (position > 0) {
+                    currentCategory = selectedCategory;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                categorySpinner.setSelection(0);
+            }
+        });
+
+        propertySpinner = findViewById(R.id.propertySpinner);
+        propertySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedProperty = (String) parent.getItemAtPosition(position);
+                if (position > 0) {
+                    currentProperty = selectedProperty;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                propertySpinner.setSelection(0);
+            }
+        });
+    }
+
+
+    /**
+     * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
+      */
+    private void initLocationOnClickListener() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                txtLat.setText(Double.toString(latLng.latitude));
+                txtLong.setText(Double.toString(latLng.longitude));
+                // Set out a marker on the spot selected
+                if (currentMarker != null) {
+                    currentMarker.remove();
+                }
+                currentMarker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
+            }
+        });
+        mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
+                txtLat.setText(Double.toString(location.getLatitude()));
+                txtLong.setText(Double.toString(location.getLongitude()));
+                // Set out a marker on the spot selected
+                if (currentMarker != null) {
+                    currentMarker.remove();
+                }
+                currentMarker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
+            }
+        });
+    }
+
+
+    /**
+     * Removes functionality of overridden parent class
+      */
+    @Override
+    protected void initPlsBtn() {}
+
+    @Override
+    protected float initZoom(){
+        return getIntent().getFloatExtra("ViewedLocationZoom",15.0f);
+    }
+
+    @Override
+    protected LatLng initLoc() { return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat",57),
+            getIntent().getDoubleExtra("ViewedLocationLong",12));}
+
+
+    @Override
+    protected void contentView() {
+        setContentView(R.layout.activity_add);
+    }
+
+
 }

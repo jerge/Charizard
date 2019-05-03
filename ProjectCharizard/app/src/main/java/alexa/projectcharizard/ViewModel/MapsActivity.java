@@ -81,28 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    // Initializes the plus button to redirect to the AddSpotActivity
-    protected void initPlsBtn() {
-        // Find the plus button
-        plsBtn = (ImageButton) findViewById(R.id.plsbtn);
-        // Set a listener
-        plsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MapsActivity.this, AddSpotActivity.class));
-            }
-        });
-    }
-
-    protected float initZoom(){
-        return 10.0f;
-    }
-
-    protected void contentView(){
-        setContentView(R.layout.activity_maps);
-    }
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -117,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         float initialZoomLevel = initZoom();
-        LatLng initialLocation = new LatLng(57.7,11.96);
+        LatLng initialLocation = initLoc();
 
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngZoom(initialLocation, initialZoomLevel));
@@ -197,4 +175,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         }
     }
+
+    protected void contentView(){
+        setContentView(R.layout.activity_maps);
+    }
+
+    // Initializes the plus button to redirect to the AddSpotActivity
+    protected void initPlsBtn() {
+        // Find the plus button
+        plsBtn = (ImageButton) findViewById(R.id.plsbtn);
+        // Set a listener
+        plsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
+                intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
+                intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
+                intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
+                startActivity(intent);
+            }
+        });
+    }
+
+    protected float initZoom(){
+        return 10.0f;
+    }
+
+    protected LatLng initLoc() {
+        return new LatLng(57.7,11.96);
+    }
+
+
+
+
+
+
 }
