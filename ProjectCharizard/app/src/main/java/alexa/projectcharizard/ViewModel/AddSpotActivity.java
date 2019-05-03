@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.location.Location;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -90,7 +91,6 @@ public class AddSpotActivity extends MapsActivity {
                 propertySpinner.setSelection(0);
             }
         });
-
     }
 
     /**
