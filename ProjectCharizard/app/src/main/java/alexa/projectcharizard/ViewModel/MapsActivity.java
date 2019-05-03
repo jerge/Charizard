@@ -121,7 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, spots);
+        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, database.getSpots());
         mMap.setInfoWindowAdapter(infoWindowAdapter);
 
         // Add marker on all 'spot's in spots
@@ -178,7 +178,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .snippet(spot.getId())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override

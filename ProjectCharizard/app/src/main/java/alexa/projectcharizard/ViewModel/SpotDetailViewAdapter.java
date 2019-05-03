@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
@@ -43,7 +44,8 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
     private void renderWindowText(Marker marker, View view) {
 
         for (Spot lstSpot : spots) {
-            if (lstSpot.getId().equals(marker.getSnippet()))
+            LatLng lstSpotLoc = new LatLng(lstSpot.getLatitude(),lstSpot.getLongitude());
+            if (lstSpotLoc.equals(marker.getPosition()))
                 spot = lstSpot;
 
         }
