@@ -3,6 +3,7 @@ package alexa.projectcharizard.ViewModel;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -22,9 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -34,10 +32,10 @@ import alexa.projectcharizard.R;
  */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    Database database = Database.getInstance();
     // The GoogleMap instance
     protected GoogleMap mMap;
     // All spots that will be added upon map refresh
-    private List<Spot> spots = new ArrayList<>();
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
 
@@ -58,15 +56,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initPlsBtn();
 
         //Open connection to database and add all existing spots to the spotlist.
-        Database databaseReference = Database.getInstance();
+        final Database databaseReference = Database.getInstance();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                spots.clear();
+                databaseReference.getSpots().clear();
 
                 for(DataSnapshot spotSnapshot : dataSnapshot.getChildren()){
                     Spot spot = spotSnapshot.getValue(Spot.class);
-                    spots.add(spot);
+                    databaseReference.getSpots().add(spot);
                 }
             }
 
@@ -75,12 +73,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        // Create temporary initial spot
-        Spot spot = new Spot("Äppelträd i stan", 57.72, 11.98,
-                "Gives red apples", true);
-        spots.add(spot);
     }
 
     // Initializes the plus button to redirect to the AddSpotActivity
@@ -124,14 +122,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.
                 newLatLngZoom(initialLocation, initialZoomLevel));
         showUserLocation();
+
+        database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                database.getSpots().clear();
+                for (DataSnapshot data: dataSnapshot.getChildren()){
+                    Spot spot = data.getValue(Spot.class);
+                    database.getSpots().add(spot);
+                }
+                updateMarkers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         // Add marker on all 'spot's in spots
-        for (Spot spot : spots) {
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
-                    .title(spot.getName())
-                    .snippet(spot.getDescription())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-        }
+        updateMarkers();
+
     }
 
     /**
@@ -174,6 +185,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 break;
             }
+        }
+    }
+
+    private void updateMarkers(){
+        for (Spot spot : database.getSpots()) {
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
+                    .title(spot.getName())
+                    .snippet(spot.getDescription())
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         }
     }
 }

@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.location.Location;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -12,7 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
@@ -24,6 +28,8 @@ import alexa.projectcharizard.R;
  * empty, creates a new spot from the data and adds it to the database.
  */
 public class AddSpotActivity extends MapsActivity {
+
+    private Marker currentMarker;
 
     private CheckBox visibilityCheckbox;
 
@@ -90,7 +96,6 @@ public class AddSpotActivity extends MapsActivity {
                 propertySpinner.setSelection(0);
             }
         });
-
     }
 
     /**
@@ -111,6 +116,13 @@ public class AddSpotActivity extends MapsActivity {
             public void onMapClick(LatLng latLng) {
                 txtLat.setText(Double.toString(latLng.latitude));
                 txtLong.setText(Double.toString(latLng.longitude));
+                // Set out a marker on the spot selected
+                if (currentMarker != null) {
+                    currentMarker.remove();
+                }
+                currentMarker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
             }
         });
         mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
@@ -118,6 +130,13 @@ public class AddSpotActivity extends MapsActivity {
             public void onMyLocationClick(@NonNull Location location) {
                 txtLat.setText(Double.toString(location.getLatitude()));
                 txtLong.setText(Double.toString(location.getLongitude()));
+                // Set out a marker on the spot selected
+                if (currentMarker != null) {
+                    currentMarker.remove();
+                }
+                currentMarker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
             }
         });
     }
@@ -134,7 +153,7 @@ public class AddSpotActivity extends MapsActivity {
 
     @Override
     protected float initZoom(){
-        return 17.0f;
+        return 15.0f;
     }
 
     /**
