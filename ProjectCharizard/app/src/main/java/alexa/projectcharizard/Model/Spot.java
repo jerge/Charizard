@@ -5,6 +5,7 @@ package alexa.projectcharizard.Model;
  * A class for saving the properties of a Spot
  */
 public class Spot {
+    private String spotId;
     private String name;
     private Double latitude, longitude;
     private String description;
@@ -30,7 +31,6 @@ public class Spot {
 
     public Spot (){
     }
-
 
 
     public String getName() {

@@ -163,8 +163,9 @@ public class AddSpotActivity extends MapsActivity {
         Category category = getCategoryEnum(currentCategory);
         boolean visibility = visibilityCheckbox.isChecked();
 
+        //Open connection to database and save the spot on the database.
         Database database = Database.getInstance();
-        database.saveSpot(name, lat, lng, description, visibility);
+        database.saveSpot(name, lat, lng, description, category, visibility);
         finish();
     }
 
