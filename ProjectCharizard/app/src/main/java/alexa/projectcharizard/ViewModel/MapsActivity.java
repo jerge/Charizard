@@ -34,7 +34,7 @@ import alexa.projectcharizard.R;
  */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    Database database = Database.getInstance();
+    final Database database = Database.getInstance();
     // The GoogleMap instance
     protected GoogleMap mMap;
     // All spots that will be added upon map refresh
@@ -42,8 +42,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageButton plsBtn;
 
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
-
-    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,24 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initPlsBtn();
 
-        //Open connection to database and add all existing spots to the spotlist.
-        final Database databaseReference = Database.getInstance();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                databaseReference.getSpots().clear();
-
-                for (DataSnapshot spotSnapshot : dataSnapshot.getChildren()) {
-                    Spot spot = spotSnapshot.getValue(Spot.class);
-                    databaseReference.getSpots().add(spot);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -104,6 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 newLatLngZoom(initialLocation, initialZoomLevel));
         showUserLocation();
 
+        //Open connection to database and add all existing spots to the spotlist.
         database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
