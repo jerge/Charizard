@@ -18,15 +18,15 @@ public class DetailedViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_view);
 
-        tabLayout=(TabLayout)findViewById(R.id.tabLayout);
-        viewPager=(ViewPager)findViewById(R.id.viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
 
         tabLayout.addTab(tabLayout.newTab().setText("About"));
         tabLayout.addTab(tabLayout.newTab().setText("Comments"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final DetailedViewAdapter adapter = new DetailedViewAdapter(this,getSupportFragmentManager(), tabLayout.getTabCount());
+        final DetailedViewAdapter adapter = new DetailedViewAdapter(this, getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

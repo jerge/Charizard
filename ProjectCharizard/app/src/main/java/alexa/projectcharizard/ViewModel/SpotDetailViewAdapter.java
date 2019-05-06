@@ -21,6 +21,7 @@ import alexa.projectcharizard.R;
  * InfoWindowAdapter for spot_info_windows.xml
  * Handles the rendering of the small detailed view window that opens
  * when pressing any spot on the map
+ *
  * @author Filip Andréasson
  */
 public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
@@ -32,19 +33,20 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
 
     public SpotDetailViewAdapter(Context context, List<Spot> spots) {
         this.context = context;
-        detailView = LayoutInflater.from(context).inflate(R.layout.spot_info_window,null);
+        detailView = LayoutInflater.from(context).inflate(R.layout.spot_info_window, null);
         this.spots = spots;
     }
 
     /**
      * Renders the views in spot_info_window.xml
+     *
      * @param marker is the marker clicked
-     * @param view is the spot_info_window.xml root view
+     * @param view   is the spot_info_window.xml root view
      */
     private void renderWindowText(Marker marker, View view) {
 
         for (Spot lstSpot : spots) {
-            LatLng lstSpotLoc = new LatLng(lstSpot.getLatitude(),lstSpot.getLongitude());
+            LatLng lstSpotLoc = new LatLng(lstSpot.getLatitude(), lstSpot.getLongitude());
             if (lstSpotLoc.equals(marker.getPosition()))
                 spot = lstSpot;
 
@@ -79,19 +81,20 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
 
     /**
      * Renders the window and returns the view
+     *
      * @param marker the marker from which we create the info window
      * @return the info window view
      */
     public View getInfoWindow(Marker marker) {
-         renderWindowText(marker, detailView);
-         return detailView;
+        renderWindowText(marker, detailView);
+        return detailView;
     }
 
 
     /**
      * Should return custom content, but without any custom view elements.
-     *
-     *                   *****Currently not usable*****
+     * <p>
+     * *****Currently not usable*****
      *
      * @param marker
      * @return

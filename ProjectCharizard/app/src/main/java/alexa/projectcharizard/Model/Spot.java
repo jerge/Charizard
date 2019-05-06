@@ -17,6 +17,7 @@ public class Spot {
 
     /**
      * Constructor for when all variables are present
+     *
      * @param name
      * @param latitude
      * @param longitude
@@ -37,6 +38,7 @@ public class Spot {
 
     /**
      * Constructor for when category is not present
+     *
      * @param name
      * @param latitude
      * @param longitude
@@ -54,7 +56,8 @@ public class Spot {
         this.image = image;
     }
 
-    public Spot() {}
+    public Spot() {
+    }
 
 
     public String getName() {

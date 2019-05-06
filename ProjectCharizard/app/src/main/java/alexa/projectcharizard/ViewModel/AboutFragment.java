@@ -23,7 +23,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
 
-        spotDescription = (TextView)v.findViewById(R.id.spotDescription);
+        spotDescription = (TextView) v.findViewById(R.id.spotDescription);
         spotName = (TextView) v.findViewById(R.id.spotName);
 
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
