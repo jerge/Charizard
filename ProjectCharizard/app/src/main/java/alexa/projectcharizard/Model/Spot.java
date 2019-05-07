@@ -1,70 +1,91 @@
 package alexa.projectcharizard.Model;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.graphics.Bitmap;
+
 
 /**
  * A class for saving the properties of a Spot
  */
 public class Spot {
     private String name;
-    private LatLng location;
+    private Double latitude;
+    private Double longitude;
     private String description;
     private Category category;
+    private Bitmap image;
     private boolean visibility;
 
-    public Spot (String name, LatLng location, String description, Category category, boolean visibility) {
+    /**
+     * Constructor for when all variables are present
+     *
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param category
+     * @param image
+     * @param visibility
+     */
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility) {
         this.name = name;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
-        this.category = category;
         this.visibility = visibility;
+        this.category = category;
+        this.image = image;
     }
 
-    public Spot (String name, LatLng location, String description, boolean visibility) {
+    /**
+     * Constructor for when category is not present
+     *
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param image
+     * @param visibility
+     */
+    public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility) {
         this.name = name;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.description = description;
         this.category = Category.OTHER;
         this.visibility = visibility;
+        this.image = image;
     }
+
+    public Spot() {
+    }
+
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public LatLng getLocation() {
-        return location;
-    }
-
-    public void setLocation(LatLng location) {
-        this.location = location;
+    public Double getLongitude() {
+        return longitude;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Category getCategory() {
         return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     public boolean isVisibility() {
         return visibility;
     }
 
-    public void setVisibility(boolean visibility) {
-        this.visibility = visibility;
+    public Bitmap getImage() {
+        return image;
     }
+
 }
