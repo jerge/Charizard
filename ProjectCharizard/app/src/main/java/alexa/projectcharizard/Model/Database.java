@@ -21,6 +21,8 @@ public class Database {
 
     private DatabaseReference databaseReference;
     private List<Spot> spots = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
+    private User activeUser;
 
     /**
      * A static instance of the database, making sure that there are not multiple instances of the
@@ -45,6 +47,7 @@ public class Database {
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Spots");
+        databaseReference = firebaseDatabase.getReference("Users");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -63,6 +66,10 @@ public class Database {
         return spots;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+
     /**
      * A method for saving spots to the database
      *
@@ -73,11 +80,41 @@ public class Database {
      * @param category    The category of the spot
      * @param visibility  The visibility of the spot
      */
-    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility);
+    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility, User user) {
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, user);
         databaseReference.push().setValue(spot);
     }
 
+    /**
+     *
+     * @param username      The username of the user
+     * @param fullName      The full name of the user
+     * @param password      The password of the user
+     * @param profileImage  The profile image of the user
+     * @param spots         The users saved spots
+     */
+    public void saveUser(String username, String fullName, String password, Bitmap profileImage, List<Spot> spots) {
+        User user = new User(username, fullName, password, profileImage, spots);
+        databaseReference.push().setValue(user);
+    }
+
     public void addValueEventListener(ValueEventListener valueEventListener) {
+    }
+
+
+    /**
+     * Gets the user that is logged in to the application
+     * @return the logged in user
+     */
+    public User getActiveUser() {
+        return activeUser;
+    }
+
+    /**
+     * Sets what user is logged in to the application
+     * @param activeUser the user to be set to active
+     */
+    public void setActiveUser(User activeUser) {
+        this.activeUser = activeUser;
     }
 }

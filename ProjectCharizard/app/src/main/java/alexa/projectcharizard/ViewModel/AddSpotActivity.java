@@ -98,7 +98,7 @@ public class AddSpotActivity extends MapsActivity {
 
         //Open connection to database and save the spot on the database.
         Database database = Database.getInstance();
-        database.saveSpot(name, lat, lng, description, category, image, visibility);
+        database.saveSpot(name, lat, lng, description, category, image, visibility, database.getActiveUser());
         finish();
     }
 

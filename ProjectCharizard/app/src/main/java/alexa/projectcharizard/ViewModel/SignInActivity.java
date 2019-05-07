@@ -8,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Map;
+
+import alexa.projectcharizard.Model.Database;
+import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
 // https://www.youtube.com/watch?v=lF5m4o_CuNg
@@ -18,6 +22,8 @@ public class SignInActivity extends Activity {
     private EditText password;
     private Button loginButton;
     private TextView signUpText;
+    private TextView incorrectCredText;
+    final Database database = Database.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,9 @@ public class SignInActivity extends Activity {
         password = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);
         signUpText = findViewById(R.id.signUpText);
+        incorrectCredText = findViewById(R.id.incorrectCredText);
+
+        incorrectCredText.setVisibility(View.INVISIBLE);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,10 +55,25 @@ public class SignInActivity extends Activity {
 
     }
 
+    /**
+     * Validates if there is a user with that name, and if the password matches that particular user
+     * @param usernameInput
+     * @param passwordInput
+     */
     private void validate(String usernameInput, String passwordInput) {
-        if ((usernameInput.equals("Admin")) && (passwordInput.equals("1234"))) {
-            Intent intent = new Intent(this, MapsActivity.class);
-            startActivity(intent);
+        for (User user : database.getUsers()) {
+            if (user.getUsername().equals(usernameInput)) {
+                if (usernameInput.equals(user.getUsername()) && passwordInput.equals(user.getPassword())) {
+                    Intent intent = new Intent(this, MapsActivity.class);
+                    startActivity(intent);
+                    incorrectCredText.setVisibility(View.INVISIBLE);
+                    break;
+                } else {
+                    incorrectCredText.setVisibility(View.VISIBLE);
+                }
+            } else {
+                incorrectCredText.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
