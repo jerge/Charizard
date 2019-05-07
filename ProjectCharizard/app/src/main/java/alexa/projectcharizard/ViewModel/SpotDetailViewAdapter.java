@@ -52,11 +52,14 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
 
         }
 
+        //Gets spot name from the spot class and adds it to the GUI
         String spotTitle = spot.getName();
         TextView title = (TextView) view.findViewById(R.id.title);
         if (!spotTitle.equals(""))
             title.setText(marker.getTitle());
 
+
+        //Gets spot image from the spot class and adds it to the GUI
         Bitmap spotImage = spot.getImage();
         ImageView image = (ImageView) view.findViewById(R.id.image);
         if (spotImage == null) {
@@ -65,6 +68,7 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
             image.setImageBitmap(spotImage);
         }
 
+        //Gets spot category from the spot class and adds it to the GUI
         Category spotCategory = spot.getCategory();
         TextView category = (TextView) view.findViewById(R.id.category);
         if (spotCategory != null)
