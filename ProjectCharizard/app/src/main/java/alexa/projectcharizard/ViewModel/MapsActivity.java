@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.setPadding(200,0,0,0);
         float initialZoomLevel = initZoom();
         LatLng initialLocation = initLoc();
 
