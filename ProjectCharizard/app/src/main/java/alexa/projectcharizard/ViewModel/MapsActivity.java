@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +34,7 @@ import alexa.projectcharizard.R;
  */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    Database database = Database.getInstance();
+    final Database database = Database.getInstance();
     // The GoogleMap instance
     protected GoogleMap mMap;
     // All spots that will be added upon map refresh
@@ -40,8 +42,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageButton plsBtn;
 
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
-
-    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initPlsBtn();
 
-        //Open connection to database and add all existing spots to the spotlist.
-        final Database databaseReference = Database.getInstance();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                databaseReference.getSpots().clear();
-
-                for (DataSnapshot spotSnapshot : dataSnapshot.getChildren()) {
-                    Spot spot = spotSnapshot.getValue(Spot.class);
-                    databaseReference.getSpots().add(spot);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
@@ -89,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
+     * It also creates the custom info window for the markers.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -101,6 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 newLatLngZoom(initialLocation, initialZoomLevel));
         showUserLocation();
 
+        //Open connection to database and add all existing spots to the spotlist.
         database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -117,6 +101,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
+        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, database.getSpots());
+        mMap.setInfoWindowAdapter(infoWindowAdapter);
 
         // Add marker on all 'spot's in spots
         updateMarkers();
@@ -168,12 +155,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
-        for (Spot spot : database.getSpots()) {
+        for (final Spot spot : database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .snippet(spot.getDescription())
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                    intent.putExtra("SpotLatitude", spot.getLatitude());
+                    intent.putExtra("SpotLongitude", spot.getLongitude());
+                    intent.putExtra("SpotDescription", spot.getDescription());
+                    intent.putExtra("SpotName", spot.getName());
+                    startActivity(intent);
+                }
+            });
         }
     }
 

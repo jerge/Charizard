@@ -1,7 +1,9 @@
 package alexa.projectcharizard.Model;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +23,7 @@ public class Database {
     private List<Spot> spots = new ArrayList<>();
 
     /**
-     * A static instance of the database, making sure that there are not muliple instances of the
+     * A static instance of the database, making sure that there are not multiple instances of the
      * database in use at the same time.
      *
      * @return the instance of the Database in use
@@ -66,13 +68,13 @@ public class Database {
      *
      * @param name        The name of the spot
      * @param dblLat      The latitude of the spot
-     * @param dblLng      The longitute of the spot
+     * @param dblLng      The longitude of the spot
      * @param description The description of the spot
      * @param category    The category of the spot
      * @param visibility  The visibility of the spot
      */
-    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Boolean visibility) {
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, visibility);
+    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility);
         databaseReference.push().setValue(spot);
     }
 
