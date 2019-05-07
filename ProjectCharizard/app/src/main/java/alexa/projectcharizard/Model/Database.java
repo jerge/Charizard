@@ -1,6 +1,7 @@
 package alexa.projectcharizard.Model;
 
 import android.graphics.Bitmap;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.FirebaseApp;
@@ -18,10 +19,9 @@ import java.util.List;
  */
 public class Database {
     private static Database instance = null;
+    private static List<Spot> spots;
 
     private DatabaseReference databaseReference;
-    private List<Spot> spots = new ArrayList<>();
-
     /**
      * A static instance of the database, making sure that there are not multiple instances of the
      * database in use at the same time.
@@ -45,6 +45,7 @@ public class Database {
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Spots");
+        spots = new ArrayList<>();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -59,7 +60,7 @@ public class Database {
         });
     }
 
-    public List<Spot> getSpots() {
+    public static List<Spot> getSpots() {
         return spots;
     }
 
@@ -74,10 +75,19 @@ public class Database {
      * @param visibility  The visibility of the spot
      */
     public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility);
-        databaseReference.push().setValue(spot);
+        String id = databaseReference.push().getKey();
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility,id);
+        databaseReference.child(id).setValue(spot);
     }
 
-    public void addValueEventListener(ValueEventListener valueEventListener) {
+    public void remove(String id, Database database){
+        database.getDatabaseReference().child(id).removeValue();
+        System.out.println(database.getSpots().size());
+        for (Spot spot: database.getSpots()){
+            if (spot.getId().equals(id)){
+                database.getSpots().remove(spot);
+            }
+        }
+        System.out.println("Size of spots: " + database.getSpots().size());
     }
 }

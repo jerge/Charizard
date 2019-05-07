@@ -60,7 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-
+        updateMarkers();
     }
 
     /**
@@ -168,6 +168,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     intent.putExtra("SpotLongitude", spot.getLongitude());
                     intent.putExtra("SpotDescription", spot.getDescription());
                     intent.putExtra("SpotName", spot.getName());
+                    intent.putExtra("SpotId", spot.getId());
+                    System.out.println("JAJAJAJAJ " + database.getSpots().size());
                     startActivity(intent);
                 }
             });
