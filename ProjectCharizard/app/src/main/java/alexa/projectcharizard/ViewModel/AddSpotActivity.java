@@ -2,7 +2,6 @@ package alexa.projectcharizard.ViewModel;
 
 import android.graphics.Bitmap;
 import android.location.Location;
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -104,9 +102,23 @@ public class AddSpotActivity extends MapsActivity {
 
 
     private Category getCategoryEnum(String currentCategory) {
-        if (currentCategory.equals("Apple Tree")) {
+    /*    if (currentCategory.equals("Apple Tree")) {
             return Category.APPLE_TREE;
-        } else {
+        }
+        */
+        if (currentCategory.equals("Fruit")) {
+            return Category.FRUIT;
+        }
+        else if (currentCategory.equals("Vegetable")) {
+            return Category.VEGETABLE;
+        }
+        else if (currentCategory.equals("Berry")) {
+            return Category.BERRY;
+        }
+        else if (currentCategory.equals("Mushroom")) {
+            return Category.MUSHROOM;
+        }
+        else {
             return Category.OTHER;
         }
     }

@@ -1,10 +1,8 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -16,15 +14,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -155,11 +154,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
+       // BitmapDescriptor icon;// = BitmapDescriptorFactory.fromResource(R.drawable.marker);
         for (final Spot spot : database.getSpots()) {
+            BitmapDescriptor icon = getMarkerIcon(spot.getCategory());
+
+      //      if(spot.getCategory().equals(Category.APPLE_TREE)){
+      //          icon = BitmapDescriptorFactory.fromResource(R.drawable.fruit);
+      //      }
+            /*
+            if(spot.getCategory().equals(Category.FRUIT)){
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.fruit);
+            }
+            else if(spot.getCategory().equals(Category.VEGETABLE)){
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.carrot);
+            }
+            else if(spot.getCategory().equals(Category.BERRY)){
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
+            }
+            else if(spot.getCategory().equals(Category.MUSHROOM)){
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
+            }
+            else{
+                icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+            }
+            */
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                    .icon(icon));
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
@@ -171,6 +193,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     startActivity(intent);
                 }
             });
+        }
+    }
+
+    private BitmapDescriptor getMarkerIcon(Category category){
+        if(category.equals(Category.FRUIT)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.fruit);
+        }
+        else if(category.equals(Category.VEGETABLE)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.carrot);
+        }
+        else if(category.equals(Category.BERRY)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
+        }
+        else if(category.equals(Category.MUSHROOM)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
+        }
+        else{
+            return BitmapDescriptorFactory.fromResource(R.drawable.marker);
         }
     }
 
