@@ -24,7 +24,7 @@ public class SignInActivity extends Activity {
     private EditText password;
     private Button loginButton;
     private TextView signUpText;
-    private TextView incorrectCredText;
+    private TextView credErrorText;
     private ImageView logoImage;
     final Database database = Database.getInstance();
 
@@ -33,14 +33,17 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        User user = new User("admin", "Olle Innebandysson", "123", null);
+        database.saveUser(user);
+
         username = findViewById(R.id.usernameField);
         password = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);
         signUpText = findViewById(R.id.signUpText);
-        incorrectCredText = findViewById(R.id.incorrectCredText);
+        credErrorText = findViewById(R.id.credErrorText);
         logoImage = findViewById(R.id.logoImage);
 
-        incorrectCredText.setVisibility(View.INVISIBLE);
+        credErrorText.setVisibility(View.INVISIBLE);
         logoImage.setImageResource(R.drawable.project_icon);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -66,18 +69,30 @@ public class SignInActivity extends Activity {
      * @param passwordInput
      */
     private void validate(String usernameInput, String passwordInput) {
+
+        if(usernameInput.equals("")){
+            credErrorText.setVisibility(View.VISIBLE);
+            credErrorText.setText(getString(R.string.missing_credential_username));
+        } else if (passwordInput.equals("")) {
+            credErrorText.setVisibility(View.VISIBLE);
+            credErrorText.setText(getString(R.string.missing_credential_password));
+        }
+
+
         for (User user : database.getUsers()) {
             if (user.getUsername().equals(usernameInput)) {
-                if (usernameInput.equals(user.getUsername()) && passwordInput.equals(user.getPassword())) {
+                if (passwordInput.equals(user.getPassword())) {
                     Intent intent = new Intent(this, MapsActivity.class);
                     startActivity(intent);
-                    incorrectCredText.setVisibility(View.INVISIBLE);
+                    credErrorText.setVisibility(View.INVISIBLE);
                     break;
                 } else {
-                    incorrectCredText.setVisibility(View.VISIBLE);
+                    credErrorText.setVisibility(View.VISIBLE);
+                    credErrorText.setText(getString(R.string.wrong_credentials));
                 }
             } else {
-                incorrectCredText.setVisibility(View.VISIBLE);
+                credErrorText.setVisibility(View.VISIBLE);
+                credErrorText.setText(getString(R.string.wrong_credentials));
             }
         }
     }

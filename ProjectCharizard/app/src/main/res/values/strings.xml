@@ -12,6 +12,9 @@
     <string name="already_signed_up">Already signed up?</string>
     <string name="action_sign_up_page">Haven\'t got an account yet? Sign up here</string>
     <string name="contentdescription_logo">The logo of the application</string>
+    <string name="wrong_credentials">Either the password or username is incorrect!</string>
+    <string name="missing_credential_username">Please enter a username!</string>
+    <string name="missing_credential_password">Please enter a password!</string>
 
     <!--
     <string name="prompt_password">Password (optional)</string>
