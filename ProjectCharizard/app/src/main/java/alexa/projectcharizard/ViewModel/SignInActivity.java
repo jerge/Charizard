@@ -21,8 +21,6 @@ import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
-// https://www.youtube.com/watch?v=lF5m4o_CuNg
-
 public class SignInActivity extends Activity {
 
     private EditText username;

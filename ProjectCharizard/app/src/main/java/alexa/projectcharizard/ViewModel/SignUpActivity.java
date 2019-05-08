@@ -13,9 +13,6 @@ import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
-// https://www.youtube.com/watch?v=zKBGjGoeid0&t=3s
-// https://www.youtube.com/watch?v=-r59HK5zyhk
-
 public class SignUpActivity extends Activity {
 
     private EditText signUpUsername, signUpPassword,signUpEmail;
