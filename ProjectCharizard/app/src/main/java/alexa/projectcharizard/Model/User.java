@@ -21,6 +21,7 @@ public class User {         //TODO hash passwords?
     private String password;
     private List<Spot> userSpots;
     private String id;
+    private String email;
 
     /**
      * Constructor for creating user from database that has all parameters
@@ -31,6 +32,17 @@ public class User {         //TODO hash passwords?
         this.password = password;
         this.profileImage = profileImage;
         this.userSpots = userSpots;
+        this.id = id;
+    }
+
+    /**
+     * Constructor used when creating a profile during sign up
+     */
+    public User(String username, String email, String password, String id) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.userSpots = new ArrayList<>();
         this.id = id;
     }
 
@@ -74,17 +86,6 @@ public class User {         //TODO hash passwords?
         this.fullName = fullName;
         this.password = password;
         this.profileImage = profileImage;
-        this.userSpots = new ArrayList<>();
-        this.id = id;
-    }
-
-    /**
-     * Constructor for when creating a user for the first time without profile image
-     */
-    public User(String username, String fullName, String password, String id) {
-        this.username = username;
-        this.fullName = fullName;
-        this.password = password;
         this.userSpots = new ArrayList<>();
         this.id = id;
     }
@@ -139,6 +140,10 @@ public class User {         //TODO hash passwords?
         return id;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     /**
      * ****** SETTERS *******
      */
@@ -165,5 +170,9 @@ public class User {         //TODO hash passwords?
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

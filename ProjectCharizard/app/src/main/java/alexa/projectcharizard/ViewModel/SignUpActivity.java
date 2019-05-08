@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import alexa.projectcharizard.Model.Database;
+import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
 // https://www.youtube.com/watch?v=zKBGjGoeid0&t=3s
@@ -16,9 +18,11 @@ import alexa.projectcharizard.R;
 
 public class SignUpActivity extends Activity {
 
-    private EditText signUpName, signUpPassword,signUpEmail;
+    private EditText signUpUsername, signUpPassword,signUpEmail;
     private Button signUpButton;
     private TextView alreadySignedUp;
+
+    final Database database = Database.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +34,21 @@ public class SignUpActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (validate()){
-                    //TODO connect to database and upload
-                    Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
-                    startActivity(mapActivity);
+
+                    String usernameInput = signUpUsername.getText().toString();
+                    String passwordInput = signUpPassword.getText().toString();
+                    String emailInput = signUpEmail.getText().toString();
+
+                    if(checkIfUsernameTaken(usernameInput) || checkIfEmailTaken(emailInput)){
+                        Toast.makeText(getApplicationContext(), "Username or email already taken", Toast.LENGTH_LONG).show();
+                    }else{
+                        User user = new User(usernameInput, emailInput, passwordInput, null);
+
+                        database.saveUser(user);
+
+                        Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
+                        startActivity(mapActivity);
+                    }
                 }
             }
         });
@@ -47,7 +63,7 @@ public class SignUpActivity extends Activity {
     }
 
     private void setUpUIViews(){
-        signUpName = (EditText)findViewById(R.id.signUpName);
+        signUpUsername = (EditText)findViewById(R.id.signUpUsername);
         signUpPassword = (EditText)findViewById(R.id.signUpPassword);
         signUpEmail = (EditText)findViewById(R.id.signUpEmail);
         signUpButton = (Button)findViewById(R.id.signUpButton);
@@ -57,7 +73,7 @@ public class SignUpActivity extends Activity {
     private Boolean validate(){
 
         Boolean result = false;
-        String name = signUpName.getText().toString();
+        String name = signUpUsername.getText().toString();
         String password = signUpPassword.getText().toString();
         String email = signUpEmail.getText().toString();
 
@@ -66,6 +82,22 @@ public class SignUpActivity extends Activity {
         else
             result = true;
         return result;
+    }
+
+    private Boolean checkIfUsernameTaken(String usernameInput){
+        for (User user : database.getUsers()){
+            if (user.getUsername().toLowerCase() == usernameInput.toLowerCase())
+                return true;
+        }
+        return false;
+    }
+
+    private Boolean checkIfEmailTaken(String emailInput){
+        for (User user : database.getUsers()){
+            if (user.getEmail().toLowerCase() == emailInput.toLowerCase())
+                return true;
+        }
+        return false;
     }
 
 }

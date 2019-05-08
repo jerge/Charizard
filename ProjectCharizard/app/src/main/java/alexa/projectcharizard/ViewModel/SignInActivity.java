@@ -33,9 +33,6 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        User user = new User("admin", "Olle Innebandysson", "123", null);
-        database.saveUser(user);
-
         username = findViewById(R.id.usernameField);
         password = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);
@@ -50,6 +47,7 @@ public class SignInActivity extends Activity {
             @Override
             public void onClick(View view) {
                 validate(username.getText().toString(), password.getText().toString());
+
             }
         });
 
