@@ -1,13 +1,13 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import alexa.projectcharizard.Model.Database;
@@ -62,7 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-        updateMarkers();
+        System.out.println("onResume spots size: " + Database.getSpots().size());
+
+
     }
 
     /**
@@ -95,6 +96,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Spot spot = data.getValue(Spot.class);
                     Database.getSpots().add(spot);
                 }
+                System.out.println("onDataChange spots size: " + Database.getSpots().size());
+
                 updateMarkers();
             }
 
@@ -157,6 +160,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
+        System.out.println("MapsActivity spots size: " + Database.getSpots().size());
+        mMap.clear();
         for (Spot spot : Database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))

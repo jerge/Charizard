@@ -78,18 +78,14 @@ public class Database {
         String id = databaseReference.push().getKey();
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility,id);
         databaseReference.child(id).setValue(spot);
-        Database.getSpots().add(spot);
-        System.out.println(Database.getSpots().size());
     }
 
     public void remove(String id){
         databaseReference.child(id).removeValue();
-        System.out.println(Database.getSpots().size());
         for (Spot spot: Database.getSpots()){
             if (spot.getId().equals(id)){
                 Database.getSpots().remove(spot);
             }
         }
-        System.out.println("Size of spots: " + Database.getSpots().size());
     }
 }
