@@ -20,85 +20,94 @@ public class User {         //TODO hash passwords?
     private Bitmap profileImage;
     private String password;
     private List<Spot> userSpots;
+    private String id;
 
     /**
      * Constructor for creating user from database that has all parameters
      */
-    public User(String username, String fullName, String password, Bitmap profileImage, List<Spot> userSpots) {
+    public User(String username, String fullName, String password, Bitmap profileImage, List<Spot> userSpots, String id) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
         this.profileImage = profileImage;
         this.userSpots = userSpots;
+        this.id = id;
     }
 
     /**
      * Constructor for creating user from database that is missing full name
      */
-    public User(String username, String password, Bitmap profileImage, List<Spot> userSpots) {
+    public User(String username, String password, Bitmap profileImage, List<Spot> userSpots, String id) {
         this.username = username;
         this.password = password;
         this.profileImage = profileImage;
         this.userSpots = userSpots;
+        this.id = id;
     }
 
     /**
      *  Constructor for creating user from database that is missing profile image
      */
-    public User(String username, String fullName, String password, List<Spot> userSpots) {
+    public User(String username, String fullName, String password, List<Spot> userSpots, String id) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
         this.userSpots = userSpots;
+        this.id = id;
     }
 
     /**
      *  Constructor for creating user from database that is missing profile image and full name
      */
-    public User(String username, String password, List<Spot> userSpots) {
+    public User(String username, String password, List<Spot> userSpots, String id) {
         this.username = username;
         this.password = password;
         this.userSpots = userSpots;
+        this.id = id;
     }
 
     /**
      *  Constructor for when creating a user for the first time that has all parameters
      */
-    public User(String username, String fullName, String password, Bitmap profileImage) {
+    public User(String username, String fullName, String password, Bitmap profileImage, String id) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
         this.profileImage = profileImage;
         this.userSpots = new ArrayList<>();
+        this.id = id;
     }
 
     /**
      * Constructor for when creating a user for the first time without profile image
      */
-    public User(String username, String fullName, String password) {
+    public User(String username, String fullName, String password, String id) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;
         this.userSpots = new ArrayList<>();
+        this.id = id;
     }
 
     /**
      * Constructor for when creating a user for the first time without full name
      */
-    public User(String username, Bitmap profileImage, String password) {
+    public User(String username, Bitmap profileImage, String password, String id) {
         this.username = username;
         this.profileImage = profileImage;
         this.password = password;
         this.userSpots = new ArrayList<>();
+        this.id = id;
     }
 
     /**
      * Constructor for when creating a user for the first time without profile image and full name
      */
-    public User(String username, String password) {
+    public User(String username, String password, String id) {
         this.username = username;
         this.password = password;
         this.userSpots = new ArrayList<>();
+        this.id = id;
     }
 
 
@@ -126,6 +135,10 @@ public class User {         //TODO hash passwords?
         return password;
     }
 
+    public String getId() {
+        return id;
+    }
+
     /**
      * ****** SETTERS *******
      */
@@ -148,5 +161,9 @@ public class User {         //TODO hash passwords?
 
     public void setUserSpots(List<Spot> userSpots) {
         this.userSpots = userSpots;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

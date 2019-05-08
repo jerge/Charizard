@@ -85,17 +85,14 @@ public class Database {
         databaseReference.push().setValue(spot);
     }
 
+
     /**
-     *
-     * @param username      The username of the user
-     * @param fullName      The full name of the user
-     * @param password      The password of the user
-     * @param profileImage  The profile image of the user
-     * @param spots         The users saved spots
+     * Function that saves user in the database
      */
-    public void saveUser(String username, String fullName, String password, Bitmap profileImage, List<Spot> spots) {
-        User user = new User(username, fullName, password, profileImage, spots);
-        databaseReference.push().setValue(user);
+    public void saveUser(User user) {
+        String tempId = databaseReference.push().getKey();
+        user.setId(tempId);
+        databaseReference.child(tempId).setValue(user);
     }
 
     public void addValueEventListener(ValueEventListener valueEventListener) {
