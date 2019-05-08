@@ -33,6 +33,10 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e1059bb16c4809673bc23a6476f329173270ea58
         username = findViewById(R.id.usernameField);
         password = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);

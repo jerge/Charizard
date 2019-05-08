@@ -86,7 +86,7 @@ public class SignUpActivity extends Activity {
 
     private Boolean checkIfUsernameTaken(String usernameInput){
         for (User user : database.getUsers()){
-            if (user.getUsername().toLowerCase() == usernameInput.toLowerCase())
+            if (user.getUsername().toLowerCase().equals(usernameInput.toLowerCase()))
                 return true;
         }
         return false;
@@ -94,7 +94,7 @@ public class SignUpActivity extends Activity {
 
     private Boolean checkIfEmailTaken(String emailInput){
         for (User user : database.getUsers()){
-            if (user.getEmail().toLowerCase() == emailInput.toLowerCase())
+            if (user.getEmail().toLowerCase().equals(emailInput.toLowerCase()))
                 return true;
         }
         return false;
