@@ -153,31 +153,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Updates the marker options for the map marker.
+     * Sets the icon for the map marker to the icon for the corresponding category.
+     */
     private void updateMarkers() {
-       // BitmapDescriptor icon;// = BitmapDescriptorFactory.fromResource(R.drawable.marker);
+
         for (final Spot spot : database.getSpots()) {
             BitmapDescriptor icon = getMarkerIcon(spot.getCategory());
 
-      //      if(spot.getCategory().equals(Category.APPLE_TREE)){
-      //          icon = BitmapDescriptorFactory.fromResource(R.drawable.fruit);
-      //      }
-            /*
-            if(spot.getCategory().equals(Category.FRUIT)){
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.fruit);
-            }
-            else if(spot.getCategory().equals(Category.VEGETABLE)){
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.carrot);
-            }
-            else if(spot.getCategory().equals(Category.BERRY)){
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
-            }
-            else if(spot.getCategory().equals(Category.MUSHROOM)){
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
-            }
-            else{
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.marker);
-            }
-            */
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
@@ -196,6 +180,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Identifies what category the specified spot belongs to and returns the corresponding icon for the category.
+     * If the category is OTHER it returns the icon of the map marker.
+     * @param category The category of the spot.
+     **/
     private BitmapDescriptor getMarkerIcon(Category category){
         if(category.equals(Category.FRUIT)){
             return BitmapDescriptorFactory.fromResource(R.drawable.fruit);

@@ -14,15 +14,6 @@
         completions."
     </string>
     <string name="title_activity_maps">Map</string>
-    <string-array name="spot_category">
-        <item>Choose category</item>
-        <item>Apple Tree</item>
-        <item>Fruit</item>
-        <item>Vegetable</item>
-        <item>Berry</item>
-        <item>Mushroom</item>
-        <item>Other</item>
-    </string-array>
     <string-array name="property_category">
         <item>Choose property</item>
         <item>Private</item>

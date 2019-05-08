@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,6 +18,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
@@ -43,6 +47,8 @@ public class AddSpotActivity extends MapsActivity {
 
     private Spinner categorySpinner;
     private Spinner propertySpinner;
+
+    private ArrayAdapter<String> categoryArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,22 +106,22 @@ public class AddSpotActivity extends MapsActivity {
         finish();
     }
 
-
+    /**
+     * Sets what category the spot should have.
+     * @param currentCategory The category of the spot.
+     */
     private Category getCategoryEnum(String currentCategory) {
-    /*    if (currentCategory.equals("Apple Tree")) {
-            return Category.APPLE_TREE;
-        }
-        */
-        if (currentCategory.equals("Fruit")) {
+
+        if (currentCategory.equals("FRUIT")) {
             return Category.FRUIT;
         }
-        else if (currentCategory.equals("Vegetable")) {
+        else if (currentCategory.equals("VEGETABLE")) {
             return Category.VEGETABLE;
         }
-        else if (currentCategory.equals("Berry")) {
+        else if (currentCategory.equals("BERRY")) {
             return Category.BERRY;
         }
-        else if (currentCategory.equals("Mushroom")) {
+        else if (currentCategory.equals("MUSHROOM")) {
             return Category.MUSHROOM;
         }
         else {
@@ -141,9 +147,26 @@ public class AddSpotActivity extends MapsActivity {
         initSpinner();
     }
 
+    /**
+     * Set listeners to spinners
+     */
     private void initSpinner() {
-        // Set listeners to spinners
         categorySpinner = findViewById(R.id.categorySpinner);
+
+        //Create a list for all categories and add "choose category"
+        // as the first item that should be shown in the dropdown
+        List<String> categoryList = new ArrayList<>();
+        categoryList.add("Choose category");
+
+        //loop through all existing categories and add it to the list.
+        for(Category cat: Category.values()){
+            categoryList.add(cat.name());
+        }
+
+        //Set the layout for the category spinner.
+        categoryArrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, categoryList);
+        categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(categoryArrayAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
