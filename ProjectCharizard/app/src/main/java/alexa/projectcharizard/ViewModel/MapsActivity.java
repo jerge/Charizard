@@ -160,12 +160,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateMarkers() {
 
         for (final Spot spot : database.getSpots()) {
-            BitmapDescriptor icon = getMarkerIcon(spot.getCategory());
-
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .icon(icon));
+                    .icon(getMarkerIcon(spot.getCategory())));
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
