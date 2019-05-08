@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +35,7 @@ public class AboutFragment extends Fragment {
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("innan knappen");
-                System.out.println(getActivity().getIntent().getStringExtra("SpotName"));
-                database.remove(getActivity().getIntent().getStringExtra("SpotId"), database);
+                database.remove(getActivity().getIntent().getStringExtra("SpotId"));
             }
         });
         // Inflate the layout for this fragment

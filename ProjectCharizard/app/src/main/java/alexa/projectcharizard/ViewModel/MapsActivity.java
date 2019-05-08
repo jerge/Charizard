@@ -90,10 +90,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                database.getSpots().clear();
+                Database.getSpots().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
-                    database.getSpots().add(spot);
+                    Database.getSpots().add(spot);
                 }
                 updateMarkers();
             }
@@ -104,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        spotDetailViewAdapter = new SpotDetailViewAdapter(this, database.getSpots());
+        spotDetailViewAdapter = new SpotDetailViewAdapter(this, Database.getSpots());
         mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
         // Add marker on all 'spot's in spots
@@ -157,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
-        for (Spot spot : database.getSpots()) {
+        for (Spot spot : Database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
