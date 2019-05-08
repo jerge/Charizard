@@ -46,20 +46,8 @@ public class Database {
      */
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Spots");
-        databaseReference = firebaseDatabase.getReference("Users");
+        databaseReference = firebaseDatabase.getReference();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw new NullPointerException();
-            }
-        });
     }
 
     public List<Spot> getSpots() {
