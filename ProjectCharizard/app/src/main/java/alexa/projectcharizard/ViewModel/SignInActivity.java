@@ -64,6 +64,7 @@ public class SignInActivity extends Activity {
             @Override
             public void onClick(View view) {
                 validate(username.getText().toString(), password.getText().toString());
+
             }
         });
 
