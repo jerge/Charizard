@@ -104,8 +104,8 @@ public class AddSpotActivity extends MapsActivity {
 
 
     private Category getCategoryEnum(String currentCategory) {
-        if (currentCategory.equals("Apple Tree")) {
-            return Category.APPLE_TREE;
+        if (currentCategory.equals("Fruit")) {
+            return Category.FRUIT;
         } else {
             return Category.OTHER;
         }

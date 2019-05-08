@@ -69,13 +69,29 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
         if (spotCategory != null)
             switch (spotCategory) {
                 case OTHER:
-                    image.setImageResource(R.drawable.default_smultron);
+                    image.setImageResource(R.drawable.marker);
                     category.setText("Other");
                     break;
 
-                case APPLE_TREE:
-                    image.setImageResource(R.drawable.marker);
-                    category.setText("Apple tree");
+                case FRUIT:
+                    image.setImageResource(R.drawable.big_fruit);
+                    category.setText("Fruit");
+                    break;
+
+                case VEGETABLE:
+                    image.setImageResource(R.drawable.big_carrot);
+                    category.setText("Vegetable");
+                    break;
+
+                case BERRY:
+                    image.setImageResource(R.drawable.big_strawberry);
+                    category.setText("Berry");
+                    break;
+
+                case MUSHROOM:
+                    image.setImageResource(R.drawable.big_mushroom);
+                    category.setText("Mushroom");
+                    break;
             }
 
 
