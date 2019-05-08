@@ -3,9 +3,11 @@ package alexa.projectcharizard.ViewModel;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Map;
@@ -23,6 +25,7 @@ public class SignInActivity extends Activity {
     private Button loginButton;
     private TextView signUpText;
     private TextView incorrectCredText;
+    private ImageView logoImage;
     final Database database = Database.getInstance();
 
     @Override
@@ -35,8 +38,10 @@ public class SignInActivity extends Activity {
         loginButton = findViewById(R.id.loginButton);
         signUpText = findViewById(R.id.signUpText);
         incorrectCredText = findViewById(R.id.incorrectCredText);
+        logoImage = findViewById(R.id.logoImage);
 
         incorrectCredText.setVisibility(View.INVISIBLE);
+        logoImage.setImageResource(R.drawable.project_icon);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
