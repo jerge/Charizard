@@ -58,13 +58,10 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
         if (!spotTitle.equals(""))
             title.setText(marker.getTitle());
 
-        //Gets spot category from the spot class and adds it to the GUI
-//        Category spotCategory = spot.getCategory();
-        //Gets spot image from the spot class and adds it to the GUI
+        //Gets spot category and image from the spot class and adds it to the GUI
 
         Category spotCategory = spot.getCategory();
         TextView category = (TextView) view.findViewById(R.id.category);
-        Bitmap spotImage = spot.getImage();
         ImageView image = (ImageView) view.findViewById(R.id.image);
         if (spotCategory != null)
             switch (spotCategory) {

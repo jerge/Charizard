@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="400sp"
+    android:layout_width="350sp"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
     android:minWidth="350sp"
@@ -29,9 +29,10 @@
             android:id="@+id/title"
             android:layout_width="183dp"
             android:layout_height="39dp"
-            android:background="#d3003f "
+            android:background="#c73b3b "
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingStart="5sp"
             android:paddingBottom="2sp"
             android:text="Spot name"
             android:textAlignment="center"
@@ -40,7 +41,7 @@
             tools:fontFamily="@tools:sample/cities"
             tools:textAlignment="center"
             tools:textColor="#FFFFFF"
-            tools:textSize="20sp" />
+            tools:textSize="22sp" />
 
         <TextView
             android:id="@+id/category"
@@ -50,15 +51,15 @@
             android:paddingStart="5sp"
             android:paddingTop="3sp"
             android:text="CATEGORY"
-            android:textAlignment="viewStart"
+            android:textAlignment="center"
             android:textColor="#AAA7A7"
-            android:textSize="12sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/detailButton"
-        android:layout_width="20dp"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/common_google_signin_btn_text_light_disabled"
