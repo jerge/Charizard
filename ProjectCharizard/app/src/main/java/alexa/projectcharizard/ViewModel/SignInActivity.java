@@ -23,6 +23,13 @@ import alexa.projectcharizard.R;
 
 // https://www.youtube.com/watch?v=lF5m4o_CuNg
 
+/**
+ * Activity for signing in to the application.
+ * This is the launcher activity.
+ *
+ * @author Filip Andréasson
+ */
+
 public class SignInActivity extends Activity {
 
     private EditText username;
@@ -38,7 +45,7 @@ public class SignInActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-
+        //finds the relevant view for every view object
         username = findViewById(R.id.usernameField);
         password = findViewById(R.id.passwordField);
         loginButton = findViewById(R.id.loginButton);
@@ -49,6 +56,10 @@ public class SignInActivity extends Activity {
         credErrorText.setVisibility(View.INVISIBLE);
         logoImage.setImageResource(R.drawable.project_icon);
 
+
+        /**
+         * Add listeners for every clickable element
+         */
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,13 +75,18 @@ public class SignInActivity extends Activity {
             }
         });
 
+
+        /**
+         * Add listener to database for Users data. This reads from the database once initially and
+         * then every time any data changes in the Users tree
+         */
         database.getDatabaseReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                database.getUsers().clear();
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                database.getUsers().clear();                                //clears the outdated user list
+                for (DataSnapshot data : dataSnapshot.getChildren()) {      //loops through every entry found in the database
                     User user = data.getValue(User.class);
-                    database.getUsers().add(user);
+                    database.getUsers().add(user);                          //adds the updated users to the user list
                 }
             }
 
@@ -84,32 +100,32 @@ public class SignInActivity extends Activity {
 
     /**
      * Validates if there is a user with that name, and if the password matches that particular user
-     * @param usernameInput
-     * @param passwordInput
+     * @param usernameInput the text from the username field in the gui
+     * @param passwordInput the text from the password field in the gui
      */
     private void validate(String usernameInput, String passwordInput) {
 
-        if(usernameInput.equals("")){
+        if(usernameInput.equals("")){           //there is no input in the username field
             credErrorText.setVisibility(View.VISIBLE);
             credErrorText.setText(getString(R.string.missing_credential_username));
-        } else if (passwordInput.equals("")) {
+        } else if (passwordInput.equals("")) {  //there is no input in the password field
             credErrorText.setVisibility(View.VISIBLE);
             credErrorText.setText(getString(R.string.missing_credential_password));
         }
 
 
-        for (User user : database.getUsers()) {
-            if (user.getUsername().equals(usernameInput)) {
-                if (passwordInput.equals(user.getPassword())) {
+        for (User user : database.getUsers()) {     //checks every user in the user list
+            if (user.getUsername().equals(usernameInput)) {         //if the username matches
+                if (passwordInput.equals(user.getPassword())) {     //...and the password matches
                     Intent intent = new Intent(this, MapsActivity.class);
                     startActivity(intent);
                     credErrorText.setVisibility(View.INVISIBLE);
                     break;
-                } else {
+                } else {        //if the password doesn't match
                     credErrorText.setVisibility(View.VISIBLE);
                     credErrorText.setText(getString(R.string.wrong_credentials));
                 }
-            } else {
+            } else {            //if the username doesn't match any users in the user list
                 credErrorText.setVisibility(View.VISIBLE);
                 credErrorText.setText(getString(R.string.wrong_credentials));
             }

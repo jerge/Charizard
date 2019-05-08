@@ -37,6 +37,10 @@ public class Database {
         return instance;
     }
 
+    /**
+     * Returns a reference to the database for use in the application
+     * @return a reference to the database
+     */
     public DatabaseReference getDatabaseReference() {
         return databaseReference;
     }
@@ -70,17 +74,19 @@ public class Database {
      */
     public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility, User user) {
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, user);
-        databaseReference.push().setValue(spot);
+        databaseReference.child("Spots").push().setValue(spot);
     }
 
 
     /**
      * Function that saves user in the database
+     * The user receives an id and gets saved at that unique id in the database
+     * @param user the user which gets saved
      */
     public void saveUser(User user) {
-        String tempId = databaseReference.push().getKey();
+        String tempId = databaseReference.child("Users").push().getKey();
         user.setId(tempId);
-        databaseReference.child(tempId).setValue(user);
+        databaseReference.child("Users").child(tempId).setValue(user);
     }
 
     public void addValueEventListener(ValueEventListener valueEventListener) {
