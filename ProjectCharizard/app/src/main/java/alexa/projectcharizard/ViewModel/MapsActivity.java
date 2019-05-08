@@ -165,7 +165,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
-                    System.out.println("Tempspot name, onInfoWindowClick " + spotDetailViewAdapter.getSpot().getName());
                     Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
                     intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
                     intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
