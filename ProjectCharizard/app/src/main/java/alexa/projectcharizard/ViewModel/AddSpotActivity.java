@@ -184,6 +184,7 @@ public class AddSpotActivity extends MapsActivity {
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
             }
         });
+
         mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
@@ -206,6 +207,13 @@ public class AddSpotActivity extends MapsActivity {
      */
     @Override
     protected void initPlsBtn() {
+    }
+
+    /**
+     * Removes functionality of overridden parent class
+     */
+    @Override
+    protected void initFilterBtn() {
     }
 
     @Override
