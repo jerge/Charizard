@@ -41,6 +41,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
 
+    private SpotDetailViewAdapter spotDetailViewAdapter;
+
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
     @Override
@@ -102,8 +104,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, database.getSpots());
-        mMap.setInfoWindowAdapter(infoWindowAdapter);
+        spotDetailViewAdapter = new SpotDetailViewAdapter(this, database.getSpots());
+        mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
         // Add marker on all 'spot's in spots
         updateMarkers();
@@ -155,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateMarkers() {
-        for (final Spot spot : database.getSpots()) {
+        for (Spot spot : database.getSpots()) {
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
@@ -163,13 +165,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
+                    System.out.println("Tempspot name, onInfoWindowClick " + spotDetailViewAdapter.getSpot().getName());
                     Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                    intent.putExtra("SpotLatitude", spot.getLatitude());
-                    intent.putExtra("SpotLongitude", spot.getLongitude());
-                    intent.putExtra("SpotDescription", spot.getDescription());
-                    intent.putExtra("SpotName", spot.getName());
-                    intent.putExtra("SpotId", spot.getId());
-                    System.out.println("JAJAJAJAJ " + database.getSpots().size());
+                    intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
+                    intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
+                    intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
                     startActivity(intent);
                 }
             });

@@ -28,9 +28,10 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
 
     private final View detailView;
     private List<Spot> spots;
-    private Spot spot;
-    private Context context;
 
+    private Spot spot;
+
+    private Context context;
     public SpotDetailViewAdapter(Context context, List<Spot> spots) {
         this.context = context;
         detailView = LayoutInflater.from(context).inflate(R.layout.spot_info_window, null);
@@ -103,4 +104,9 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
         return null;
     }
+
+    public Spot getSpot() {
+        return spot;
+    }
+
 }
