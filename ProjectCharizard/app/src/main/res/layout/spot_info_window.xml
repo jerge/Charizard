@@ -15,7 +15,7 @@
         android:layout_height="100dp"
         android:layout_weight="2"
         android:scaleType="fitCenter"
-        android:src="@drawable/big_strawberry" />
+        android:src="@drawable/big_fruit" />
 
 
     <LinearLayout
@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingStart="5sp"
-            android:paddingBottom="2sp"
+            android:paddingTop="3sp"
             android:text="Spot name"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat"
@@ -41,7 +41,7 @@
             tools:fontFamily="@tools:sample/cities"
             tools:textAlignment="center"
             tools:textColor="#FFFFFF"
-            tools:textSize="22sp" />
+            tools:textSize="25sp" />
 
         <TextView
             android:id="@+id/category"
@@ -51,6 +51,7 @@
             android:paddingStart="5sp"
             android:paddingTop="3sp"
             android:text="CATEGORY"
+            android:layout_gravity="center"
             android:textAlignment="center"
             android:textColor="#AAA7A7"
             android:textSize="16sp" />
