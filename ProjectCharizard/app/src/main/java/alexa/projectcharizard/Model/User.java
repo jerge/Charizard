@@ -110,6 +110,8 @@ public class User {         //TODO hash passwords?
         this.id = id;
     }
 
+    public User(){}
+
 
     /**
      * ****** GETTERS *******
