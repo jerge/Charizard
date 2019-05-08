@@ -1,10 +1,8 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -16,15 +14,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -154,12 +153,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Updates the marker options for the map marker.
+     * Sets the icon for the map marker to the icon for the corresponding category.
+     */
     private void updateMarkers() {
+
         for (final Spot spot : database.getSpots()) {
+            BitmapDescriptor icon = getMarkerIcon(spot.getCategory());
+
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                    .icon(icon));
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
@@ -171,6 +177,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     startActivity(intent);
                 }
             });
+        }
+    }
+
+    /**
+     * Identifies what category the specified spot belongs to and returns the corresponding icon for the category.
+     * If the category is OTHER it returns the icon of the map marker.
+     * @param category The category of the spot.
+     **/
+    private BitmapDescriptor getMarkerIcon(Category category){
+        if(category.equals(Category.FRUIT)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.fruit);
+        }
+        else if(category.equals(Category.VEGETABLE)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.carrot);
+        }
+        else if(category.equals(Category.BERRY)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
+        }
+        else if(category.equals(Category.MUSHROOM)){
+            return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
+        }
+        else{
+            return BitmapDescriptorFactory.fromResource(R.drawable.marker);
         }
     }
 
