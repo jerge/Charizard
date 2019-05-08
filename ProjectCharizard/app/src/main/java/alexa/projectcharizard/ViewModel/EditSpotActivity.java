@@ -12,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -27,9 +29,20 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
+
+/**
+ * An activity class that implements functionality for changing the information about a spot.
+ * Gets information from the GUI and changes the interface to display preliminary changes. Sends
+ * the changed information to the database in order to update the spot.
+ *
+ * @Author Stefan Chan
+ */
 
 public class EditSpotActivity extends MapsActivity {
 
@@ -48,19 +61,21 @@ public class EditSpotActivity extends MapsActivity {
     private Button editSpotSaveButton;
 
     private String currentCategory;
-    private String spotId;
 
     private boolean spotVis;
 
+    // Override super class methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         initSpinner();
         initSwitch();
-        initId();
     }
 
+    /**
+     * Called when the map is ready for use
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
@@ -78,8 +93,8 @@ public class EditSpotActivity extends MapsActivity {
 
     @Override
     protected LatLng initLoc() {
-        return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat", 57),
-                getIntent().getDoubleExtra("ViewedLocationLong", 12));
+        return new LatLng(getIntent().getDoubleExtra("SpotLatitude", 57),
+                getIntent().getDoubleExtra("SpotLongitude", 12));
     }
 
     @Override
@@ -87,7 +102,9 @@ public class EditSpotActivity extends MapsActivity {
         setContentView(R.layout.activity_edit_spot);
     }
 
-
+    /**
+     * Initialises text components
+     */
     private void initView() {
         editSpotNameView = findViewById(R.id.editSpotNameView);
         editSpotLatView = findViewById(R.id.editSpotLatView);
@@ -100,6 +117,10 @@ public class EditSpotActivity extends MapsActivity {
         setInitText();
     }
 
+    /**
+     * Sets listener and populates the spinner with all spot categories, sets the current spot
+     * category as the initial selected option
+     */
     private void initSpinner() {
         editSpotCatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -114,9 +135,23 @@ public class EditSpotActivity extends MapsActivity {
                 editSpotCatSpinner.setSelection(0);
             }
         });
-        editSpotCatSpinner.setSelection(0);
+
+        List<String> categoryElements = new ArrayList<String>();
+        for (Category c : Category.values()) {
+            categoryElements.add(c.toString());
+        }
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categoryElements);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        editSpotCatSpinner.setAdapter(categoryAdapter);
+
+        Category spotCategory = Category.valueOf(getIntent().getStringExtra("SpotCategory"));
+        editSpotCatSpinner.setSelection(getCategoryPosition(spotCategory));
     }
 
+    /**
+     * Sets the switch depending on the visibility of the spot
+     */
     private void initSwitch() {
         editSpotVisSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -127,27 +162,51 @@ public class EditSpotActivity extends MapsActivity {
         editSpotVisSwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
     }
 
-    private void initId() {
-        spotId = getIntent().getStringExtra("SpotId");
-    }
-
+    /**
+     * Sets the textviews with appropriate spot information
+     */
     private void setInitText() {
         Intent intent = getIntent();
 
         editSpotNameView.setText(intent.getStringExtra("SpotName"));
         editSpotLatView.setText(Double.toString(intent.getDoubleExtra("SpotLatitude", 57)));
         editSpotLongView.setText(Double.toString(intent.getDoubleExtra("SpotLongitude", 12)));
-        editSpotDescText.setText(intent.getStringExtra("spotDescription"));
+        editSpotDescText.setText(intent.getStringExtra("SpotDescription"));
     }
 
+    /**
+     * Converts the string to a Category enum equivalent, giving "OTHER" back if no equivalent
+     * exist
+     *
+     * @param currentCategory the string to be converted
+     * @return
+     */
     private Category getCategoryEnum(String currentCategory) {
-        if (currentCategory.equals("Apple Tree")) {
-            return Category.APPLE_TREE;
-        } else {
+        try {
+            return Category.valueOf(currentCategory);
+        } catch (IllegalArgumentException e) {
             return Category.OTHER;
         }
     }
 
+    /**
+     * Gets the position for a category enum, used mainly for determining position in spinner
+     *
+     * @param category the category to determine the position of
+     * @return the position of the category
+     */
+    private int getCategoryPosition(Category category) {
+        for (int i = 0; i < Category.values().length; i++) {
+            if (category == Category.values()[i]) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Sets the textviews when clicking on the map to correspond with the latitude and longitude
+     */
     private void initLocationOnClickListener() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -179,6 +238,12 @@ public class EditSpotActivity extends MapsActivity {
         });
     }
 
+    /**
+     * Spawns a dialog in which the user can type in the new spot name, changes the textview to
+     * display the new name
+     *
+     * @param view the view to show the dialog in
+     */
     public void showChangeSpotNameDialog(View view) {
         final EditText newSpotNameField = new EditText(this);
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -196,8 +261,17 @@ public class EditSpotActivity extends MapsActivity {
         dialog.show();
     }
 
+    /**
+     * Calls the database to change update the spot with new information from the textviews.
+     * Triggers when pressing "Save" on the graphical interface. Sends feedback if the update
+     * to the database is successful or fails
+     *
+     * @param view the view which this action takes place in
+     */
     public void changeSpotInfoAction(View view) {
-        DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child(spotId);
+        DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child(
+                getIntent().getStringExtra("SpotId")
+        );
         Category spotCategory = getCategoryEnum(this.currentCategory);
         try {
             dataRef.child("name").setValue(editSpotNameView.getText().toString());
@@ -208,7 +282,9 @@ public class EditSpotActivity extends MapsActivity {
             dataRef.child("visibility").setValue(spotVis);
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
+        Toast.makeText(this, "Details changed", Toast.LENGTH_SHORT).show();
     }
 
 }
