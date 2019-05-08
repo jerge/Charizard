@@ -59,8 +59,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // The list of all checkboxes
     private List<Category> checkBoxes = new ArrayList<>();
 
-    private List<Marker> markers = new ArrayList<>();
-
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
     @Override
@@ -132,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add marker on all 'spot's in spots
         updateMarkers();
 
-        // Set a listener to make the RelativeLayout Gone when clicking on map
+        // Set a listener to make the RelativeLayout filterBoxes Gone when clicking on map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -197,16 +195,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void updateMarkers() {
         // Clear all markers
-        for (Marker marker : markers) {
-            marker.remove();
-        }
+        mMap.clear();
         // Add all markers
         for (final Spot spot : database.getSpots()) {
+            // if the spot is suppose to be shown, show it
             if (filter(spot)) {
-                markers.add(mMap.addMarker(new MarkerOptions()
+                mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                         .title(spot.getName())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker))));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
@@ -245,6 +242,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Initializes the filter button with all its functionality, besides closing the window upon
+     * clicking elsewhere. That is done in onMapReady
+     */
     protected void initFilterBtn() {
         RelativeLayout rel = ((RelativeLayout) findViewById(R.id.filterBoxes));
         // Arbitrary number for ID which hopefully doesn't collide with other ID
@@ -253,9 +254,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int counter = 0;
         for (final Category category: Category.values()){
             checkBoxes.add(category);
-            createCheckbox(id,counter,category,rel);
 
+            createCheckbox(id,counter,category,rel);
             createTextView(id,counter,category,rel);
+
             counter++;
         }
         rel.getLayoutParams().height = 50+60 * counter;
