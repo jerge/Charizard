@@ -102,7 +102,9 @@ public class AddSpotActivity extends MapsActivity {
 
         //Open connection to database and save the spot on the database.
         Database database = Database.getInstance();
-        database.saveSpot(name, lat, lng, description, category, image, visibility);
+
+        // Saving the current Spot and then adding it to a list of Spots added during current run.
+        MapsActivity.getCurrentRunAddedSpots().add( database.saveSpot(name, lat, lng, description, category, image, visibility));
         finish();
     }
 

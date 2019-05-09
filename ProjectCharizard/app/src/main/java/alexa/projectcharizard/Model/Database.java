@@ -62,23 +62,26 @@ public class Database {
         return spots;
     }
 
+
     /**
-     * A method for saving spots to the database
-     *
+     *  A method for saving spots to the database
      * @param name        The name of the spot
      * @param dblLat      The latitude of the spot
      * @param dblLng      The longitude of the spot
      * @param description The description of the spot
      * @param category    The category of the spot
      * @param visibility  The visibility of the spot
+     *
+     * @return The saved Spot
      */
-    public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
+    public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
         String id = databaseReference.push().getKey();
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility,id);
         if (id != null){
             databaseReference.child(id).setValue(spot);
         }
         spots.add(spot);
+        return spot;
     }
 
     /**

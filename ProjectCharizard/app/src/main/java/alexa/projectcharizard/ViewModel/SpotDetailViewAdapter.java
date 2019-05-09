@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.List;
@@ -45,11 +44,26 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
      * @param view   is the spot_info_window.xml root view
      */
     private void renderWindowText(Marker marker, View view) {
-        for (Spot lstSpot : spots) {
-            LatLng lstSpotLoc = new LatLng(lstSpot.getLatitude(), lstSpot.getLongitude());
-            if (lstSpotLoc.equals(marker.getPosition()))
-                spot = lstSpot;
+        // Reset spot between usages, does not happen automatically
+        spot = new Spot();
 
+        // Gets spot from database if the spotId is the same as the id saved on the marker from
+        // the last activity
+        for (Spot currentSpot: spots){
+            if (currentSpot.getId().equals(marker.getSnippet())){
+                spot = currentSpot;
+            }
+        }
+
+        // If the spot was created during the current run it will not have been found in previous
+        // loop, therefore it is found in the list of spots added during the current run
+        if (spot.getName() == null){
+            for (Spot currentSpot: MapsActivity.getCurrentRunAddedSpots()){
+                if (currentSpot.getId().equals(marker.getSnippet())){
+                    spot = currentSpot;
+                    spots.add(currentSpot);
+                }
+            }
         }
 
         //Gets spot name from the spot class and adds it to the GUI

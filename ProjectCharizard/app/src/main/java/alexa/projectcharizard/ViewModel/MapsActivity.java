@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
@@ -43,6 +44,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageButton plsBtn;
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
+
+    // A list containting all spots added during current run
+    private static List<Spot> currentRunAddedSpots = new ArrayList<>();
 
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
@@ -166,7 +170,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
                     .icon(getMarkerIcon(spot.getCategory())));
+
+            // Saves the id of the spot in the snippet so that it can be accessed in the next
+            // activity
             marker.setSnippet(spot.getId());
+
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
@@ -234,5 +242,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return new LatLng(57.7, 11.96);
     }
 
-
+    /**
+     * A list of spots added during current run, in static context so that the list stays the same
+     * no matter what object is currently in use
+     *
+     * @return The list of spots added during the current run
+     */
+    public static List<Spot> getCurrentRunAddedSpots() {
+        return currentRunAddedSpots;
+    }
 }
