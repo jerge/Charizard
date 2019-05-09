@@ -45,7 +45,6 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
      * @param view   is the spot_info_window.xml root view
      */
     private void renderWindowText(Marker marker, View view) {
-
         for (Spot lstSpot : spots) {
             LatLng lstSpotLoc = new LatLng(lstSpot.getLatitude(), lstSpot.getLongitude());
             if (lstSpotLoc.equals(marker.getPosition()))

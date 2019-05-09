@@ -28,9 +28,6 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
 
-        System.out.println("AboutFragment spots size: " + Database.getSpots().size());
-
-
         initFragment(v);
 
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
@@ -39,6 +36,8 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 database.remove(getActivity().getIntent().getStringExtra("SpotId"));
+
+                //closes the activity and returns to previous
                 getActivity().onBackPressed();
             }
         });

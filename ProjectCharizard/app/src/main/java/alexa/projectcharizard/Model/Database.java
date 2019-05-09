@@ -1,10 +1,8 @@
 package alexa.projectcharizard.Model;
 
 import android.graphics.Bitmap;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +17,7 @@ import java.util.List;
  */
 public class Database {
     private static Database instance = null;
-    private static List<Spot> spots;
+    private static List<Spot> spots = new ArrayList<>();
 
     private DatabaseReference databaseReference;
     /**
@@ -60,7 +58,7 @@ public class Database {
         });
     }
 
-    public static List<Spot> getSpots() {
+    public List<Spot> getSpots() {
         return spots;
     }
 
@@ -77,14 +75,22 @@ public class Database {
     public void saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
         String id = databaseReference.push().getKey();
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility,id);
-        databaseReference.child(id).setValue(spot);
+        if (id != null){
+            databaseReference.child(id).setValue(spot);
+        }
+        spots.add(spot);
     }
 
+    /**
+     * A method for removing a spot, also removes from the list of spots
+     *
+     * @param id The id of the spot to be removed
+     */
     public void remove(String id){
         databaseReference.child(id).removeValue();
-        for (Spot spot: Database.getSpots()){
+        for (Spot spot: spots){
             if (spot.getId().equals(id)){
-                Database.getSpots().remove(spot);
+                spots.remove(spot);
             }
         }
     }

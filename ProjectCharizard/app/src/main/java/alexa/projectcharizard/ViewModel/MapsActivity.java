@@ -23,6 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
@@ -61,9 +63,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("onResume spots size: " + Database.getSpots().size());
-
-
     }
 
     /**
@@ -91,13 +90,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Database.getSpots().clear();
+                database.getSpots().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
-                    Database.getSpots().add(spot);
+                    database.getSpots().add(spot);
                 }
-                System.out.println("onDataChange spots size: " + Database.getSpots().size());
-
                 updateMarkers();
             }
 
@@ -106,8 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
-        spotDetailViewAdapter = new SpotDetailViewAdapter(this, Database.getSpots());
+        spotDetailViewAdapter = new SpotDetailViewAdapter(this, database.getSpots());
         mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
         // Add marker on all 'spot's in spots
@@ -164,13 +160,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Sets the icon for the map marker to the icon for the corresponding category.
      */
     private void updateMarkers() {
-        System.out.println("MapsActivity spots size: " + Database.getSpots().size());
         mMap.clear();
-        for (Spot spot : Database.getSpots()) {
-            mMap.addMarker(new MarkerOptions()
+        for (Spot spot : database.getSpots()) {
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
                     .icon(getMarkerIcon(spot.getCategory())));
+            marker.setSnippet(spot.getId());
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {

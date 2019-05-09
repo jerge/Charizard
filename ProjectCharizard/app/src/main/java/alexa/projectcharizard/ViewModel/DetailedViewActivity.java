@@ -47,9 +47,5 @@ public class DetailedViewActivity extends AppCompatActivity {
 
             }
         });
-
-        System.out.println("DetailedViewActivity spots size: " + Database.getSpots().size());
-
-
     }
 }
