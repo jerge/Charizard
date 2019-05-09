@@ -21,8 +21,6 @@ import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
-// https://www.youtube.com/watch?v=lF5m4o_CuNg
-
 /**
  * Activity for signing in to the application.
  * This is the launcher activity.
