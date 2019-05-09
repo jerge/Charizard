@@ -18,7 +18,6 @@ public class SignUpActivity extends Activity {
     private EditText signUpUsername, signUpPassword,signUpEmail;
     private Button signUpButton;
     private TextView alreadySignedUp;
-
     final Database database = Database.getInstance();
 
     @Override
@@ -30,19 +29,24 @@ public class SignUpActivity extends Activity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validate()){
+
+                //Checking whether the user has entered information in all the fields
+                if (areFieldsFilledIn()){
 
                     String usernameInput = signUpUsername.getText().toString();
                     String passwordInput = signUpPassword.getText().toString();
                     String emailInput = signUpEmail.getText().toString();
 
+                    //Checking if the username and email is already in use
                     if(checkIfUsernameTaken(usernameInput) || checkIfEmailTaken(emailInput)){
                         Toast.makeText(getApplicationContext(), "Username or email already taken", Toast.LENGTH_LONG).show();
                     }else{
-                        User user = new User(usernameInput, emailInput, passwordInput, null);
 
+                        // Saving the information the user has entered as a new user in the database
+                        User user = new User(usernameInput, emailInput, passwordInput, null);
                         database.saveUser(user);
 
+                        // Directing the user to Maps Activity
                         Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
                         startActivity(mapActivity);
                     }
@@ -50,6 +54,7 @@ public class SignUpActivity extends Activity {
             }
         });
 
+        // Allows the user to return to the sign in page
         alreadySignedUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +64,9 @@ public class SignUpActivity extends Activity {
 
     }
 
+    /**
+     * A method to connect all the elements on the page with its corresponding variable
+     */
     private void setUpUIViews(){
         signUpUsername = (EditText)findViewById(R.id.signUpUsername);
         signUpPassword = (EditText)findViewById(R.id.signUpPassword);
@@ -67,8 +75,13 @@ public class SignUpActivity extends Activity {
         alreadySignedUp = (TextView)findViewById(R.id.alreadySignedUp);
     }
 
-    private Boolean validate(){
 
+    /**
+     * A method to determine whether information has been entered in all the fields when signing
+     * up for a new account. If not, a toast appears asking the user to enter his or her details.
+     * @return True if information has been entered in all the fields, false if not
+     */
+    private Boolean areFieldsFilledIn(){
         Boolean result = false;
         String name = signUpUsername.getText().toString();
         String password = signUpPassword.getText().toString();
@@ -81,6 +94,12 @@ public class SignUpActivity extends Activity {
         return result;
     }
 
+    /**
+     * Method for checking whether the username a user want to use when signing up is already in
+     * use or not.
+     * @param usernameInput The username the user want to use for signing up
+     * @return True if the username is already in use, false if not
+     */
     private Boolean checkIfUsernameTaken(String usernameInput){
         for (User user : database.getUsers()){
             if (user.getUsername().equalsIgnoreCase(usernameInput))
@@ -89,6 +108,12 @@ public class SignUpActivity extends Activity {
         return false;
     }
 
+    /**
+     * Method for checking whether the e-mail a user want to use when signing up is already in
+     * use or not.
+     * @param emailInput The e-mail the user want to use for signing up
+     * @return True if the e-mail is already in use, false if not
+     */
     private Boolean checkIfEmailTaken(String emailInput){
         for (User user : database.getUsers()){
             if (user.getEmail().equalsIgnoreCase(emailInput))
