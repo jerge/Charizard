@@ -2,52 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="200sp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:radius="10dp"
     android:background="#FFFFFF"
-    android:minWidth="280sp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:radius="10dp">
 
 
     <LinearLayout
-        android:layout_width="22dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:gravity="center"
-        android:radius="10dp"
+        android:orientation="vertical"
 
-        android:orientation="vertical">
+        android:radius="10dp">
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="280dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:text="Spot name"
             android:textAlignment="center"
-            android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             tools:fontFamily="@tools:sample/cities" />
 
         <TextView
             android:id="@+id/category"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
             android:fontFamily="sans-serif-black"
+            android:gravity="center"
             android:maxLines="1"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:text="CATEGORY"
             android:textAlignment="center"
-            android:gravity="center"
             android:textColor="#AAA7A7"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
 
     </LinearLayout>

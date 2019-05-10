@@ -183,22 +183,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Identifies what category the specified spot belongs to and returns the corresponding icon for the category.
      * If the category is OTHER it returns the icon of the map marker.
+     *
      * @param category The category of the spot.
      **/
-    private BitmapDescriptor getMarkerIcon(Category category){
-        if(category.equals(Category.FRUIT)){
+    private BitmapDescriptor getMarkerIcon(Category category) {
+        if (category.equals(Category.FRUIT)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.fruit);
-        }
-        else if(category.equals(Category.VEGETABLE)){
+        } else if (category.equals(Category.VEGETABLE)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.carrot);
-        }
-        else if(category.equals(Category.BERRY)){
+        } else if (category.equals(Category.BERRY)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
-        }
-        else if(category.equals(Category.MUSHROOM)){
+        } else if (category.equals(Category.MUSHROOM)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
-        }
-        else{
+        } else {
             return BitmapDescriptorFactory.fromResource(R.drawable.marker);
         }
     }
