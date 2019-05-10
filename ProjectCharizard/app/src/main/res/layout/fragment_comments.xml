@@ -8,7 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -16,75 +23,67 @@
                 android:id="@+id/textView14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="19dp"
                 android:text="Pelle P."
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="42dp"
+                tools:layout_editor_absoluteY="165dp" />
 
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textView14"
-                android:layout_marginTop="53dp"
-                android:text="Mycket goda äpplen mmmmm....." />
+                android:text="Mycket goda äpplen mmmmm....."
+                tools:layout_editor_absoluteX="28dp"
+                tools:layout_editor_absoluteY="221dp" />
 
             <TextView
                 android:id="@+id/textView17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textView14"
-                android:layout_marginTop="90dp"
                 android:text="Alexander S."
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="71dp"
+                tools:layout_editor_absoluteY="270dp" />
 
             <TextView
                 android:id="@+id/textView18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textView14"
-                android:layout_marginTop="124dp"
-                android:text="Jag äter bara pasta med väldigt lite köttfärssås" />
+                android:text="Jag äter bara pasta med väldigt lite köttfärssås"
+                tools:layout_editor_absoluteX="42dp"
+                tools:layout_editor_absoluteY="310dp" />
 
             <TextView
                 android:id="@+id/textView19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/textView14"
-                android:layout_marginBottom="120dp"
                 android:text="Add comment"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="139dp"
+                tools:layout_editor_absoluteY="360dp" />
 
             <EditText
                 android:id="@+id/editText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/textView14"
-                android:layout_marginBottom="58dp"
                 android:ems="10"
                 android:hint="Write something..."
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                tools:layout_editor_absoluteX="59dp"
+                tools:layout_editor_absoluteY="392dp" />
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/editText2"
-                android:layout_marginEnd="26dp"
-                android:text="Send" />
-        </RelativeLayout>
+                android:text="Send"
+                tools:layout_editor_absoluteX="203dp"
+                tools:layout_editor_absoluteY="508dp" />
+        </android.support.constraint.ConstraintLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
 
 </FrameLayout>
