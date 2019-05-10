@@ -3,6 +3,8 @@ package alexa.projectcharizard.ViewModel;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,10 +42,19 @@ public class SignUpActivity extends Activity {
                     String emailInput = signUpEmail.getText().toString();
 
                     //Checking if the username and email is already in use
-                    if(checkIfUsernameTaken(usernameInput) || checkIfEmailTaken(emailInput)){
-                        Toast.makeText(getApplicationContext(), "Username or email already taken", Toast.LENGTH_LONG).show();
-                    }else{
+                    if(checkIfUsernameTaken(usernameInput)){
 
+                        Toast.makeText(getApplicationContext(), "Username already taken, please choose another", Toast.LENGTH_LONG).show();
+
+                    }else if (!isValidEmail(emailInput)){
+
+                        Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
+
+                    }else if (checkIfEmailTaken(emailInput)){
+
+                        Toast.makeText(getApplicationContext(), "Email already taken, please choose another", Toast.LENGTH_LONG).show();
+
+                    }else{
                         // Saving the information the user has entered as a new user in the database
                         User user = new User(usernameInput, emailInput, passwordInput, null);
                         database.saveUser(user);
@@ -118,10 +129,15 @@ public class SignUpActivity extends Activity {
      */
     private Boolean checkIfEmailTaken(String emailInput){
         for (User user : CurrentRun.getCurrentRunUsers()){
-            if (user.getEmail().equalsIgnoreCase(emailInput))
+
+            if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(emailInput))
                 return true;
         }
         return false;
+    }
+
+    public static boolean isValidEmail(final String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
 }
