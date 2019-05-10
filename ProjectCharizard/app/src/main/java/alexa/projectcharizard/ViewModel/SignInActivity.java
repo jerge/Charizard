@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
@@ -37,6 +38,7 @@ public class SignInActivity extends Activity {
     private TextView credErrorText;
     private ImageView logoImage;
     final Database database = Database.getInstance();
+    private CurrentRun currentRun = CurrentRun.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +84,12 @@ public class SignInActivity extends Activity {
         database.getDatabaseReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                database.getUsers().clear();                                //clears the outdated user list
+                currentRun.getUsers().clear();                                //clears the outdated user list
                 for (DataSnapshot data : dataSnapshot.getChildren()) {      //loops through every entry found in the database
                     User user = data.getValue(User.class);
-                    database.getUsers().add(user);                          //adds the updated users to the user list
+                    currentRun.getUsers().add(user);                          //adds the updated users to the user list
                 }
+                CurrentRun.setCurrentRunUsers(currentRun.getUsers());
             }
 
             @Override
@@ -113,7 +116,7 @@ public class SignInActivity extends Activity {
         }
 
 
-        for (User user : database.getUsers()) {     //checks every user in the user list
+        for (User user : currentRun.getUsers()) {     //checks every user in the user list
             if (user.getUsername().equals(usernameInput)) {         //if the username matches
                 if (passwordInput.equals(user.getPassword())) {     //...and the password matches
                     Intent intent = new Intent(this, MapsActivity.class);

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
 
@@ -102,7 +103,9 @@ public class AddSpotActivity extends MapsActivity {
 
         //Open connection to database and save the spot on the database.
         Database database = Database.getInstance();
-        database.saveSpot(name, lat, lng, description, category, image, visibility, database.getActiveUser());
+
+        // Saving the current Spot and then adding it to a list of Spots added during current run.
+        CurrentRun.getCurrentRunAddedSpots().add( database.saveSpot(name, lat, lng, description, category, image, visibility));
         finish();
     }
 

@@ -1,11 +1,11 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageButton;
@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -36,11 +37,14 @@ import alexa.projectcharizard.R;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     final Database database = Database.getInstance();
+    final CurrentRun currentRun = CurrentRun.getInstance();
     // The GoogleMap instance
     protected GoogleMap mMap;
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
+
+    private SpotDetailViewAdapter spotDetailViewAdapter;
 
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
@@ -61,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     /**
@@ -89,10 +92,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         database.getDatabaseReference().child("Spots").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                database.getSpots().clear();
+                currentRun.getSpots().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
-                    database.getSpots().add(spot);
+                    currentRun.getSpots().add(spot);
                 }
                 updateMarkers();
             }
@@ -102,9 +105,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-
-        SpotDetailViewAdapter infoWindowAdapter = new SpotDetailViewAdapter(this, database.getSpots());
-        mMap.setInfoWindowAdapter(infoWindowAdapter);
+        spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
+        mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
         // Add marker on all 'spot's in spots
         updateMarkers();
@@ -160,21 +162,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Sets the icon for the map marker to the icon for the corresponding category.
      */
     private void updateMarkers() {
-
-        for (final Spot spot : database.getSpots()) {
-            System.out.println(spot);
-            mMap.addMarker(new MarkerOptions()
+        mMap.clear();
+        for (Spot spot : currentRun.getSpots()) {
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
                     .icon(getMarkerIcon(spot.getCategory())));
+
+            // Saves the id of the spot in the snippet so that it can be accessed in the next
+            // activity
+            marker.setSnippet(spot.getId());
+
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
                     Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                    intent.putExtra("SpotLatitude", spot.getLatitude());
-                    intent.putExtra("SpotLongitude", spot.getLongitude());
-                    intent.putExtra("SpotDescription", spot.getDescription());
-                    intent.putExtra("SpotName", spot.getName());
+                    intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
+                    intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
+                    intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
                     startActivity(intent);
                 }
             });
@@ -234,6 +239,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected LatLng initLoc() {
         return new LatLng(57.7, 11.96);
     }
-
-
 }

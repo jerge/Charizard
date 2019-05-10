@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
@@ -19,6 +20,7 @@ public class SignUpActivity extends Activity {
     private Button signUpButton;
     private TextView alreadySignedUp;
     final Database database = Database.getInstance();
+    private CurrentRun currentRun = CurrentRun.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class SignUpActivity extends Activity {
      * @return True if the username is already in use, false if not
      */
     private Boolean checkIfUsernameTaken(String usernameInput){
-        for (User user : database.getUsers()){
+        for (User user : CurrentRun.getCurrentRunUsers()){
             if (user.getUsername().equalsIgnoreCase(usernameInput))
                 return true;
         }
@@ -115,7 +117,7 @@ public class SignUpActivity extends Activity {
      * @return True if the e-mail is already in use, false if not
      */
     private Boolean checkIfEmailTaken(String emailInput){
-        for (User user : database.getUsers()){
+        for (User user : CurrentRun.getCurrentRunUsers()){
             if (user.getEmail().equalsIgnoreCase(emailInput))
                 return true;
         }
