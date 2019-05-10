@@ -66,7 +66,7 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
         if (spotCategory != null)
             switch (spotCategory) {
                 case OTHER:
-                    image.setImageResource(R.drawable.marker);
+                    image.setImageResource(R.drawable.big_othericon);
                     category.setText("Other");
                     break;
 
