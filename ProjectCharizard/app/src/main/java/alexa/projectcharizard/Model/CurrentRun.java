@@ -6,17 +6,19 @@ import java.util.List;
 public class CurrentRun {
 
     private static CurrentRun instance;
+
+    // A list of all spots loaded from the database
     private static List<Spot> spots = new ArrayList<>();
 
     // A list containting all spots added during current run
     private static List<Spot> currentRunAddedSpots = new ArrayList<>();
 
-    private CurrentRun(){
+    private CurrentRun() {
         spots = new ArrayList<>();
     }
 
-    public static CurrentRun getInstance(){
-        if (instance == null){
+    public static CurrentRun getInstance() {
+        if (instance == null) {
             return new CurrentRun();
         }
         return instance;

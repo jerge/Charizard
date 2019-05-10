@@ -17,6 +17,9 @@ public class Database {
     private static Database instance = null;
     private CurrentRun currentRun = CurrentRun.getInstance();
 
+    /**
+     * A reference that communicates with the Firebase database
+     */
     private DatabaseReference databaseReference;
 
     /**
@@ -33,6 +36,11 @@ public class Database {
     }
 
 
+    /**
+     * Gets the database reference
+     *
+     * @return Databasereference
+     */
     public DatabaseReference getDatabaseReference() {
         return databaseReference;
     }
