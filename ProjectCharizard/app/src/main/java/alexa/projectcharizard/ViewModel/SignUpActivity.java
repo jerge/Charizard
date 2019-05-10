@@ -48,6 +48,8 @@ public class SignUpActivity extends Activity {
                         User user = new User(usernameInput, emailInput, passwordInput, null);
                         database.saveUser(user);
 
+                        CurrentRun.getInstance().setActiveUser(user);
+
                         // Directing the user to Maps Activity
                         Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
                         startActivity(mapActivity);
