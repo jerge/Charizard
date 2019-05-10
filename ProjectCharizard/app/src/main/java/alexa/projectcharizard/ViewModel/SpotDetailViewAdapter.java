@@ -62,31 +62,31 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
 
         Category spotCategory = spot.getCategory();
         TextView category = (TextView) view.findViewById(R.id.category);
-        ImageView image = (ImageView) view.findViewById(R.id.image);
+        //ImageView image = (ImageView) view.findViewById(R.id.image);
         if (spotCategory != null)
             switch (spotCategory) {
                 case OTHER:
-                    image.setImageResource(R.drawable.big_othericon);
+        //            image.setImageResource(R.drawable.big_othericon);
                     category.setText("Other");
                     break;
 
                 case FRUIT:
-                    image.setImageResource(R.drawable.big_fruit);
+          //          image.setImageResource(R.drawable.big_fruit);
                     category.setText("Fruit");
                     break;
 
                 case VEGETABLE:
-                    image.setImageResource(R.drawable.big_carrot);
+            //        image.setImageResource(R.drawable.big_carrot);
                     category.setText("Vegetable");
                     break;
 
                 case BERRY:
-                    image.setImageResource(R.drawable.big_strawberry);
+              //      image.setImageResource(R.drawable.big_strawberry);
                     category.setText("Berry");
                     break;
 
                 case MUSHROOM:
-                    image.setImageResource(R.drawable.big_mushroom);
+                //    image.setImageResource(R.drawable.big_mushroom);
                     category.setText("Mushroom");
                     break;
             }
