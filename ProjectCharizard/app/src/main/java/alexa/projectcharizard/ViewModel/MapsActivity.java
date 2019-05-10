@@ -75,7 +75,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-
     }
 
     @Override
@@ -97,7 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setPadding(200,0,0,0);
+        mMap.setPadding(200, 0, 0, 0);
         float initialZoomLevel = initZoom();
         LatLng initialLocation = initLoc();
 
@@ -141,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Returns true if the spot's category is checked true in the checkbox, otherwise false
+     *
      * @param s the spot to check
      * @return true if the spot's category is checked true in the checkbox, otherwise false
      */
@@ -202,21 +202,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add all markers
         for (final Spot spot : database.getSpots()) {
             if (filter(spot)) {
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
-                    .title(spot.getName())
-                    .icon(getMarkerIcon(spot.getCategory())));
-            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                    intent.putExtra("SpotLatitude", spot.getLatitude());
-                    intent.putExtra("SpotLongitude", spot.getLongitude());
-                    intent.putExtra("SpotDescription", spot.getDescription());
-                    intent.putExtra("SpotName", spot.getName());
-                    startActivity(intent);
-                }
-            });
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
+                        .title(spot.getName())
+                        .icon(getMarkerIcon(spot.getCategory())));
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                        intent.putExtra("SpotLatitude", spot.getLatitude());
+                        intent.putExtra("SpotLongitude", spot.getLongitude());
+                        intent.putExtra("SpotDescription", spot.getDescription());
+                        intent.putExtra("SpotName", spot.getName());
+                        startActivity(intent);
+                    }
+                });
             }
         }
     }
@@ -224,22 +224,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Identifies what category the specified spot belongs to and returns the corresponding icon for the category.
      * If the category is OTHER it returns the icon of the map marker.
+     *
      * @param category The category of the spot.
      **/
-    private BitmapDescriptor getMarkerIcon(Category category){
-        if(category.equals(Category.FRUIT)){
+    private BitmapDescriptor getMarkerIcon(Category category) {
+        if (category.equals(Category.FRUIT)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.fruit);
-        }
-        else if(category.equals(Category.VEGETABLE)){
+        } else if (category.equals(Category.VEGETABLE)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.carrot);
-        }
-        else if(category.equals(Category.BERRY)){
+        } else if (category.equals(Category.BERRY)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
-        }
-        else if(category.equals(Category.MUSHROOM)){
+        } else if (category.equals(Category.MUSHROOM)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
-        }
-        else{
+        } else {
             return BitmapDescriptorFactory.fromResource(R.drawable.marker);
         }
     }
@@ -277,15 +274,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int id = 5030201;
         // The amounts of lines currently added
         int counter = 0;
-        for (final Category category: Category.values()){
+        for (final Category category : Category.values()) {
             checkBoxes.add(category);
 
-            createCheckbox(id,counter,category,rel);
-            createTextView(id,counter,category,rel);
+            createCheckbox(id, counter, category, rel);
+            createTextView(id, counter, category, rel);
 
             counter++;
         }
-        rel.getLayoutParams().height = 50+60 * counter;
+        rel.getLayoutParams().height = 50 + 60 * counter;
 
         // Find the filter button
         filterBtn = (ImageButton) findViewById(R.id.filterbtn);
@@ -309,7 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CheckBox checkBox = new CheckBox(this);
         checkBox.setChecked(true);
         checkBox.setId(id);
-        paramsCB.setMargins(0,15+60*counter,0,0);
+        paramsCB.setMargins(0, 15 + 60 * counter, 0, 0);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -335,8 +332,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Create a TextView with the specified margins and
         // an ID which should not collide with the checkbox's ID
         TextView txt = new TextView(this);
-        txt.setId(id+1000);
-        paramsTxt.setMargins(100,30+60*(counter),0,0);
+        txt.setId(id + 1000);
+        paramsTxt.setMargins(100, 30 + 60 * (counter), 0, 0);
         txt.setText(category.toString());
         rel.addView(txt, paramsTxt);
     }
