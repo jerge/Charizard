@@ -1,16 +1,13 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -29,8 +26,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,11 +202,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                         .title(spot.getName())
                         .icon(getMarkerIcon(spot.getCategory())));
-    
+
                 // Saves the id of the spot in the snippet so that it can be accessed in the next
                 // activity
                 marker.setSnippet(spot.getId());
-    
+
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
