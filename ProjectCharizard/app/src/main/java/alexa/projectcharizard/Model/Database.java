@@ -9,17 +9,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class used to retrieve and store data on the Firebase Database.
  */
 public class Database {
     private static Database instance = null;
-    private static List<Spot> spots = new ArrayList<>();
+    private CurrentRun currentRun = CurrentRun.getInstance();
 
     private DatabaseReference databaseReference;
+
     /**
      * A static instance of the database, making sure that there are not multiple instances of the
      * database in use at the same time.
@@ -33,6 +32,7 @@ public class Database {
         return instance;
     }
 
+
     public DatabaseReference getDatabaseReference() {
         return databaseReference;
     }
@@ -43,7 +43,6 @@ public class Database {
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Spots");
-        spots = new ArrayList<>();
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -58,29 +57,24 @@ public class Database {
         });
     }
 
-    public List<Spot> getSpots() {
-        return spots;
-    }
-
-
     /**
-     *  A method for saving spots to the database
+     * A method for saving spots to the database
+     *
      * @param name        The name of the spot
      * @param dblLat      The latitude of the spot
      * @param dblLng      The longitude of the spot
      * @param description The description of the spot
      * @param category    The category of the spot
      * @param visibility  The visibility of the spot
-     *
      * @return The saved Spot
      */
     public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
         String id = databaseReference.push().getKey();
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility,id);
-        if (id != null){
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id);
+        if (id != null) {
             databaseReference.child(id).setValue(spot);
         }
-        spots.add(spot);
+        currentRun.getSpots().add(spot);
         return spot;
     }
 
@@ -89,11 +83,11 @@ public class Database {
      *
      * @param id The id of the spot to be removed
      */
-    public void remove(String id){
+    public void remove(String id) {
         databaseReference.child(id).removeValue();
-        for (Spot spot: spots){
-            if (spot.getId().equals(id)){
-                spots.remove(spot);
+        for (Spot spot : currentRun.getSpots()) {
+            if (spot.getId().equals(id)) {
+                currentRun.getSpots().remove(spot);
             }
         }
     }

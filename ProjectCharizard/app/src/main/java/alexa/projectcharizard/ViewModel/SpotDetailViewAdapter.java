@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.Marker;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
@@ -58,7 +59,7 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
         // If the spot was created during the current run it will not have been found in previous
         // loop, therefore it is found in the list of spots added during the current run
         if (spot.getName() == null){
-            for (Spot currentSpot: MapsActivity.getCurrentRunAddedSpots()){
+            for (Spot currentSpot: CurrentRun.getCurrentRunAddedSpots()){
                 if (currentSpot.getId().equals(marker.getSnippet())){
                     spot = currentSpot;
                     spots.add(currentSpot);

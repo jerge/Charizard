@@ -23,10 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -37,6 +35,7 @@ import alexa.projectcharizard.R;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     final Database database = Database.getInstance();
+    final CurrentRun currentRun = CurrentRun.getInstance();
     // The GoogleMap instance
     protected GoogleMap mMap;
     // All spots that will be added upon map refresh
@@ -44,9 +43,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageButton plsBtn;
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
-
-    // A list containting all spots added during current run
-    private static List<Spot> currentRunAddedSpots = new ArrayList<>();
 
     final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
 
@@ -94,10 +90,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                database.getSpots().clear();
+                currentRun.getSpots().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
-                    database.getSpots().add(spot);
+                    currentRun.getSpots().add(spot);
                 }
                 updateMarkers();
             }
@@ -107,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-        spotDetailViewAdapter = new SpotDetailViewAdapter(this, database.getSpots());
+        spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
         mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
         // Add marker on all 'spot's in spots
@@ -165,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private void updateMarkers() {
         mMap.clear();
-        for (Spot spot : database.getSpots()) {
+        for (Spot spot : currentRun.getSpots()) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
@@ -240,15 +236,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected LatLng initLoc() {
         return new LatLng(57.7, 11.96);
-    }
-
-    /**
-     * A list of spots added during current run, in static context so that the list stays the same
-     * no matter what object is currently in use
-     *
-     * @return The list of spots added during the current run
-     */
-    public static List<Spot> getCurrentRunAddedSpots() {
-        return currentRunAddedSpots;
     }
 }
