@@ -2,6 +2,8 @@ package alexa.projectcharizard.Model;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
+
 
 /**
  * A class for saving the properties of a Spot
@@ -16,6 +18,7 @@ public class Spot {
     private boolean visibility;
     private User creatorUser;
     private String id;
+    private List<Comment> commentList;
 
     /**
      * @param name
@@ -120,5 +123,9 @@ public class Spot {
 
     public String getId() {
         return id;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
     }
 }
