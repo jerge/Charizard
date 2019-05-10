@@ -58,10 +58,7 @@ public class EditSpotActivity extends MapsActivity {
 
     private Switch editSpotVisSwitch;
 
-    private Button editSpotSaveButton;
-
     private String currentCategory;
-    private String currentSpotId;
 
     private boolean spotVis;
 
@@ -113,8 +110,6 @@ public class EditSpotActivity extends MapsActivity {
         editSpotDescText = findViewById(R.id.editSpotDescText);
         editSpotCatSpinner = findViewById(R.id.editSpotCatSpinner);
         editSpotVisSwitch = findViewById(R.id.editSpotVisSwitch);
-        editSpotSaveButton = findViewById(R.id.editSpotSaveButton);
-
         setInitText();
     }
 
@@ -126,9 +121,8 @@ public class EditSpotActivity extends MapsActivity {
         editSpotCatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 0) {
-                    currentCategory = (String) parent.getItemAtPosition(position);
-                }
+                currentCategory = (String) parent.getItemAtPosition(position);
+
             }
 
             @Override
@@ -146,8 +140,8 @@ public class EditSpotActivity extends MapsActivity {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editSpotCatSpinner.setAdapter(categoryAdapter);
 
-        Category spotCategory = Category.valueOf(getIntent().getStringExtra("SpotCategory"));
-        editSpotCatSpinner.setSelection(getCategoryPosition(spotCategory));
+        String spotCategory = (getIntent().getStringExtra("SpotCategory"));
+        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(spotCategory));
     }
 
     /**
@@ -161,10 +155,6 @@ public class EditSpotActivity extends MapsActivity {
             }
         });
         editSpotVisSwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
-    }
-
-    private void initSpotId() {
-        
     }
 
     /**
@@ -184,7 +174,7 @@ public class EditSpotActivity extends MapsActivity {
      * exist
      *
      * @param currentCategory the string to be converted
-     * @return
+     * @return the enum, or OTHER if it no equivalent exists
      */
     private Category getCategoryEnum(String currentCategory) {
         try {
@@ -194,20 +184,6 @@ public class EditSpotActivity extends MapsActivity {
         }
     }
 
-    /**
-     * Gets the position for a category enum, used mainly for determining position in spinner
-     *
-     * @param category the category to determine the position of
-     * @return the position of the category
-     */
-    private int getCategoryPosition(Category category) {
-        for (int i = 0; i < Category.values().length; i++) {
-            if (category == Category.values()[i]) {
-                return i;
-            }
-        }
-        return 0;
-    }
 
     /**
      * Sets the textviews when clicking on the map to correspond with the latitude and longitude
