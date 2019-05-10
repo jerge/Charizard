@@ -62,6 +62,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:hint="Lat..."
+        android:onClick="notifyUserToUseMap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
@@ -84,6 +85,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:hint="Long..."
+        android:onClick="notifyUserToUseMap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider3" />
 

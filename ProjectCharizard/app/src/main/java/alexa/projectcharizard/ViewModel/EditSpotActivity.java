@@ -61,6 +61,7 @@ public class EditSpotActivity extends MapsActivity {
     private Button editSpotSaveButton;
 
     private String currentCategory;
+    private String currentSpotId;
 
     private boolean spotVis;
 
@@ -160,6 +161,10 @@ public class EditSpotActivity extends MapsActivity {
             }
         });
         editSpotVisSwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
+    }
+
+    private void initSpotId() {
+        
     }
 
     /**
@@ -285,6 +290,16 @@ public class EditSpotActivity extends MapsActivity {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(this, "Details changed", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Notifies the user via Toast to use the map fragment to change latitude or longitude values
+     *
+     * @param view the view which this action takes place in
+     */
+    public void notifyUserToUseMap(View view) {
+        Toast.makeText(this, "Please use the map below to change latitude/longitude",
+                        Toast.LENGTH_SHORT).show();
     }
 
 }
