@@ -21,12 +21,12 @@
 
     <ImageButton
         android:id="@+id/plsbtn"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="52dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="72dp"
         android:background="@null"
-        android:scaleType="center"
+        android:scaleType="fitCenter"
         android:src="@drawable/new_addicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
