@@ -131,7 +131,6 @@ public class SignUpActivity extends Activity {
      */
     private Boolean checkIfEmailTaken(String emailInput){
         for (User user : CurrentRun.getCurrentRunUsers()){
-
             if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(emailInput))
                 return true;
         }
