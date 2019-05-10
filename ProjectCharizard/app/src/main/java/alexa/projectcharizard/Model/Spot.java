@@ -14,6 +14,7 @@ public class Spot {
     private Category category;
     private Bitmap image;
     private boolean visibility;
+    private User creatorUser;
     private String id;
 
     /**
@@ -48,7 +49,7 @@ public class Spot {
      * @param image
      * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility) {
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, User creatorUser) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -56,6 +57,7 @@ public class Spot {
         this.visibility = visibility;
         this.category = category;
         this.image = image;
+        this.creatorUser = creatorUser;
     }
 
     /**
@@ -68,7 +70,7 @@ public class Spot {
      * @param image
      * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility) {
+    public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility, User creatorUser) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -76,6 +78,7 @@ public class Spot {
         this.category = Category.OTHER;
         this.visibility = visibility;
         this.image = image;
+        this.creatorUser = creatorUser;
     }
 
     public Spot() {
@@ -108,6 +111,11 @@ public class Spot {
 
     public Bitmap getImage() {
         return image;
+    }
+
+    public User getCreatorUser() {
+        return creatorUser;
+
     }
 
     public String getId() {
