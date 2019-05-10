@@ -14,6 +14,28 @@ public class Spot {
     private Category category;
     private Bitmap image;
     private boolean visibility;
+    private String id;
+
+    /**
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param category
+     * @param image
+     * @param visibility
+     * @param id
+     */
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.category = category;
+        this.image = image;
+        this.visibility = visibility;
+        this.id = id;
+    }
 
     /**
      * Constructor for when all variables are present
@@ -88,4 +110,7 @@ public class Spot {
         return image;
     }
 
+    public String getId() {
+        return id;
+    }
 }

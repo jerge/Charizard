@@ -16,8 +16,8 @@ public class DetailedViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_view);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
 
 
         tabLayout.addTab(tabLayout.newTab().setText("About"));
@@ -45,6 +45,5 @@ public class DetailedViewActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }
