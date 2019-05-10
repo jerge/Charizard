@@ -71,6 +71,7 @@ public class Database {
             databaseReference.child(id).setValue(spot);
         }
         currentRun.getSpots().add(spot);
+        currentRun.getActiveUser().getUserSpots().add(spot);
         return spot;
     }
 

@@ -13,7 +13,7 @@ public class CurrentRun {
     private User activeUser;
 
 
-    // A list containting all spots added during current run
+    // A list containing all spots added during current run
     private static List<Spot> currentRunAddedSpots = new ArrayList<>();
     private static List<User> currentRunUsers = new ArrayList<>();
 
