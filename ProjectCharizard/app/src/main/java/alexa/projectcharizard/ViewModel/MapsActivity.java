@@ -2,6 +2,8 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -328,6 +330,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CheckBox checkBox = new CheckBox(this);
         checkBox.setChecked(true);
         checkBox.setId(id);
+        checkBox.setButtonTintList(new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked} , // checked
+                },
+                new int[]{
+                        Color.parseColor("#FF6E73"),
+                        Color.parseColor("#FF6E73"),
+                }
+        ));
         paramsCB.setMargins(0, 15 + 60 * counter, 0, 0);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
