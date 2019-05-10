@@ -35,7 +35,6 @@ public class Database {
         return instance;
     }
 
-
     /**
      * Gets the database reference
      *
@@ -50,32 +49,21 @@ public class Database {
      */
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Spots");
+        databaseReference = firebaseDatabase.getReference();
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                throw new NullPointerException();
-            }
-        });
     }
 
     /**
-     * A method for saving spots to the database
-     *
-     * @param name        The name of the spot
-     * @param dblLat      The latitude of the spot
-     * @param dblLng      The longitude of the spot
-     * @param description The description of the spot
-     * @param category    The category of the spot
-     * @param visibility  The visibility of the spot
-     * @return The saved Spot
+     * Function that saves user in the database
+     * The user receives an id and gets saved at that unique id in the database
+     * @param user the user which gets saved
      */
+    public void saveUser(User user) {
+        String tempId = databaseReference.child("Users").push().getKey();
+        user.setId(tempId);
+        databaseReference.child("Users").child(tempId).setValue(user);
+    }
+
     public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
         String id = databaseReference.push().getKey();
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id);

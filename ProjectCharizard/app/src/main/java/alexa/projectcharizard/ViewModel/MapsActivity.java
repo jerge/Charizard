@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import alexa.projectcharizard.Model.Category;
@@ -87,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         showUserLocation();
 
         //Open connection to database and add all existing spots to the spotlist.
-        database.getDatabaseReference().addValueEventListener(new ValueEventListener() {
+        database.getDatabaseReference().child("Spots").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentRun.getSpots().clear();
