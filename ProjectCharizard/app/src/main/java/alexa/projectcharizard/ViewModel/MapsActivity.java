@@ -89,7 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
     }
 
-
+/*
     @Override
     public void onBackPressed()
     {
@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
 
         mBackPressed = System.currentTimeMillis();
-    }
+    }*/
 
     /**
      * Manipulates the map once available.
