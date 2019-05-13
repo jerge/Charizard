@@ -12,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
+import alexa.projectcharizard.Model.CurrentRun;
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
 
 /**
@@ -24,36 +28,37 @@ import alexa.projectcharizard.R;
 
 public class AccountPageActivity extends AppCompatActivity {
 
-    // public constant key in order to identify which activity sent the messaged
-    public static final String EXTRA_MESSAGE = "alexa.projectcharizard.ViewModel.MESSAGE";
-
     // UI references
     private TextView userNameView;
     private TextView nameView;
-    private ImageView emailView;
-    private ImageView passwordView;
-    private ImageView deleteView;
+    private TextView emailView;
 
-    // Hardcoded user information
-    // TODO: Replace these with user information from userAccount
-    private String userName = "Inte_Semlan_420";
-    private String name = "Mathias Bammers";
-    private String email = "420@swag.it";
-    // TODO: Replace with something that is not a primitive type
-    private String password = "password";
+    // Accessing the current user information
+    private CurrentRun currentRun;
+
+    // Accessing the database to update user information
+    private DatabaseReference dataReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_page);
+        initViews();
+        initTextInViews();
+        currentRun = CurrentRun.getInstance();
+        dataReference = Database.getInstance().getDatabaseReference().child("Users");
+    }
+
+    private void initViews() {
         userNameView = (TextView) findViewById(R.id.userNameView);
         nameView = (TextView) findViewById(R.id.nameView);
-        emailView = (ImageView) findViewById(R.id.emailView);
-        passwordView = (ImageView) findViewById(R.id.passwordView);
-        deleteView = (ImageView) findViewById(R.id.deleteView);
+        emailView = (TextView) findViewById(R.id.emailView);
+    }
 
-        userNameView.setText(userName);
-        nameView.setText(name);
+    private void initTextInViews() {
+        userNameView.setText(currentRun.getActiveUser().getUsername());
+        nameView.setText(currentRun.getActiveUser().getFullName());
+        emailView.setText(currentRun.getActiveUser().getEmail());
     }
 
     /**
@@ -64,7 +69,8 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     private void changeUserName(String newUserName) {
         // TODO: Add call to change username in backend, preferably before setting userNameView
-        this.userName = newUserName;
+        dataReference.child(currentRun.getActiveUser().getId()).child("username").setValue(newUserName);
+        currentRun.getActiveUser().setUsername(newUserName);
         userNameView.setText(newUserName);
         // For debugging purposes
         Toast.makeText(getApplicationContext(),newUserName, Toast.LENGTH_SHORT).show();
@@ -78,7 +84,8 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     private void changeName(String newName) {
         // TODO: Add call to change name in backend, preferably before setting nameView
-        this.name = newName;
+        dataReference.child(currentRun.getActiveUser().getId()).child("fullname").setValue(newName);
+        currentRun.getActiveUser().setFullName(newName);
         nameView.setText(newName);
         // For debugging purposes
         Toast.makeText(getApplicationContext(), newName, Toast.LENGTH_SHORT).show();
@@ -154,7 +161,8 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     public void changeEmailAction(View view) {
         Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, email);
+        intent.putExtra("UserEmail", currentRun.getActiveUser().getEmail());
+        intent.putExtra("UserId", currentRun.getActiveUser().getId());
         startActivity(intent);
     }
 
@@ -166,7 +174,8 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     public void changePasswordAction(View view) {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, password);
+        intent.putExtra("UserPassword", currentRun.getActiveUser().getPassword());
+        intent.putExtra("UserId", currentRun.getActiveUser().getId());
         startActivity(intent);
     }
 

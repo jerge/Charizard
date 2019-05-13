@@ -2,13 +2,16 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+
+import alexa.projectcharizard.Model.CurrentRun;
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
 
 /**
@@ -16,28 +19,38 @@ import alexa.projectcharizard.R;
  *
  * @author Stefan Chan
  */
-public class ChangePasswordActivity extends Activity {
+public class ChangePasswordActivity extends AppCompatActivity {
 
     private TextView currentPasswordView;
     private EditText newPasswordField;
     private EditText verifNewPasswordField;
-    private Button changePasswordButton;
     private Intent intent;
+    private DatabaseReference dataReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
+        initView();
+        initText();
         intent = getIntent();
-        String message = intent.getStringExtra(AccountPageActivity.EXTRA_MESSAGE);
+        dataReference = Database.getInstance().getDatabaseReference().child("Users")
+                                .child(intent.getStringExtra("UserId"));
 
+    }
+
+    /**
+     * Initialises Android view elements
+     */
+    private void initView() {
         currentPasswordView = (TextView) findViewById(R.id.currentPasswordView);
         newPasswordField = (EditText) findViewById(R.id.newPasswordField);
         verifNewPasswordField = (EditText) findViewById(R.id.verifNewPasswordField);
-        changePasswordButton = (Button) findViewById(R.id.changePasswordButton);
+    }
 
-        currentPasswordView.setText(message);
+    private void initText() {
+        String currentPassword = intent.getStringExtra("UserPassword");
+        currentPasswordView.setText(currentPassword);
     }
 
     /**
@@ -50,12 +63,14 @@ public class ChangePasswordActivity extends Activity {
     public void changePasswordAction(View view) {
         String newPassword = newPasswordField.getText().toString();
         String verifNewPassword = verifNewPasswordField.getText().toString();
-        if (newPassword.equals(intent.getStringExtra(AccountPageActivity.EXTRA_MESSAGE))) {
+        if (newPassword.equals(intent.getStringExtra("UserPassword"))) {
             Toast.makeText(getApplicationContext(), "New password is the same as the old password", Toast.LENGTH_SHORT).show();
         } else if (!newPassword.equals(verifNewPassword)) {
             Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
         } else {
             // TODO: Call backend to change the user password
+            dataReference.child("password").setValue(newPassword);
+            CurrentRun.getInstance().getActiveUser().setPassword(newPassword);
             currentPasswordView.setText(newPassword);
             Toast.makeText(getApplicationContext(), "Password changed", Toast.LENGTH_SHORT).show();
         }
