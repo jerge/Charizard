@@ -208,7 +208,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Saves the id of the spot in the snippet so that it can be accessed in the next
                 // activity
                 marker.setSnippet(spot.getId());
-                /*
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
@@ -216,21 +215,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
                         intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
                         intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
-                        startActivity(intent);
-                    }
-                });
-                */
-                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        Intent intent = new Intent(MapsActivity.this, EditSpotActivity.class);
-                        intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
-                        intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
-                        intent.putExtra("SpotLatitude", spotDetailViewAdapter.getSpot().getLatitude());
-                        intent.putExtra("SpotLongitude", spotDetailViewAdapter.getSpot().getLongitude());
-                        intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
-                        intent.putExtra("SpotCategory", spotDetailViewAdapter.getSpot().getCategory());
-                        intent.putExtra("SpotVisibility", spotDetailViewAdapter.getSpot().isVisibility());
                         startActivity(intent);
                     }
                 });
