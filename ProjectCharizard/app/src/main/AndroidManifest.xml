@@ -39,9 +39,7 @@
         <activity android:name=".ViewModel.Test2" />
         <activity android:name=".ViewModel.DetailedViewActivity"/>
         <activity android:name=".ViewModel.AddSpotActivity"/>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+        <activity android:name=".ViewModel.EditSpotActivity" />
 
         <activity
             android:name=".ViewModel.SignInActivity"

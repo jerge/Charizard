@@ -5,15 +5,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -22,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -82,6 +76,11 @@ public class EditSpotActivity extends MapsActivity {
 
     @Override
     protected void initPlsBtn() {
+    }
+
+    @Override
+    protected void initFilterBtn() {
+
     }
 
     @Override
@@ -250,9 +249,8 @@ public class EditSpotActivity extends MapsActivity {
      * @param view the view which this action takes place in
      */
     public void changeSpotInfoAction(View view) {
-        DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child(
-                getIntent().getStringExtra("SpotId")
-        );
+        DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child("Spots")
+                                    .child(getIntent().getStringExtra("SpotId"));
         Category spotCategory = getCategoryEnum(this.currentCategory);
         try {
             dataRef.child("name").setValue(editSpotNameView.getText().toString());

@@ -227,7 +227,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Saves the id of the spot in the snippet so that it can be accessed in the next
                 // activity
                 marker.setSnippet(spot.getId());
-
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
