@@ -41,6 +41,7 @@
         <activity android:name=".ViewModel.AddSpotActivity"/>
         <activity android:name=".ViewModel.ChangeEmailActivity" />
         <activity android:name=".ViewModel.ChangePasswordActivity" />
+        <activity android:name=".ViewModel.AccountPageActivity" />
 
         <activity
             android:name=".ViewModel.SignInActivity"

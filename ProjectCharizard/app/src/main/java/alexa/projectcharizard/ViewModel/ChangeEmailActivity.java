@@ -76,7 +76,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
         } else if (isValidEmail(newEmail) && newEmail.equals(verifMail)) {
             // Change the users email address and notify the user'
             dataReference.child("email").setValue(newEmail);
-            CurrentRun.getInstance().getActiveUser().setEmail(newEmail);
+            //CurrentRun.getInstance().getActiveUser().setEmail(newEmail);
             currentEmailView.setText(newEmail);
             Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail)) {

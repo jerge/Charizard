@@ -43,9 +43,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
      * Initialises Android view elements
      */
     private void initView() {
-        currentPasswordView = (TextView) findViewById(R.id.currentPasswordView);
-        newPasswordField = (EditText) findViewById(R.id.newPasswordField);
-        verifNewPasswordField = (EditText) findViewById(R.id.verifNewPasswordField);
+        currentPasswordView = findViewById(R.id.currentPasswordView);
+        newPasswordField = findViewById(R.id.newPasswordField);
+        verifNewPasswordField = findViewById(R.id.verifNewPasswordField);
     }
 
     private void initText() {
@@ -68,9 +68,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
         } else if (!newPassword.equals(verifNewPassword)) {
             Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
         } else {
-            // TODO: Call backend to change the user password
             dataReference.child("password").setValue(newPassword);
-            CurrentRun.getInstance().getActiveUser().setPassword(newPassword);
+            //CurrentRun.getInstance().getActiveUser().setPassword(newPassword);
             currentPasswordView.setText(newPassword);
             Toast.makeText(getApplicationContext(), "Password changed", Toast.LENGTH_SHORT).show();
         }

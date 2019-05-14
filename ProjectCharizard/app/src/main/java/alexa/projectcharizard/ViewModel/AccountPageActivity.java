@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,13 +47,18 @@ public class AccountPageActivity extends AppCompatActivity {
         currentRun = CurrentRun.getInstance();
         dataReference = Database.getInstance().getDatabaseReference().child("Users");
     }
-
+    /**
+     * Initialises Android view elements
+     */
     private void initViews() {
-        userNameView = (TextView) findViewById(R.id.userNameView);
-        nameView = (TextView) findViewById(R.id.nameView);
-        emailView = (TextView) findViewById(R.id.emailView);
+        userNameView = findViewById(R.id.userNameView);
+        nameView = findViewById(R.id.nameView);
+        emailView = findViewById(R.id.emailView);
     }
 
+    /**
+     * Sets initial text
+     */
     private void initTextInViews() {
         userNameView.setText(currentRun.getActiveUser().getUsername());
         nameView.setText(currentRun.getActiveUser().getFullName());
@@ -68,9 +72,8 @@ public class AccountPageActivity extends AppCompatActivity {
      * @param newUserName the new username
      */
     private void changeUserName(String newUserName) {
-        // TODO: Add call to change username in backend, preferably before setting userNameView
         dataReference.child(currentRun.getActiveUser().getId()).child("username").setValue(newUserName);
-        currentRun.getActiveUser().setUsername(newUserName);
+        //currentRun.getActiveUser().setUsername(newUserName);
         userNameView.setText(newUserName);
         // For debugging purposes
         Toast.makeText(getApplicationContext(),newUserName, Toast.LENGTH_SHORT).show();
@@ -83,9 +86,8 @@ public class AccountPageActivity extends AppCompatActivity {
      * @param newName the new name
      */
     private void changeName(String newName) {
-        // TODO: Add call to change name in backend, preferably before setting nameView
         dataReference.child(currentRun.getActiveUser().getId()).child("fullname").setValue(newName);
-        currentRun.getActiveUser().setFullName(newName);
+        //currentRun.getActiveUser().setFullName(newName);
         nameView.setText(newName);
         // For debugging purposes
         Toast.makeText(getApplicationContext(), newName, Toast.LENGTH_SHORT).show();
