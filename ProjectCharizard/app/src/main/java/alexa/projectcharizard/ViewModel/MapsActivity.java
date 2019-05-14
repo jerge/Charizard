@@ -89,10 +89,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
     }
 
-/*
-    @Override
-    public void onBackPressed()
-    {
+    /**
+     * Method to avoid the user returning to the sign in / sign up page from the map view. Instead,
+     * the back button closes the application if pressed twice quickly.
+     */
+    /*@Override
+    public void onBackPressed(){
+
         if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
         {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -103,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
 
         mBackPressed = System.currentTimeMillis();
-    }*/
+    }*/ //TODO Prevent this method to behave this way in AddSpotActivity
 
     /**
      * Manipulates the map once available.

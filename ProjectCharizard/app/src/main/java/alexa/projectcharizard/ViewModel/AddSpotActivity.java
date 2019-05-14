@@ -268,5 +268,13 @@ public class AddSpotActivity extends MapsActivity {
         setContentView(R.layout.activity_add);
     }
 
+    /**
+     * Method to make back button behave as it normally would
+     */
+    /*@Override
+    public void onBackPressed() {
+
+    }*/ //TODO This method may need to be changed for parent method to behave correctly
+
 
 }
