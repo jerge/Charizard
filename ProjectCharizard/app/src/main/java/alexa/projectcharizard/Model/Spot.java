@@ -13,9 +13,9 @@ public class Spot {
     private String description;
     private Category category;
     private Bitmap image;
-    private boolean visibility;
     private String creatorId;
     private String id;
+    private boolean isPrivate;
 
 
     /**
@@ -27,18 +27,18 @@ public class Spot {
      * @param description
      * @param category
      * @param image
-     * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id, String creatorId) {
+    public Spot(String name, Double latitude, Double longitude, String description,
+                Category category, Bitmap image, String id, String creatorId, boolean isPrivate) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
-        this.visibility = visibility;
         this.category = category;
         this.image = image;
         this.id = id;
         this.creatorId = creatorId;
+        this.isPrivate = isPrivate;
     }
 
     /**
@@ -50,17 +50,17 @@ public class Spot {
      * @param description
      * @param category
      * @param image
-     * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id) {
+    public Spot(String name, Double latitude, Double longitude, String description,
+                Category category, Bitmap image, String id, boolean isPrivate) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = category;
         this.image = image;
-        this.visibility = visibility;
         this.id = id;
+        this.isPrivate = isPrivate;
     }
 
     /**
@@ -71,17 +71,17 @@ public class Spot {
      * @param longitude
      * @param description
      * @param image
-     * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility, String creatorId) {
+    public Spot(String name, Double latitude, Double longitude, String description,
+                Bitmap image, String creatorId, boolean isPrivate) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = Category.OTHER;
-        this.visibility = visibility;
         this.image = image;
         this.creatorId = creatorId;
+        this.isPrivate = isPrivate;
     }
 
     public Spot() {
@@ -106,10 +106,6 @@ public class Spot {
 
     public Category getCategory() {
         return category;
-    }
-
-    public boolean isVisibility() {
-        return visibility;
     }
 
     public Bitmap getImage() {

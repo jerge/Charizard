@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,18 +37,18 @@ public class AddSpotActivity extends MapsActivity {
 
     private Marker currentMarker;
 
-    private CheckBox visibilityCheckbox;
-
-    private TextView txtLat;
-    private TextView txtLong;
     private EditText txtName;
     private EditText txtDescription;
 
     private String currentCategory;
-    private String currentProperty;
 
     private Spinner categorySpinner;
     private Spinner propertySpinner;
+
+    private Switch privateSwitch;
+
+    private Double latitude;
+    private Double longitude;
 
     private ArrayAdapter<String> categoryArrayAdapter;
 
@@ -73,16 +74,7 @@ public class AddSpotActivity extends MapsActivity {
      * @param view the view that contains the values for the spot
      */
     public void addNewSpot(View view) {
-        if (txtLat.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in latitude", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Double lat = Double.valueOf(txtLat.getText().toString());
-        if (txtLong.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in longitude", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Double lng = Double.valueOf(txtLong.getText().toString());
+
         if (txtName.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
             return;
@@ -105,7 +97,8 @@ public class AddSpotActivity extends MapsActivity {
         Database database = Database.getInstance();
 
         // Saving the current Spot and then adding it to a list of Spots added during current run.
-        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility, CurrentRun.getActiveUser().getId()));
+        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category,
+                image, visibility, CurrentRun.getActiveUser().getId(), privateSwitch.isChecked()));
         finish();
     }
 
@@ -130,20 +123,18 @@ public class AddSpotActivity extends MapsActivity {
     }
 
     private void initView() {
-        txtLat = findViewById(R.id.txtLat);
-        txtLong = findViewById(R.id.txtLong);
+
         txtName = findViewById(R.id.txtName);
         txtDescription = findViewById(R.id.txtDescription);
 
         // Set default parameters
         currentCategory = "Other";
-        currentProperty = "Public";
 
         // Set checkbox default
-        visibilityCheckbox = findViewById(R.id.visibilityCheckbox);
-        if (visibilityCheckbox.isChecked()) {
-            visibilityCheckbox.setChecked(false);
-        }
+        privateSwitch = findViewById(R.id.privateSwitch);
+        privateSwitch.setChecked(false);
+        privateSwitch.setText(R.string.private_switch_unchecked);
+
         initSpinner();
     }
 
@@ -202,14 +193,15 @@ public class AddSpotActivity extends MapsActivity {
 
 
     /**
-     * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
+     * Sets the fields latitude and longitude when clicking on the map to correspond to the latitude and longitude
      */
     private void initLocationOnClickListener() {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                txtLat.setText(Double.toString(latLng.latitude));
-                txtLong.setText(Double.toString(latLng.longitude));
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
+
                 // Set out a marker on the spot selected
                 if (currentMarker != null) {
                     currentMarker.remove();
@@ -223,8 +215,9 @@ public class AddSpotActivity extends MapsActivity {
         mMap.setOnMyLocationClickListener(new GoogleMap.OnMyLocationClickListener() {
             @Override
             public void onMyLocationClick(@NonNull Location location) {
-                txtLat.setText(Double.toString(location.getLatitude()));
-                txtLong.setText(Double.toString(location.getLongitude()));
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
                 // Set out a marker on the spot selected
                 if (currentMarker != null) {
                     currentMarker.remove();
