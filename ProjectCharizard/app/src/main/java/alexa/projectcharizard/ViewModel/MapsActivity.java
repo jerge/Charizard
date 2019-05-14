@@ -276,6 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Find the plus button
         plsBtn = (ImageButton) findViewById(R.id.plsbtn);
         // Set a listener
+        /*
         plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,6 +284,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
                 intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
                 intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
+                startActivity(intent);
+            }
+        });
+        */
+        plsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
                 startActivity(intent);
             }
         });
