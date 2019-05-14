@@ -65,10 +65,10 @@ public class Database {
     }
 
     public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility, String userId) {
-        String id = databaseReference.push().getKey();
+        String id = databaseReference.child("Spots").push().getKey();
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id, userId);
         if (id != null) {
-            databaseReference.child(id).setValue(spot);
+            databaseReference.child("Spots").child(id).setValue(spot);
         }
         currentRun.getSpots().add(spot);
         //currentRun.getActiveUser().getUserSpots().add(spot); //TODO make this work pls lmao
