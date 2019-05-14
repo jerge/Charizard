@@ -105,7 +105,7 @@ public class AddSpotActivity extends MapsActivity {
         Database database = Database.getInstance();
 
         // Saving the current Spot and then adding it to a list of Spots added during current run.
-        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility));
+        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility, CurrentRun.getActiveUser().getId()));
         finish();
     }
 
@@ -267,6 +267,14 @@ public class AddSpotActivity extends MapsActivity {
     protected void contentView() {
         setContentView(R.layout.activity_add);
     }
+
+    /**
+     * Method to make back button behave as it normally would
+     */
+    /*@Override
+    public void onBackPressed() {
+
+    }*/ //TODO This method may need to be changed for parent method to behave correctly
 
 
 }

@@ -64,14 +64,14 @@ public class Database {
         databaseReference.child("Users").child(tempId).setValue(user);
     }
 
-    public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility) {
+    public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility, String userId) {
         String id = databaseReference.push().getKey();
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id);
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id, userId);
         if (id != null) {
             databaseReference.child(id).setValue(spot);
         }
         currentRun.getSpots().add(spot);
-        currentRun.getActiveUser().getUserSpots().add(spot);
+        //currentRun.getActiveUser().getUserSpots().add(spot); //TODO make this work pls lmao
         return spot;
     }
 

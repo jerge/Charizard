@@ -2,6 +2,8 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -25,8 +27,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -50,6 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
 
     //The button for opening the filter
     private ImageButton filterBtn;
@@ -82,6 +84,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
     }
+
+    /**
+     * Method to avoid the user returning to the sign in / sign up page from the map view. Instead,
+     * the back button closes the application if pressed twice quickly.
+     */
+    /*@Override
+    public void onBackPressed(){
+
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
+
+        mBackPressed = System.currentTimeMillis();
+    }*/ //TODO Prevent this method to behave this way in AddSpotActivity
 
     /**
      * Manipulates the map once available.
@@ -158,8 +179,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     MY_PERMISSIONS_ACCESS_FINE_LOCATION);
         } else {
             mMap.setMyLocationEnabled(true);
-            //mMap.setOnMyLocationButtonClickListener(this);
-            //mMap.setOnMyLocationClickListener(this);
         }
     }
 
@@ -307,6 +326,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         CheckBox checkBox = new CheckBox(this);
         checkBox.setChecked(true);
         checkBox.setId(id);
+        checkBox.setButtonTintList(new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked} , // checked
+                },
+                new int[]{
+                        Color.parseColor("#FF6E73"),
+                        Color.parseColor("#FF6E73"),
+                }
+        ));
         paramsCB.setMargins(0, 15 + 60 * counter, 0, 0);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

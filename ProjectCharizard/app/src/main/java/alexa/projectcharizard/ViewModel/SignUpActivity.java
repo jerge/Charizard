@@ -138,8 +138,8 @@ public class SignUpActivity extends Activity {
      * @return True if the e-mail is already in use, false if not
      */
     private Boolean checkIfEmailTaken(String emailInput){
-        for (User user : currentRun.getCurrentRunUsers()){
 
+        for (User user : CurrentRun.getCurrentRunUsers()){
             if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(emailInput))
                 return true;
         }
