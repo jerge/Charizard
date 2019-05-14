@@ -60,9 +60,9 @@ public class AccountPageActivity extends AppCompatActivity {
      * Sets initial text
      */
     private void initTextInViews() {
-        userNameView.setText(currentRun.getActiveUser().getUsername());
-        nameView.setText(currentRun.getActiveUser().getFullName());
-        emailView.setText(currentRun.getActiveUser().getEmail());
+        userNameView.setText(CurrentRun.getActiveUser().getUsername());
+        nameView.setText(CurrentRun.getActiveUser().getFullName());
+        emailView.setText(CurrentRun.getActiveUser().getEmail());
     }
 
     /**
@@ -72,7 +72,7 @@ public class AccountPageActivity extends AppCompatActivity {
      * @param newUserName the new username
      */
     private void changeUserName(String newUserName) {
-        dataReference.child(currentRun.getActiveUser().getId()).child("username").setValue(newUserName);
+        dataReference.child(CurrentRun.getActiveUser().getId()).child("username").setValue(newUserName);
         //currentRun.getActiveUser().setUsername(newUserName);
         userNameView.setText(newUserName);
         // For debugging purposes
@@ -86,7 +86,7 @@ public class AccountPageActivity extends AppCompatActivity {
      * @param newName the new name
      */
     private void changeName(String newName) {
-        dataReference.child(currentRun.getActiveUser().getId()).child("fullname").setValue(newName);
+        dataReference.child(CurrentRun.getActiveUser().getId()).child("fullname").setValue(newName);
         //currentRun.getActiveUser().setFullName(newName);
         nameView.setText(newName);
         // For debugging purposes
@@ -163,8 +163,8 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     public void changeEmailAction(View view) {
         Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("UserEmail", currentRun.getActiveUser().getEmail());
-        intent.putExtra("UserId", currentRun.getActiveUser().getId());
+        intent.putExtra("UserEmail", CurrentRun.getActiveUser().getEmail());
+        intent.putExtra("UserId", CurrentRun.getActiveUser().getId());
         startActivity(intent);
     }
 
@@ -176,8 +176,8 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     public void changePasswordAction(View view) {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("UserPassword", currentRun.getActiveUser().getPassword());
-        intent.putExtra("UserId", currentRun.getActiveUser().getId());
+        intent.putExtra("UserPassword", CurrentRun.getActiveUser().getPassword());
+        intent.putExtra("UserId", CurrentRun.getActiveUser().getId());
         startActivity(intent);
     }
 
