@@ -119,7 +119,11 @@ public class SignInActivity extends Activity {
         for (User user : currentRun.getUsers()) {     //checks every user in the user list
             if (user.getUsername().equals(usernameInput)) {         //if the username matches
                 if (passwordInput.equals(user.getPassword())) {     //...and the password matches
-                    CurrentRun.getInstance().setActiveUser(user);
+                    currentRun.setActiveUser(user);
+                    System.out.println(user.getUsername());
+                    System.out.println(currentRun);
+                    System.out.println(CurrentRun.getActiveUser());
+                    System.out.println("hej");
                     Intent intent = new Intent(this, MapsActivity.class);
                     startActivity(intent);
                     credErrorText.setVisibility(View.INVISIBLE);
