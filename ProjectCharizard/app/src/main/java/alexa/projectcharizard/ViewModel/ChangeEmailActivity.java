@@ -25,7 +25,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
 
     private TextView currentEmailView;
     private EditText newEmailView;
-    private EditText verifNewEmailView;
+    private EditText verifyNewEmailView;
 
     private Intent intent;
     private DatabaseReference dataReference;
@@ -53,7 +53,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
     private void initView() {
         currentEmailView = (TextView) findViewById(R.id.currentEmailView);
         newEmailView = (EditText) findViewById(R.id.newEmailView);
-        verifNewEmailView = (EditText) findViewById(R.id.verifNewEmailView);
+        verifyNewEmailView = (EditText) findViewById(R.id.verifyNewEmailView);
     }
 
     /**
@@ -73,7 +73,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
      */
     public void changeEmailButtonAction(View view) {
         String newEmail = newEmailView.getText().toString();
-        String verifMail = verifNewEmailView.getText().toString();
+        String verifMail = verifyNewEmailView.getText().toString();
         if (newEmail.equals(intent.getStringExtra("UserEmail"))) {
             // Return error message that the new email is the same as the old one
             Toast.makeText(getApplicationContext(), "New email is the same as the old email", Toast.LENGTH_SHORT).show();
