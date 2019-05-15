@@ -1,14 +1,9 @@
 package alexa.projectcharizard.Model;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 
 /**
  * A class used to retrieve and store data on the Firebase Database.
@@ -30,7 +25,8 @@ public class Database {
      */
     public static Database getInstance() {
         if (instance == null) {
-            return new Database();
+            instance = new Database();
+            return instance;
         }
         return instance;
     }
@@ -87,5 +83,15 @@ public class Database {
                 currentRun.getSpots().remove(spot);
             }
         }
+    }
+
+    /**
+     * A method that saves a comment to the database in the specified spot.
+     *
+     * @param comment The comment to be saved
+     * @param spotId The spot the comment is to be saved in
+     */
+    public void saveComment(Comment comment, String spotId) {
+        databaseReference.child("Spots").child(spotId).child("comments").push().setValue(comment);
     }
 }

@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 
 import java.util.List;
 
-
 /**
  * A class for saving the properties of a Spot
  */
@@ -19,7 +18,6 @@ public class Spot {
     private String creatorId;
     private String id;
     private List<Comment> commentList;
-
 
     /**
      * Constructor for when all variables are present
@@ -129,5 +127,9 @@ public class Spot {
 
     public List<Comment> getCommentList() {
         return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }
