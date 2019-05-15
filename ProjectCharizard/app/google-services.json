@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "773446104029-bkgg5p4e2j8fbds3bok4s3ec6c8lfmol.apps.googleusercontent.com",
+          "client_id": "773446104029-dq3f5f9bd86q6iboui68c9ie6bdokpp5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "alexa.projectcharizard",
-            "certificate_hash": "890e2439d340e5aa76aa9eb812f8130b7974b912"
+            "certificate_hash": "592e2ff11b7f984fcab8f6df8aaed208ce878c01"
+          }
+        },
+        {
+          "client_id": "773446104029-9ph05r5gicrao94njupp54aidf0dd64e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "alexa.projectcharizard",
+            "certificate_hash": "8e17acb7e181f6b7d20e95489d0bfed8427c811c"
           }
         },
         {
@@ -31,11 +39,11 @@
           }
         },
         {
-          "client_id": "773446104029-9ph05r5gicrao94njupp54aidf0dd64e.apps.googleusercontent.com",
+          "client_id": "773446104029-bkgg5p4e2j8fbds3bok4s3ec6c8lfmol.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "alexa.projectcharizard",
-            "certificate_hash": "8e17acb7e181f6b7d20e95489d0bfed8427c811c"
+            "certificate_hash": "890e2439d340e5aa76aa9eb812f8130b7974b912"
           }
         },
         {

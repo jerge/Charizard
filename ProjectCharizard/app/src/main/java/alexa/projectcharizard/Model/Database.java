@@ -1,13 +1,27 @@
 package alexa.projectcharizard.Model;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.webkit.MimeTypeMap;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.nio.charset.Charset;
+import java.sql.Blob;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 /**
@@ -21,6 +35,12 @@ public class Database {
      * A reference that communicates with the Firebase database
      */
     private DatabaseReference databaseReference;
+
+    /**
+     * A reference that communicates with the Storage part of Firebase
+     */
+    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+
 
     /**
      * A static instance of the database, making sure that there are not multiple instances of the
@@ -45,12 +65,21 @@ public class Database {
     }
 
     /**
+     * Gets the Storage reference
+     *
+     * @return StorageReference
+     */
+
+    public StorageReference getStorageReference() {
+        return storageReference;
+    }
+
+    /**
      * The initiation of the database
      */
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-
     }
 
     /**
@@ -64,7 +93,10 @@ public class Database {
         databaseReference.child("Users").child(tempId).setValue(user);
     }
 
+
+
     public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility, String userId) {
+
         String id = databaseReference.child("Spots").push().getKey();
         Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id, userId);
         if (id != null) {
@@ -88,4 +120,5 @@ public class Database {
             }
         }
     }
+
 }

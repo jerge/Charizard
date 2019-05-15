@@ -1,24 +1,37 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +47,11 @@ import alexa.projectcharizard.R;
  */
 public class AddSpotActivity extends MapsActivity {
 
+    //a constant to track the file chooser intent
+    private static final int PICK_IMAGE_REQUEST = 234;
+    //a Uri object to store file path
+    private Uri filePath;
+
     private Marker currentMarker;
 
     private CheckBox visibilityCheckbox;
@@ -42,6 +60,8 @@ public class AddSpotActivity extends MapsActivity {
     private TextView txtLong;
     private EditText txtName;
     private EditText txtDescription;
+    private Button btnImage;
+    private ImageView addedImage;
 
     private String currentCategory;
     private String currentProperty;
@@ -97,8 +117,18 @@ public class AddSpotActivity extends MapsActivity {
             Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
             return;
         }
+
         Category category = getCategoryEnum(currentCategory);
         boolean visibility = visibilityCheckbox.isChecked();
+
+        if (filePath != null) {
+            // Call the upload file, which finishes the tasks upon completion of upload
+            uploadFile(name, lat, lng, description, category, visibility, CurrentRun.getActiveUser().getId());
+            return;
+        }
+
+
+
         Bitmap image = null;
 
         //Open connection to database and save the spot on the database.
@@ -134,6 +164,8 @@ public class AddSpotActivity extends MapsActivity {
         txtLong = findViewById(R.id.txtLong);
         txtName = findViewById(R.id.txtName);
         txtDescription = findViewById(R.id.txtDescription);
+        btnImage = findViewById(R.id.addImage);
+        addedImage = findViewById(R.id.addedImage);
 
         // Set default parameters
         currentCategory = "Other";
@@ -145,6 +177,7 @@ public class AddSpotActivity extends MapsActivity {
             visibilityCheckbox.setChecked(false);
         }
         initSpinner();
+        initBtnImage();
     }
 
     /**
@@ -199,7 +232,6 @@ public class AddSpotActivity extends MapsActivity {
             }
         });
     }
-
 
     /**
      * Sets the TextViews when clicking on the map to correspond to the latitude and longitude
@@ -260,6 +292,92 @@ public class AddSpotActivity extends MapsActivity {
     protected LatLng initLoc() {
         return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat", 57),
                 getIntent().getDoubleExtra("ViewedLocationLong", 12));
+    }
+
+    private void initBtnImage() {
+        btnImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+        });
+    }
+
+    //handling the image chooser activity result
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                addedImage.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadFile(final String name, final double lat, final double lng, final String description, final Category category, final Boolean visibility, String userId) {
+        //if there is a file to upload
+        if (filePath != null) {
+            //displaying a progress dialog while upload is going on
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+            //String id = databaseReference.child("Spots").push().getKey();
+
+            StorageReference riversRef = Database.getInstance().getStorageReference().child("images/pic.jpg");
+            riversRef.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //if the upload is successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            //and displaying a success toast
+                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            //Open connection to database and save the spot on the database.
+                            Database database = Database.getInstance();
+
+                            // Saving the current Spot and then adding it to a list of Spots added during current run.
+                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, null, visibility, CurrentRun.getActiveUser().getId()));
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            //if the upload is not successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            //and displaying error message
+                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+
+                            finish();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //calculating progress percentage
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                            //displaying percentage in progress dialog
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+        }
+        //if there is not any file
+        else {
+            //you can display an error toast
+        }
     }
 
 

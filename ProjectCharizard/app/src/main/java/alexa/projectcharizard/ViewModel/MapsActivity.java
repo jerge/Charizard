@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -180,6 +181,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             mMap.setMyLocationEnabled(true);
         }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+        } else {
+            mMap.setMyLocationEnabled(true);
+        }
     }
 
     /**
@@ -314,6 +322,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.VISIBLE);
             }
         });
+
+
+
 
     }
 
