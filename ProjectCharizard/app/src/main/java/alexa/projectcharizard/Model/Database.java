@@ -65,9 +65,9 @@ public class Database {
     }
 
     public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category,
-                         Bitmap image, Boolean visibility, String userId, boolean isPrivate) {
+                         Bitmap image, String userId, boolean isPrivate) {
         String id = databaseReference.child("Spots").push().getKey();
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id, userId, isPrivate);
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, id, userId, isPrivate);
         if (id != null) {
             databaseReference.child("Spots").child(id).setValue(spot);
         }

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,10 +41,11 @@ public class AddSpotActivity extends MapsActivity {
     private EditText txtName;
     private EditText txtDescription;
 
+    private ImageView backButton;
+
     private String currentCategory;
 
     private Spinner categorySpinner;
-    private Spinner propertySpinner;
 
     private Switch privateSwitch;
 
@@ -80,17 +82,19 @@ public class AddSpotActivity extends MapsActivity {
             return;
         }
         String name = txtName.getText().toString();
+
         if (txtDescription.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Fill in description", Toast.LENGTH_SHORT).show();
             return;
         }
         String description = txtDescription.getText().toString();
+
         if (currentCategory == null) {
             Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
             return;
         }
         Category category = getCategoryEnum(currentCategory);
-        boolean visibility = visibilityCheckbox.isChecked();
+
         Bitmap image = null;
 
         //Open connection to database and save the spot on the database.
@@ -98,7 +102,15 @@ public class AddSpotActivity extends MapsActivity {
 
         // Saving the current Spot and then adding it to a list of Spots added during current run.
         CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category,
-                image, visibility, CurrentRun.getActiveUser().getId(), privateSwitch.isChecked()));
+                image, CurrentRun.getActiveUser().getId(), privateSwitch.isChecked()));
+        finish();
+    }
+
+    /**
+     * When the back button gets pressed
+     * @param view the view from which this function takes you away from
+     */
+    public void backButtonOnClick(View view) {
         finish();
     }
 
@@ -126,6 +138,8 @@ public class AddSpotActivity extends MapsActivity {
 
         txtName = findViewById(R.id.txtName);
         txtDescription = findViewById(R.id.txtDescription);
+
+        backButton = findViewById(R.id.backArrow);
 
         // Set default parameters
         currentCategory = "Other";
@@ -173,22 +187,6 @@ public class AddSpotActivity extends MapsActivity {
             }
         });
 
-        propertySpinner = findViewById(R.id.propertySpinner);
-        propertySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedProperty = (String) parent.getItemAtPosition(position);
-                if (position > 0) {
-                    currentProperty = selectedProperty;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                propertySpinner.setSelection(0);
-            }
-        });
     }
 
 
