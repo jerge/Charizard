@@ -10,7 +10,7 @@ public class CurrentRun {
     // A list of all spots loaded from the database
     private static List<Spot> spots = new ArrayList<>();
     private List<User> users = new ArrayList<>();
-    private User activeUser;
+    private static User activeUser;
 
 
     // A list containing all spots added during current run
@@ -58,7 +58,7 @@ public class CurrentRun {
      * Gets the user that is logged in to the application
      * @return the logged in user
      */
-    public User getActiveUser() {
+    public static User getActiveUser() {
         return activeUser;
     }
 

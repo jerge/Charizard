@@ -1,14 +1,20 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,9 +27,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.CurrentRun;
@@ -43,6 +50,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
+
+    //The button for opening the filter
+    private ImageButton filterBtn;
+
+    // The list of all checkboxes
+    private List<Category> checkBoxes = new ArrayList<>();
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
 
@@ -53,12 +68,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         // Connect to layout file
         contentView();
+
+        initPlsBtn();
+        initFilterBtn();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        initPlsBtn();
 
     }
 
@@ -66,6 +84,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
     }
+
+    /**
+     * Method to avoid the user returning to the sign in / sign up page from the map view. Instead,
+     * the back button closes the application if pressed twice quickly.
+     */
+    /*@Override
+    public void onBackPressed(){
+
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
+
+        mBackPressed = System.currentTimeMillis();
+    }*/ //TODO Prevent this method to behave this way in AddSpotActivity
 
     /**
      * Manipulates the map once available.
@@ -80,7 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.setPadding(200, 0, 0, 0);
         float initialZoomLevel = initZoom();
         LatLng initialLocation = initLoc();
 
@@ -111,6 +148,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add marker on all 'spot's in spots
         updateMarkers();
 
+        // Set a listener to make the RelativeLayout filterBoxes Gone when clicking on map
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    /**
+     * Returns true if the spot's category is checked true in the checkbox, otherwise false
+     *
+     * @param s the spot to check
+     * @return true if the spot's category is checked true in the checkbox, otherwise false
+     */
+    private boolean filter(Spot s) {
+        return checkBoxes.contains(s.getCategory());
     }
 
     /**
@@ -124,8 +179,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     MY_PERMISSIONS_ACCESS_FINE_LOCATION);
         } else {
             mMap.setMyLocationEnabled(true);
-            //mMap.setOnMyLocationButtonClickListener(this);
-            //mMap.setOnMyLocationClickListener(this);
         }
     }
 
@@ -164,47 +217,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateMarkers() {
         mMap.clear();
         for (Spot spot : currentRun.getSpots()) {
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
-                    .title(spot.getName())
-                    .icon(getMarkerIcon(spot.getCategory())));
+            //Add all markers
+            if (filter(spot)) {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
+                        .title(spot.getName())
+                        .icon(getMarkerIcon(spot.getCategory())));
 
-            // Saves the id of the spot in the snippet so that it can be accessed in the next
-            // activity
-            marker.setSnippet(spot.getId());
-
-            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                    intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
-                    intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
-                    intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
-                    startActivity(intent);
-                }
-            });
+                // Saves the id of the spot in the snippet so that it can be accessed in the next
+                // activity
+                marker.setSnippet(spot.getId());
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                        intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
+                        intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
+                        intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
+                        startActivity(intent);
+                    }
+                });
+            }
         }
     }
 
     /**
      * Identifies what category the specified spot belongs to and returns the corresponding icon for the category.
      * If the category is OTHER it returns the icon of the map marker.
+     *
      * @param category The category of the spot.
      **/
-    private BitmapDescriptor getMarkerIcon(Category category){
-        if(category.equals(Category.FRUIT)){
+    private BitmapDescriptor getMarkerIcon(Category category) {
+        if (category.equals(Category.FRUIT)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.fruit);
-        }
-        else if(category.equals(Category.VEGETABLE)){
+        } else if (category.equals(Category.VEGETABLE)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.carrot);
-        }
-        else if(category.equals(Category.BERRY)){
+        } else if (category.equals(Category.BERRY)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
-        }
-        else if(category.equals(Category.MUSHROOM)){
+        } else if (category.equals(Category.MUSHROOM)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
-        }
-        else{
+        } else {
             return BitmapDescriptorFactory.fromResource(R.drawable.marker);
         }
     }
@@ -230,6 +282,90 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * Initializes the filter button with all its functionality, besides closing the window upon
+     * clicking elsewhere. That is done in onMapReady
+     */
+    protected void initFilterBtn() {
+        RelativeLayout rel = ((RelativeLayout) findViewById(R.id.filterBoxes));
+        // Arbitrary number for ID which hopefully doesn't collide with other ID
+        int id = 5030201;
+        // The amounts of lines currently added
+        int counter = 0;
+        for (final Category category : Category.values()) {
+            checkBoxes.add(category);
+
+            createCheckbox(id, counter, category, rel);
+            createTextView(id, counter, category, rel);
+
+            counter++;
+        }
+        rel.getLayoutParams().height = 50 + 60 * counter;
+
+        // Find the filter button
+        filterBtn = (ImageButton) findViewById(R.id.filterbtn);
+
+        // Set a listener to make the RelativeLayout visible
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel) {
+        // Create parameters for the check box
+        RelativeLayout.LayoutParams paramsCB = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        CheckBox checkBox = new CheckBox(this);
+        checkBox.setChecked(true);
+        checkBox.setId(id);
+        checkBox.setButtonTintList(new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked} , // checked
+                },
+                new int[]{
+                        Color.parseColor("#FF6E73"),
+                        Color.parseColor("#FF6E73"),
+                }
+        ));
+        paramsCB.setMargins(0, 15 + 60 * counter, 0, 0);
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    checkBoxes.add(category);
+                    updateMarkers();
+                } else {
+                    checkBoxes.remove(category);
+                    updateMarkers();
+                }
+            }
+        });
+        rel.addView(checkBox, paramsCB);
+    }
+
+    private void createTextView(int id, int counter, final Category category, RelativeLayout rel) {
+        // Create parameters for the text view
+        RelativeLayout.LayoutParams paramsTxt = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        // Create a TextView with the specified margins and
+        // an ID which should not collide with the checkbox's ID
+        TextView txt = new TextView(this);
+        txt.setId(id + 1000);
+        paramsTxt.setMargins(100, 30 + 60 * (counter), 0, 0);
+        txt.setText(category.toString());
+        rel.addView(txt, paramsTxt);
     }
 
     protected float initZoom() {

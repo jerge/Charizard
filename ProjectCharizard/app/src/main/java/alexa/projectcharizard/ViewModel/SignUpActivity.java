@@ -3,6 +3,7 @@ package alexa.projectcharizard.ViewModel;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +14,12 @@ import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
+
+/**
+ * Activity for signing up an account in the application
+ * This is accessed from the sign in activity
+ * @author Mathias Lammers
+ */
 
 public class SignUpActivity extends Activity {
 
@@ -28,6 +35,9 @@ public class SignUpActivity extends Activity {
         setContentView(R.layout.activity_signup);
         setUpUIViews();
 
+
+
+        //When the 'Sign up' button is clicked, this is what happens
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,15 +50,24 @@ public class SignUpActivity extends Activity {
                     String emailInput = signUpEmail.getText().toString();
 
                     //Checking if the username and email is already in use
-                    if(checkIfUsernameTaken(usernameInput) || checkIfEmailTaken(emailInput)){
-                        Toast.makeText(getApplicationContext(), "Username or email already taken", Toast.LENGTH_LONG).show();
-                    }else{
+                    if(checkIfUsernameTaken(usernameInput)){
 
+                        Toast.makeText(getApplicationContext(), "Username already taken, please choose another", Toast.LENGTH_LONG).show();
+
+                    }else if (!isValidEmail(emailInput)){
+
+                        Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
+
+                    }else if (checkIfEmailTaken(emailInput)){
+
+                        Toast.makeText(getApplicationContext(), "Email already taken, please choose another", Toast.LENGTH_LONG).show();
+
+                    }else{
                         // Saving the information the user has entered as a new user in the database
                         User user = new User(usernameInput, emailInput, passwordInput, null);
                         database.saveUser(user);
 
-                        CurrentRun.getInstance().setActiveUser(user);
+                        currentRun.setActiveUser(user);
 
                         // Directing the user to Maps Activity
                         Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
@@ -105,7 +124,7 @@ public class SignUpActivity extends Activity {
      * @return True if the username is already in use, false if not
      */
     private Boolean checkIfUsernameTaken(String usernameInput){
-        for (User user : CurrentRun.getCurrentRunUsers()){
+        for (User user : currentRun.getCurrentRunUsers()){
             if (user.getUsername().equalsIgnoreCase(usernameInput))
                 return true;
         }
@@ -119,11 +138,16 @@ public class SignUpActivity extends Activity {
      * @return True if the e-mail is already in use, false if not
      */
     private Boolean checkIfEmailTaken(String emailInput){
+
         for (User user : CurrentRun.getCurrentRunUsers()){
-            if (user.getEmail().equalsIgnoreCase(emailInput))
+            if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(emailInput))
                 return true;
         }
         return false;
+    }
+
+    public static boolean isValidEmail(final String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
 }

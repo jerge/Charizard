@@ -1,7 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,7 @@ public class AboutFragment extends Fragment {
         return v;
     }
 
-    private void initFragment(View v){
+    private void initFragment(View v) {
         spotDescription = (TextView) v.findViewById(R.id.spotDescription);
         spotName = (TextView) v.findViewById(R.id.spotName);
         removeBtn = (Button) v.findViewById(R.id.removeBtn);
