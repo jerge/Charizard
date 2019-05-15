@@ -30,6 +30,8 @@ public class ChangeEmailActivity extends AppCompatActivity {
     private Intent intent;
     private DatabaseReference dataReference;
 
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +39,11 @@ public class ChangeEmailActivity extends AppCompatActivity {
         initView();
         initText();
 
+        userId = CurrentRun.getActiveUser().getId();
+
         intent = getIntent();
         dataReference = Database.getInstance().getDatabaseReference().child("Users")
-                                .child(intent.getStringExtra("UserId"));
+                                .child(userId);
 
     }
 
@@ -56,8 +60,8 @@ public class ChangeEmailActivity extends AppCompatActivity {
      * Sets initial text
      */
     private void initText() {
-        String message = intent.getStringExtra("UserEmail");
-        currentEmailView.setText(message);
+        String currentEmail = CurrentRun.getActiveUser().getEmail();
+        currentEmailView.setText(currentEmail);
     }
 
     /**
@@ -76,9 +80,11 @@ public class ChangeEmailActivity extends AppCompatActivity {
         } else if (isValidEmail(newEmail) && newEmail.equals(verifMail)) {
             // Change the users email address and notify the user'
             dataReference.child("email").setValue(newEmail);
-            //CurrentRun.getInstance().getActiveUser().setEmail(newEmail);
+            CurrentRun.getActiveUser().setEmail(newEmail);
             currentEmailView.setText(newEmail);
             Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ChangeEmailActivity.this, AccountPageActivity.class);
+            startActivity(intent);
         } else if (isValidEmail(newEmail)) {
             // Return error message that the verification field does not match
             Toast.makeText(getApplicationContext(), "Email does not match", Toast.LENGTH_SHORT).show();

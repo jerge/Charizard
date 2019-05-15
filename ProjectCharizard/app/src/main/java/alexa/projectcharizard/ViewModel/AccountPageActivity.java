@@ -32,9 +32,6 @@ public class AccountPageActivity extends AppCompatActivity {
     private TextView nameView;
     private TextView emailView;
 
-    // Accessing the current user information
-    private CurrentRun currentRun;
-
     // Accessing the database to update user information
     private DatabaseReference dataReference;
 
@@ -44,7 +41,6 @@ public class AccountPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_page);
         initViews();
         initTextInViews();
-        currentRun = CurrentRun.getInstance();
         dataReference = Database.getInstance().getDatabaseReference().child("Users");
     }
     /**
@@ -163,8 +159,6 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     public void changeEmailAction(View view) {
         Intent intent = new Intent(this, ChangeEmailActivity.class);
-        intent.putExtra("UserEmail", CurrentRun.getActiveUser().getEmail());
-        intent.putExtra("UserId", CurrentRun.getActiveUser().getId());
         startActivity(intent);
     }
 
@@ -176,12 +170,12 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     public void changePasswordAction(View view) {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("UserPassword", CurrentRun.getActiveUser().getPassword());
-        intent.putExtra("UserId", CurrentRun.getActiveUser().getId());
         startActivity(intent);
     }
 
     /**
+     * Deletes the account, currently not implemented
+     *
      * @param view the view which calls this method in click
      */
     public void deleteAccountAction(View view) {
