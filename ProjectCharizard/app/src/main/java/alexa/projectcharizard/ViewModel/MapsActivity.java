@@ -159,16 +159,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Returns true if the spot's category is checked true in the checkbox, otherwise false
-     *
-     * @param s the spot to check
-     * @return true if the spot's category is checked true in the checkbox, otherwise false
-     */
-    private boolean filter(Spot s) {
-        return checkBoxes.contains(s.getCategory());
-    }
-
-    /**
      * A method for showing the user's location on the map
      */
     protected void showUserLocation() {
@@ -218,7 +208,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         for (Spot spot : currentRun.getSpots()) {
             //Add all markers
-            if (filter(spot)) {
+            if (filter(spot) && (privacyVisible(spot))) {
                 Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                         .title(spot.getName())
@@ -238,6 +228,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
+        }
+    }
+
+    /**
+     * Returns true if the spot's category is checked true in the checkbox, otherwise false
+     *
+     * @param s the spot to check
+     * @return true if the spot's category is checked true in the checkbox, otherwise false
+     */
+    private boolean filter(Spot s) {
+        return checkBoxes.contains(s.getCategory());
+    }
+
+    private boolean privacyVisible(Spot s) {
+        if (!s.getPrivacy() || s.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
+            return true;
+        } else {
+            return false;
         }
     }
 

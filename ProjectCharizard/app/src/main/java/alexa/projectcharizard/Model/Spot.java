@@ -15,7 +15,7 @@ public class Spot {
     private Bitmap image;
     private String creatorId;
     private String id;
-    private boolean isPrivate;
+    private boolean privacy;
 
 
     /**
@@ -29,7 +29,7 @@ public class Spot {
      * @param image
      */
     public Spot(String name, Double latitude, Double longitude, String description,
-                Category category, Bitmap image, String id, String creatorId, boolean isPrivate) {
+                Category category, Bitmap image, String id, String creatorId, boolean privacy) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -38,7 +38,7 @@ public class Spot {
         this.image = image;
         this.id = id;
         this.creatorId = creatorId;
-        this.isPrivate = isPrivate;
+        this.privacy = privacy;
     }
 
     /**
@@ -52,7 +52,7 @@ public class Spot {
      * @param image
      */
     public Spot(String name, Double latitude, Double longitude, String description,
-                Category category, Bitmap image, String id, boolean isPrivate) {
+                Category category, Bitmap image, String id, boolean privacy) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -60,7 +60,7 @@ public class Spot {
         this.category = category;
         this.image = image;
         this.id = id;
-        this.isPrivate = isPrivate;
+        this.privacy = privacy;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Spot {
      * @param image
      */
     public Spot(String name, Double latitude, Double longitude, String description,
-                Bitmap image, String creatorId, boolean isPrivate) {
+                Bitmap image, String creatorId, boolean privacy) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -81,7 +81,7 @@ public class Spot {
         this.category = Category.OTHER;
         this.image = image;
         this.creatorId = creatorId;
-        this.isPrivate = isPrivate;
+        this.privacy = privacy;
     }
 
     public Spot() {
@@ -118,5 +118,9 @@ public class Spot {
 
     public String getId() {
         return id;
+    }
+
+    public boolean getPrivacy() {
+        return privacy;
     }
 }

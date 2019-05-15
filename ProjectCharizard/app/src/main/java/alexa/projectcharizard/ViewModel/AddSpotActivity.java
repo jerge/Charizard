@@ -80,23 +80,24 @@ public class AddSpotActivity extends MapsActivity {
      */
     public void addNewSpot(View view) {
 
-        if (txtName.getText().toString().isEmpty()) {
+        if (latitude == null || longitude == null) {    //creates a toast if no spot location has been chosen
+            Toast.makeText(getApplicationContext(), "Choose the location of your spot", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (txtName.getText().toString().isEmpty()) {   //creates a toast if no name has been chosen for the spot
             Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
             return;
         }
         String name = txtName.getText().toString();
 
-        if (txtDescription.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in description", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String description = txtDescription.getText().toString();
-
-        if (currentCategory == null) {
+        if (currentCategory == null) {  //creates a toast if no category has been chosen for the spot
             Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
             return;
         }
         Category category = getCategoryEnum(currentCategory);
+
+        String description = txtDescription.getText().toString();
 
         Bitmap image = null;
 
@@ -137,6 +138,9 @@ public class AddSpotActivity extends MapsActivity {
         }
     }
 
+    /**
+     * Couples the GUI with functionality as well as preparing the elements
+     */
     private void initView() {
 
         txtName = findViewById(R.id.txtName);
@@ -263,11 +267,19 @@ public class AddSpotActivity extends MapsActivity {
     protected void initFilterBtn() {
     }
 
+    /**
+     * Initial zoom value of the map
+     * @return
+     */
     @Override
     protected float initZoom() {
         return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
     }
 
+    /**
+     * Initial location showing on the map
+     * @return
+     */
     @Override
     protected LatLng initLoc() {
         return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat", 57),
