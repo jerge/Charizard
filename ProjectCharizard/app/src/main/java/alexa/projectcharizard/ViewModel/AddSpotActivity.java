@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -40,6 +41,8 @@ public class AddSpotActivity extends MapsActivity {
 
     private EditText txtName;
     private EditText txtDescription;
+
+    private TextView privateSwitchText;
 
     private ImageView backButton;
 
@@ -144,12 +147,30 @@ public class AddSpotActivity extends MapsActivity {
         // Set default parameters
         currentCategory = "Other";
 
-        // Set checkbox default
-        privateSwitch = findViewById(R.id.privateSwitch);
-        privateSwitch.setChecked(false);
-        privateSwitch.setText(R.string.private_switch_unchecked);
-
+        initSwitch();
         initSpinner();
+    }
+
+    /**
+     * Sets defaults and connects listener to switch
+     */
+    private void initSwitch() {
+        // Set switch default
+        privateSwitch = findViewById(R.id.privateSwitch);
+        privateSwitchText = findViewById(R.id.privateSwitchText);
+        privateSwitch.setChecked(false);
+        privateSwitchText.setText(R.string.private_switch_unchecked);
+
+        privateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    privateSwitchText.setText(R.string.private_switch_checked);
+                } else {
+                    privateSwitchText.setText(R.string.private_switch_unchecked);
+                }
+            }
+        });
     }
 
     /**

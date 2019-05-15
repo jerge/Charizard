@@ -11,5 +11,9 @@
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
     </style>
 
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">#5C6B3F</item>
+    </style>
+
 </resources>
 

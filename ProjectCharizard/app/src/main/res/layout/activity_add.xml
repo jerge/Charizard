@@ -70,28 +70,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
-    <Switch
-        android:id="@+id/privateSwitch"
-        android:layout_width="217dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="20dp"
-        android:layoutDirection="rtl"
-        android:switchPadding="30dp"
-        android:text="Visibility text"
-        app:layout_constraintStart_toStartOf="@id/txtDescription"
-        app:layout_constraintTop_toBottomOf="@+id/txtDescription" />
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDescription">
+
+        <Switch
+            android:id="@+id/privateSwitch"
+            android:layout_width="49dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="12dp"
+            android:switchPadding="30dp"
+            android:theme="@style/SwitchCompatTheme"/>
+
+        <TextView
+            android:id="@+id/privateSwitchText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Privacy text placeholder" />
+
+
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/categorySpinner"
         android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/privateSwitch" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
     <fragment
