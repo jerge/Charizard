@@ -1,8 +1,5 @@
 package alexa.projectcharizard.Model;
 
-import android.graphics.Bitmap;
-
-
 /**
  * A class for saving the properties of a Spot
  */
@@ -12,7 +9,6 @@ public class Spot {
     private Double longitude;
     private String description;
     private Category category;
-    private Bitmap image;
     private boolean visibility;
     private String creatorId;
     private String id;
@@ -26,17 +22,15 @@ public class Spot {
      * @param longitude
      * @param description
      * @param category
-     * @param image
      * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id, String creatorId) {
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean visibility, String id, String creatorId) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.visibility = visibility;
         this.category = category;
-        this.image = image;
         this.id = id;
         this.creatorId = creatorId;
     }
@@ -49,16 +43,14 @@ public class Spot {
      * @param longitude
      * @param description
      * @param category
-     * @param image
      * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id) {
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean visibility, String id) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = category;
-        this.image = image;
         this.visibility = visibility;
         this.id = id;
     }
@@ -70,17 +62,15 @@ public class Spot {
      * @param latitude
      * @param longitude
      * @param description
-     * @param image
      * @param visibility
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility, String creatorId) {
+    public Spot(String name, Double latitude, Double longitude, String description, boolean visibility, String creatorId) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = Category.OTHER;
         this.visibility = visibility;
-        this.image = image;
         this.creatorId = creatorId;
     }
 
@@ -110,10 +100,6 @@ public class Spot {
 
     public boolean isVisibility() {
         return visibility;
-    }
-
-    public Bitmap getImage() {
-        return image;
     }
 
     public String getCreatorId() {

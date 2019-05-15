@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -128,14 +127,11 @@ public class AddSpotActivity extends MapsActivity {
         }
 
 
-
-        Bitmap image = null;
-
         //Open connection to database and save the spot on the database.
         Database database = Database.getInstance();
 
         // Saving the current Spot and then adding it to a list of Spots added during current run.
-        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility, CurrentRun.getActiveUser().getId()));
+        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, visibility, CurrentRun.getActiveUser().getId()));
         finish();
     }
 
@@ -329,9 +325,9 @@ public class AddSpotActivity extends MapsActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading");
             progressDialog.show();
-            //String id = databaseReference.child("Spots").push().getKey();
 
-            StorageReference riversRef = Database.getInstance().getStorageReference().child("images/pic.jpg");
+            final String id = Database.getInstance().getDatabaseReference().child("Spots").push().getKey();
+            StorageReference riversRef = Database.getInstance().getStorageReference().child("images/" + id);
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -346,7 +342,7 @@ public class AddSpotActivity extends MapsActivity {
                             Database database = Database.getInstance();
 
                             // Saving the current Spot and then adding it to a list of Spots added during current run.
-                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, null, visibility, CurrentRun.getActiveUser().getId()));
+                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(id, name, lat, lng, description, category, visibility, CurrentRun.getActiveUser().getId()));
                             finish();
                         }
                     })
@@ -373,10 +369,6 @@ public class AddSpotActivity extends MapsActivity {
                             progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
                         }
                     });
-        }
-        //if there is not any file
-        else {
-            //you can display an error toast
         }
     }
 

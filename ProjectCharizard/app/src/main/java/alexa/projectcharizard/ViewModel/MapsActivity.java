@@ -184,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // If not request permission to access fine location
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         } else {
             mMap.setMyLocationEnabled(true);
         }
@@ -324,8 +324,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-
-
     }
 
     private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel) {
@@ -340,7 +338,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkBox.setButtonTintList(new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked}, // unchecked
-                        new int[]{android.R.attr.state_checked} , // checked
+                        new int[]{android.R.attr.state_checked}, // checked
                 },
                 new int[]{
                         Color.parseColor("#FF6E73"),

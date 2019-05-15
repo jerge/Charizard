@@ -1,27 +1,9 @@
 package alexa.projectcharizard.Model;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.webkit.MimeTypeMap;
-
-import com.google.android.gms.auth.api.signin.internal.Storage;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.File;
-import java.nio.charset.Charset;
-import java.sql.Blob;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 /**
@@ -85,6 +67,7 @@ public class Database {
     /**
      * Function that saves user in the database
      * The user receives an id and gets saved at that unique id in the database
+     *
      * @param user the user which gets saved
      */
     public void saveUser(User user) {
@@ -94,11 +77,21 @@ public class Database {
     }
 
 
+    // A constructor for spots with images, they have already created an ID for the spot
+    public Spot saveSpot(String id, String name, Double dblLat, Double dblLng, String description, Category category, Boolean visibility, String userId) {
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, visibility, id, userId);
+        if (id != null) {
+            databaseReference.child("Spots").child(id).setValue(spot);
+        }
+        currentRun.getSpots().add(spot);
+        //currentRun.getActiveUser().getUserSpots().add(spot); //TODO make this work pls lmao
+        return spot;
+    }
 
-    public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Bitmap image, Boolean visibility, String userId) {
+    public Spot saveSpot(String name, Double dblLat, Double dblLng, String description, Category category, Boolean visibility, String userId) {
 
         String id = databaseReference.child("Spots").push().getKey();
-        Spot spot = new Spot(name, dblLat, dblLng, description, category, image, visibility, id, userId);
+        Spot spot = new Spot(name, dblLat, dblLng, description, category, visibility, id, userId);
         if (id != null) {
             databaseReference.child("Spots").child(id).setValue(spot);
         }
