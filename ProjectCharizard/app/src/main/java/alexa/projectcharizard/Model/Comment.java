@@ -20,6 +20,7 @@ public class Comment implements Serializable {
     }
 
     public Comment() {
+        // Required for Firebase to create new Comments
     }
 
     public String getUsername() {
