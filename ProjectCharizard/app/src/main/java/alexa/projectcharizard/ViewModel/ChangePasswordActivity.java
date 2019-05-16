@@ -24,8 +24,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private TextView currentPasswordView;
     private EditText newPasswordField;
     private EditText verifNewPasswordField;
+
     private Intent intent;
     private DatabaseReference dataReference;
+
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +36,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_password);
         initView();
         initText();
+
+        userId = CurrentRun.getActiveUser().getId();
+
         intent = getIntent();
         dataReference = Database.getInstance().getDatabaseReference().child("Users")
-                                .child(intent.getStringExtra("UserId"));
+                                .child(userId);
 
     }
 
@@ -48,8 +54,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         verifNewPasswordField = findViewById(R.id.verifNewPasswordField);
     }
 
+    /**
+     * Sets initial text
+     */
     private void initText() {
-        String currentPassword = intent.getStringExtra("UserPassword");
+        String currentPassword = CurrentRun.getActiveUser().getPassword();
         currentPasswordView.setText(currentPassword);
     }
 
@@ -69,9 +78,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
         } else {
             dataReference.child("password").setValue(newPassword);
-            //CurrentRun.getInstance().getActiveUser().setPassword(newPassword);
+            CurrentRun.getActiveUser().setPassword(newPassword);
             currentPasswordView.setText(newPassword);
             Toast.makeText(getApplicationContext(), "Password changed", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ChangePasswordActivity.this, AccountPageActivity.class);
+            startActivity(intent);
         }
     }
 

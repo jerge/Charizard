@@ -25,10 +25,12 @@ public class ChangeEmailActivity extends AppCompatActivity {
 
     private TextView currentEmailView;
     private EditText newEmailView;
-    private EditText verifNewEmailView;
+    private EditText verifyNewEmailView;
 
     private Intent intent;
     private DatabaseReference dataReference;
+
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +39,11 @@ public class ChangeEmailActivity extends AppCompatActivity {
         initView();
         initText();
 
+        userId = CurrentRun.getActiveUser().getId();
+
         intent = getIntent();
         dataReference = Database.getInstance().getDatabaseReference().child("Users")
-                                .child(intent.getStringExtra("UserId"));
+                                .child(userId);
 
     }
 
@@ -49,15 +53,15 @@ public class ChangeEmailActivity extends AppCompatActivity {
     private void initView() {
         currentEmailView = (TextView) findViewById(R.id.currentEmailView);
         newEmailView = (EditText) findViewById(R.id.newEmailView);
-        verifNewEmailView = (EditText) findViewById(R.id.verifNewEmailView);
+        verifyNewEmailView = (EditText) findViewById(R.id.verifyNewEmailView);
     }
 
     /**
      * Sets initial text
      */
     private void initText() {
-        String message = intent.getStringExtra("UserEmail");
-        currentEmailView.setText(message);
+        String currentEmail = CurrentRun.getActiveUser().getEmail();
+        currentEmailView.setText(currentEmail);
     }
 
     /**
@@ -69,16 +73,18 @@ public class ChangeEmailActivity extends AppCompatActivity {
      */
     public void changeEmailButtonAction(View view) {
         String newEmail = newEmailView.getText().toString();
-        String verifMail = verifNewEmailView.getText().toString();
+        String verifMail = verifyNewEmailView.getText().toString();
         if (newEmail.equals(intent.getStringExtra("UserEmail"))) {
             // Return error message that the new email is the same as the old one
             Toast.makeText(getApplicationContext(), "New email is the same as the old email", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail) && newEmail.equals(verifMail)) {
             // Change the users email address and notify the user'
             dataReference.child("email").setValue(newEmail);
-            //CurrentRun.getInstance().getActiveUser().setEmail(newEmail);
+            CurrentRun.getActiveUser().setEmail(newEmail);
             currentEmailView.setText(newEmail);
             Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ChangeEmailActivity.this, AccountPageActivity.class);
+            startActivity(intent);
         } else if (isValidEmail(newEmail)) {
             // Return error message that the verification field does not match
             Toast.makeText(getApplicationContext(), "Email does not match", Toast.LENGTH_SHORT).show();
