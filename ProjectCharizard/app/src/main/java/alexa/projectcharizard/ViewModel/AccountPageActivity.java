@@ -39,6 +39,8 @@ public class AccountPageActivity extends AppCompatActivity {
     private DatabaseReference dataReference;
     private Database database = Database.getInstance();;
 
+    Boolean deleteUser = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,16 +190,50 @@ public class AccountPageActivity extends AppCompatActivity {
     }
 
     /**
-     * Deletes the account, currently not implemented
-     *
+     * Method called when the user presses delete account button/text. Starts with asking for a
+     * confirmation from user.
      * @param view the view which calls this method in click
      */
     public void deleteAccountAction(View view) {
-        System.out.println("In deleteAccountAction method. Current user is: " + CurrentRun.getActiveUser().getId());
-        database.deleteUser(CurrentRun.getActiveUser().getId());
-        System.out.println("After deleteUser method has been run");
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
+
+        confirmDialog();
+
+        if (deleteUser){
+            database.deleteUser(CurrentRun.getActiveUser().getId());
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivity(intent);
+            Toast.makeText(getApplicationContext(), "Your account has been deleted.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * A dialog box that shows up when the user clicks "Delete user" button, asking the user
+     * to confirm the choice.
+     * @return True if the user says yes, otherwise no
+     */
+    private Boolean confirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setTitle("Delete account");
+        builder.setMessage("You are about to delete your account. Do you want to proceed ?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User chose yes, returns the user to the log in page
+                deleteUser = true;
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User chose no, returning to account page
+                deleteUser = false;
+            }
+        });
+
+        builder.show();
+        return deleteUser;
     }
 
 }

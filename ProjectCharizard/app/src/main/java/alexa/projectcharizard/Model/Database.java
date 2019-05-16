@@ -89,12 +89,19 @@ public class Database {
         }
     }
 
+    /**
+     * A method for removing the user from the database. Called after the user presses the
+     * delete account button/text.
+     * @param id The ID of the user
+     */
     public void deleteUser(String id) {
         databaseReference.child(id).removeValue();
         for (User user : currentRun.getUsers()) {
             if (user.getId().equals(id)) {
                 System.out.println("Removing user " + user.getId());
                 Database.getInstance().getDatabaseReference().child("Users").child(id).removeValue();
+                currentRun.getUsers().remove(user);
+                return;
             }
         }
     }
