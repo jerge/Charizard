@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,23 +52,30 @@ public class CommentsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(commentsAdapter);
 
+        initButton();
+
+
+        return v;
+    }
+
+    private void initButton() {
         // Button that saves and uploads a new comment.
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DateTime dateTime = new DateTime();
-                String tempDate = "20" + dateTime.getYearOfCentury()
+                String dateString = "20" + dateTime.getYearOfCentury()
                         + "/" + dateTime.getMonthOfYear()
                         + "/" + dateTime.getDayOfMonth()
                         + "  " + dateTime.getHourOfDay()
-                        + ":" + dateTime.getMinuteOfHour();
+                        + ":" + getMinuteOfHour(dateTime);
                 // The comment that is supposed to be saved.
-                Comment tempComment = new Comment(spot.getCreatorId(), comment.getText().toString(),
-                        tempDate);
+                Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
+                        dateString);
                 // Saves comment to the database.
-                database.saveComment(tempComment, spot.getId());
+                database.saveComment(newComment, spot.getId());
                 // Saves comment to the commentlist.
-                spot.getCommentList().add(tempComment);
+                spot.getCommentList().add(newComment);
 
                 // Resets the text in the comment zone, and resets the focus
                 comment.setText("");
@@ -78,7 +87,6 @@ public class CommentsFragment extends Fragment {
                 recyclerView.setAdapter(commentsAdapter);
             }
         });
-        return v;
     }
 
     /**
@@ -102,6 +110,13 @@ public class CommentsFragment extends Fragment {
         }
     }
 
+    private String getMinuteOfHour(DateTime dateTime) {
+        if (dateTime.getMinuteOfHour() < 10){
+            return "0"+dateTime.getMinuteOfHour();
+        }
+        return dateTime.getMinuteOfHour() + "";
+    }
+
     /**
      * A method that initialized the fragment.
      *
@@ -112,6 +127,34 @@ public class CommentsFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.comment_recyclerView);
         comment = (EditText) v.findViewById(R.id.postTxt);
         send = (Button) v.findViewById(R.id.sentBtn);
+        // Starts the button as not enabled since there is no text to be used as a comment
+        send.setEnabled(false);
+        initCommentSection();
     }
 
+    /**
+     * A method that lets tells the send-button if there is text to be sent as a comment
+     */
+    private void initCommentSection() {
+        comment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().trim().length()==0){
+                    send.setEnabled(false);
+                } else {
+                    send.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
 }
