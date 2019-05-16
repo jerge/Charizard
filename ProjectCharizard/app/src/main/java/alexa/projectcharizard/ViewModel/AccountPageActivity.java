@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class AccountPageActivity extends AppCompatActivity {
     private TextView userNameView;
     private TextView nameView;
     private TextView emailView;
+    private Button signOutButton;
 
     // Accessing the current user information
     private CurrentRun currentRun;
@@ -46,6 +48,14 @@ public class AccountPageActivity extends AppCompatActivity {
         initTextInViews();
         currentRun = CurrentRun.getInstance();
         dataReference = Database.getInstance().getDatabaseReference().child("Users");
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountPageActivity.this, SignInActivity.class));
+            }
+        });
+
     }
     /**
      * Initialises Android view elements
@@ -54,6 +64,7 @@ public class AccountPageActivity extends AppCompatActivity {
         userNameView = findViewById(R.id.userNameView);
         nameView = findViewById(R.id.nameView);
         emailView = findViewById(R.id.emailView);
+        signOutButton = findViewById(R.id.signOutButton);
     }
 
     /**
