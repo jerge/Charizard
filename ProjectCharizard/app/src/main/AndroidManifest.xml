@@ -40,7 +40,6 @@
         <activity android:name=".ViewModel.DetailedViewActivity"/>
         <activity android:name=".ViewModel.AddSpotActivity"/>
         <activity android:name=".ViewModel.EditSpotActivity" />
-
         <activity
             android:name=".ViewModel.SignInActivity"
             android:label="@string/app_name">

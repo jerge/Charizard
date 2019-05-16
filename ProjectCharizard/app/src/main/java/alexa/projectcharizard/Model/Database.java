@@ -21,7 +21,7 @@ public class Database {
     /**
      * A reference that communicates with the Storage part of Firebase
      */
-    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
 
     /**
@@ -102,7 +102,7 @@ public class Database {
 
     /**
      * A method for removing a spot, also removes from the list of spots
-     *
+     * Also removes the spot from storage
      * @param id The id of the spot to be removed
      */
     public void remove(String id) {
@@ -112,6 +112,7 @@ public class Database {
                 currentRun.getSpots().remove(spot);
             }
         }
+        storageReference.child("images/" + id).delete();
     }
 
 }

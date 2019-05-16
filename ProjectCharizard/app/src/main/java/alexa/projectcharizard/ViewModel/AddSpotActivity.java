@@ -302,7 +302,14 @@ public class AddSpotActivity extends MapsActivity {
         });
     }
 
-    //handling the image chooser activity result
+    /**
+     * Upon choosing a file, this method is called to update the filePath.
+     * Also sets the picture of addedImage to the choosen file.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -318,29 +325,43 @@ public class AddSpotActivity extends MapsActivity {
         }
     }
 
+    /**
+     * Uploads a file to the firebase storage.
+     * It shows a progress bar until done and then finishes the activity
+     *
+     * @param name
+     * @param lat
+     * @param lng
+     * @param description
+     * @param category
+     * @param visibility
+     * @param userId
+     */
     private void uploadFile(final String name, final double lat, final double lng, final String description, final Category category, final Boolean visibility, String userId) {
-        //if there is a file to upload
+        // If the user has selected a file
         if (filePath != null) {
             //displaying a progress dialog while upload is going on
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading");
             progressDialog.show();
 
+            // Gets the ID for the spot that is about to be created
             final String id = Database.getInstance().getDatabaseReference().child("Spots").push().getKey();
-            StorageReference riversRef = Database.getInstance().getStorageReference().child("images/" + id);
-            riversRef.putFile(filePath)
+            // Names the image the same as the spot ID and puts it in folder /images/
+            StorageReference imageRef = Database.getInstance().getStorageReference().child("images/" + id);
+            imageRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            //if the upload is successfull
+                            //if the upload is successful
                             //hiding the progress dialog
                             progressDialog.dismiss();
 
-                            //and displaying a success toast
+                            // and displaying a success toast
                             Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
-                            //Open connection to database and save the spot on the database.
-                            Database database = Database.getInstance();
 
+                            // Open connection to database and save the spot on the database.
+                            Database database = Database.getInstance();
                             // Saving the current Spot and then adding it to a list of Spots added during current run.
                             CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(id, name, lat, lng, description, category, visibility, CurrentRun.getActiveUser().getId()));
                             finish();
@@ -349,13 +370,13 @@ public class AddSpotActivity extends MapsActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            //if the upload is not successfull
-                            //hiding the progress dialog
+                            // if the upload is not successful
+                            // hiding the progress dialog
                             progressDialog.dismiss();
 
-                            //and displaying error message
-                            Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-
+                            // and displaying error message
+                            Toast.makeText(getApplicationContext(), exception.getMessage() + " . Spot not saved, please try again", Toast.LENGTH_LONG).show();
+                            // Finishes the activity
                             finish();
                         }
                     })

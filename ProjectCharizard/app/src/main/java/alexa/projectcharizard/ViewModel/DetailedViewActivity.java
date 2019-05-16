@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
 
 public class DetailedViewActivity extends AppCompatActivity {
@@ -61,10 +61,10 @@ public class DetailedViewActivity extends AppCompatActivity {
         final ImageView iv = findViewById(R.id.htab_header);
 
         // Gets the location in Storage of the picture
-        StorageReference he = FirebaseStorage.getInstance().getReference()
+        StorageReference imageReference = Database.getInstance().getStorageReference()
                 .child("images/" + getIntent().getStringExtra("SpotId"));
         // Tries to download from the url
-        he.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 String imageURL = uri.toString();
