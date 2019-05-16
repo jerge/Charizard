@@ -280,17 +280,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isOnline()) {
-                    Toast.makeText(getBaseContext(), "You have to be connected to internet to add a spot. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-
-                }
-                else{
+                if(isOnline()) {
                     Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
                     intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
                     intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
                     intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
                     startActivity(intent);
+                }else{
+                    Toast.makeText(getBaseContext(), "You have to be connected to internet to add a spot. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -395,7 +393,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnected()) {
             return true;
         } else {
             return false;

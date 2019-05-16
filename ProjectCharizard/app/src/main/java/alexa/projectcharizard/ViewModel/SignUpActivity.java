@@ -45,11 +45,7 @@ public class SignUpActivity extends Activity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isOnline()) {
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-                } else {
-
+                if (isOnline()) {
                     //Checking whether the user has entered information in all the fields
                     if (areFieldsFilledIn()) {
 
@@ -82,7 +78,11 @@ public class SignUpActivity extends Activity {
                             startActivity(mapActivity);
                         }
                     }
+                } else{
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
 
@@ -166,7 +166,7 @@ public class SignUpActivity extends Activity {
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnected()) {
             return true;
         } else {
             return false;
