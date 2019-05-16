@@ -80,7 +80,7 @@ public class Database {
      *
      * @param id The id of the spot to be removed
      */
-    public void remove(String id) {
+    public void removeSpot(String id) {
         databaseReference.child(id).removeValue();
         for (Spot spot : currentRun.getSpots()) {
             if (spot.getId().equals(id)) {
@@ -88,4 +88,18 @@ public class Database {
             }
         }
     }
+
+    public void deleteUser(String id) {
+        System.out.println("In deleteUser method");
+        databaseReference.child(id).removeValue();
+        for (User user : currentRun.getUsers()) {
+            System.out.println("In for-loop. Currently looking at user: " + user.getId());
+            if (user.getId().equals(id)) {
+                System.out.println("Removing user " + user.getId());
+                currentRun.getUsers().remove(user);
+                System.out.println("After currentRun.getUsers().remove(user) has been run");
+            }
+        }
+    }
+
 }

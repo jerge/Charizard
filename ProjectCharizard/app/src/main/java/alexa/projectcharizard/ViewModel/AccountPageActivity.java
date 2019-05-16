@@ -32,10 +32,12 @@ public class AccountPageActivity extends AppCompatActivity {
     private TextView userNameView;
     private TextView nameView;
     private TextView emailView;
+    private TextView deleteAccountView;
     private Button signOutButton;
 
     // Accessing the database to update user information
     private DatabaseReference dataReference;
+    private Database database = Database.getInstance();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class AccountPageActivity extends AppCompatActivity {
         nameView = findViewById(R.id.nameView);
         emailView = findViewById(R.id.emailView);
         signOutButton = findViewById(R.id.signOutButton);
+        deleteAccountView = findViewById(R.id.deleteAccountText);
     }
 
     /**
@@ -190,8 +193,11 @@ public class AccountPageActivity extends AppCompatActivity {
      * @param view the view which calls this method in click
      */
     public void deleteAccountAction(View view) {
-        String message = "Execute Order 66";
-        Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
+        System.out.println("In deleteAccountAction method. Current user is: " + CurrentRun.getActiveUser().getId());
+        database.deleteUser(CurrentRun.getActiveUser().getId());
+        System.out.println("After deleteUser method has been run");
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
     }
 
 }

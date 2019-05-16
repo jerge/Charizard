@@ -279,10 +279,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
-                intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
+                Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
+                /*intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
                 intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
-                intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
+                intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);*/
                 startActivity(intent);
             }
         });
