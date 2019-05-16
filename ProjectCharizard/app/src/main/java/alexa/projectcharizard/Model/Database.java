@@ -106,7 +106,7 @@ public class Database {
      * @param id The id of the spot to be removed
      */
     public void remove(String id) {
-        databaseReference.child(id).removeValue();
+        Database.getInstance().getDatabaseReference().child("Spots").child(id).removeValue();
         for (Spot spot : currentRun.getSpots()) {
             if (spot.getId().equals(id)) {
                 currentRun.getSpots().remove(spot);
