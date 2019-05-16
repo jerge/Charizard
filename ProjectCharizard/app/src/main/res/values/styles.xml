@@ -12,7 +12,7 @@
     </style>
 
     <style name="SwitchCompatTheme" >
-        <item name="colorControlActivated">#5C6B3F</item>
+        <item name="colorControlActivated">#FF6E73</item>
     </style>
 
 </resources>

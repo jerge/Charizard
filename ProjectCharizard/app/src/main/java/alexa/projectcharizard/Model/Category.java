@@ -8,5 +8,6 @@ public enum Category {
     VEGETABLE,
     BERRY,
     MUSHROOM,
+    PRIVATE,
     OTHER
 }
