@@ -46,7 +46,6 @@ public class Database {
     private Database() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-
     }
 
     /**
@@ -77,10 +76,11 @@ public class Database {
      * @param id The id of the spot to be removed
      */
     public void remove(String id) {
-        databaseReference.child(id).removeValue();
+        Database.getInstance().getDatabaseReference().child("Spots").child(id).removeValue();
         for (Spot spot : currentRun.getSpots()) {
             if (spot.getId().equals(id)) {
                 currentRun.getSpots().remove(spot);
+                return;
             }
         }
     }
@@ -92,6 +92,7 @@ public class Database {
      * @param spotId The spot the comment is to be saved in
      */
     public void saveComment(Comment comment, String spotId) {
-        databaseReference.child("Spots").child(spotId).child("comments").push().setValue(comment);
+        Database.getInstance().getDatabaseReference().child("Spots").child(spotId)
+                .child("comments").push().setValue(comment);
     }
 }
