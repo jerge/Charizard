@@ -1,21 +1,22 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
 
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
@@ -60,10 +61,18 @@ public class SignInActivity extends Activity {
         /**
          * Add listeners for every clickable element
          */
+        //Internet connection is required to be able to sign in
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validate(username.getText().toString(), password.getText().toString());
+                if(!isOnline()) {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+
+                }
+                else{
+                    validate(username.getText().toString(), password.getText().toString());
+                }
 
             }
         });
@@ -136,6 +145,20 @@ public class SignInActivity extends Activity {
                 credErrorText.setVisibility(View.VISIBLE);
                 credErrorText.setText(getString(R.string.wrong_credentials));
             }
+        }
+    }
+
+    /**
+     * Method for checking if connected to internet.
+     * @return True if connected to internet, false otherwise
+     */
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
