@@ -67,35 +67,47 @@ public class AddSpotActivity extends MapsActivity {
     }
 
     /**
-     * Saves a new spot to the database
-     * starts by checking if fields are empty
+     * Saves a new spot to the database, but only if there is an internet connection.
+     * If connected, start checking if fields are empty
      *
      * @param view the view that contains the values for the spot
      */
     public void addNewSpot(View view) {
-        if(isOnline()) {
+        // if no internet connection, show a message
+        if(!isOnline()) {
+            Toast.makeText(getBaseContext(),"You are not connected to internet. " +
+                            "Please check your internet connection and try again.",
+                                Toast.LENGTH_LONG).show();
+        }
+        // If there is an internet connection, check if fields are empty. Then save spot.
+        else{
             if (txtLat.getText().toString().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Fill in latitude", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Fill in latitude",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             Double lat = Double.valueOf(txtLat.getText().toString());
             if (txtLong.getText().toString().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Fill in longitude", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Fill in longitude",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             Double lng = Double.valueOf(txtLong.getText().toString());
             if (txtName.getText().toString().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Fill in name",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             String name = txtName.getText().toString();
             if (txtDescription.getText().toString().isEmpty()) {
-                Toast.makeText(getApplicationContext(), "Fill in description", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Fill in description",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             String description = txtDescription.getText().toString();
             if (currentCategory == null) {
-                Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Select a category",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             Category category = getCategoryEnum(currentCategory);
@@ -106,12 +118,9 @@ public class AddSpotActivity extends MapsActivity {
             Database database = Database.getInstance();
 
             // Saving the current Spot and then adding it to a list of Spots added during current run.
-            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility, CurrentRun.getActiveUser().getId()));
+            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description,
+                    category, image, visibility, CurrentRun.getActiveUser().getId()));
             finish();
-        }
-        else{
-            Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                    "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -170,7 +179,8 @@ public class AddSpotActivity extends MapsActivity {
         }
 
         //Set the layout for the category spinner.
-        categoryArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryList);
+        categoryArrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, categoryList);
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryArrayAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

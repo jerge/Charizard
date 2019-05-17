@@ -177,9 +177,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     protected void showUserLocation() {
         // Check if app has permission to access fine location
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // If not request permission to access fine location
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_ACCESS_FINE_LOCATION);
         } else {
             mMap.setMyLocationEnabled(true);
@@ -271,6 +273,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Initializes the plus button to redirect to the AddSpotActivity
+     * Redirection requires an internet connection
      */
     protected void initPlsBtn() {
         // Find the plus button
@@ -279,15 +282,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isOnline()) {
+                //if no internet connection, show a message
+                if(!isOnline()) {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.",
+                                Toast.LENGTH_LONG).show();
+                }
+                //If there is an internet connection, redirect to the AddSpotActivity
+                else{
                     Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
                     intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
                     intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
                     intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
                     startActivity(intent);
-                }else{
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -391,9 +398,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * @return True if connected to internet, false otherwise
      */
     public boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(
+                        ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 
 }

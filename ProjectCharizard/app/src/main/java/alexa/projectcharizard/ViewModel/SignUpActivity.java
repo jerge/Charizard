@@ -1,7 +1,10 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -35,45 +38,52 @@ public class SignUpActivity extends Activity {
         setContentView(R.layout.activity_signup);
         setUpUIViews();
 
-
-
         //When the 'Sign up' button is clicked, this is what happens
+        //Internet connection is required to be able to sign up.
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if no internet connection, show a message
+                if (!isOnline()) {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                                    "Please check your internet connection and try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+                //if connected to internet
+                else{
+                //Checking whether the user has entered information in all the fields
+                if (areFieldsFilledIn()) {
 
-                    //Checking whether the user has entered information in all the fields
-                    if (areFieldsFilledIn()) {
+                    String usernameInput = signUpUsername.getText().toString();
+                    String passwordInput = signUpPassword.getText().toString();
+                    String emailInput = signUpEmail.getText().toString();
 
-                        String usernameInput = signUpUsername.getText().toString();
-                        String passwordInput = signUpPassword.getText().toString();
-                        String emailInput = signUpEmail.getText().toString();
+                    //Checking if the username and email is already in use
+                    if (checkIfUsernameTaken(usernameInput)) {
 
-                        //Checking if the username and email is already in use
-                        if (checkIfUsernameTaken(usernameInput)) {
+                        Toast.makeText(getApplicationContext(), "Username already taken, please choose another", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), "Username already taken, please choose another", Toast.LENGTH_LONG).show();
+                    } else if (!isValidEmail(emailInput)) {
 
-                        } else if (!isValidEmail(emailInput)) {
+                        Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), "Please enter a valid email", Toast.LENGTH_LONG).show();
+                    } else if (checkIfEmailTaken(emailInput)) {
 
-                        } else if (checkIfEmailTaken(emailInput)) {
+                        Toast.makeText(getApplicationContext(), "Email already taken, please choose another", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(getApplicationContext(), "Email already taken, please choose another", Toast.LENGTH_LONG).show();
+                    } else {
+                        // Saving the information the user has entered as a new user in the database
+                        User user = new User(usernameInput, emailInput, passwordInput, null);
+                        database.saveUser(user);
 
-                        } else {
-                            // Saving the information the user has entered as a new user in the database
-                            User user = new User(usernameInput, emailInput, passwordInput, null);
-                            database.saveUser(user);
+                        currentRun.setActiveUser(user);
 
-                            currentRun.setActiveUser(user);
-
-                            // Directing the user to Maps Activity
-                            Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
-                            startActivity(mapActivity);
-                        }
+                        // Directing the user to Maps Activity
+                        Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
+                        startActivity(mapActivity);
                     }
+                }
+            }
 
             }
         });
@@ -149,6 +159,19 @@ public class SignUpActivity extends Activity {
 
     public static boolean isValidEmail(final String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    /**
+     * Method for checking if connected to internet.
+     * @return True if connected to internet, false otherwise
+     */
+    public boolean isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(
+                        ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 
 

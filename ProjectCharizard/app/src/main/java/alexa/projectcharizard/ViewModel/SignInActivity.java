@@ -57,13 +57,6 @@ public class SignInActivity extends Activity {
         credErrorText.setVisibility(View.INVISIBLE);
         logoImage.setImageResource(R.drawable.project_icon);
 
-        // Check for Internet Connection
-        if (isOnline()) {
-            Toast.makeText(getApplicationContext(), "Internet Connected", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-        }
-
         /**
          * Add listeners for every clickable element
          */
@@ -71,11 +64,15 @@ public class SignInActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isOnline()) {
-                    validate(username.getText().toString(), password.getText().toString());
-                }else{
+                //if no internet connection, show a message
+                if(!isOnline()) {
                     Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+                            "Please check your internet connection and try again.",
+                                Toast.LENGTH_LONG).show();
+                }
+                //if connected to internet, validate username and password
+                else{
+                    validate(username.getText().toString(), password.getText().toString());
                 }
 
             }
@@ -85,12 +82,16 @@ public class SignInActivity extends Activity {
         signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isOnline()) {
+                //if no internet connection, show a message
+                if(!isOnline()) {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.",
+                                Toast.LENGTH_LONG).show();
+                }
+                //If connected to internet, redirect to SignUpActivity
+                else {
                     Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                     startActivity(intent);
-                }else {
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -159,9 +160,12 @@ public class SignInActivity extends Activity {
      * @return True if connected to internet, false otherwise
      */
     public boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(
+                        ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 
 
