@@ -71,26 +71,27 @@ public class SignInActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-           //     if(isOnline()) {
+                if(isOnline()) {
                     validate(username.getText().toString(), password.getText().toString());
-             //   }else{
-            //        Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-             //               "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-             //   }
+                }else{
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
 
+        //Internet connection is required to be able to sign up
         signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //    if(isOnline()) {
+                if(isOnline()) {
                     Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                     startActivity(intent);
-            //    }else {
-            //        Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-            //                "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-           //     }
+                }else {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -159,9 +160,9 @@ public class SignInActivity extends Activity {
      */
     public boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        //we are connected to a network
         return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
+
 
 }

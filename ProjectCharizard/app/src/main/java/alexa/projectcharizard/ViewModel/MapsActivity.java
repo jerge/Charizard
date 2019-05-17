@@ -1,9 +1,12 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -275,11 +279,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isOnline()) {
                     Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
                     intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
                     intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
                     intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
                     startActivity(intent);
+                }else{
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -375,6 +384,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected LatLng initLoc() {
         return new LatLng(57.7, 11.96);
+    }
+
+    /**
+     * Method for checking if connected to internet.
+     * @return True if connected to internet, false otherwise
+     */
+    public boolean isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 
 }

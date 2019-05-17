@@ -73,40 +73,46 @@ public class AddSpotActivity extends MapsActivity {
      * @param view the view that contains the values for the spot
      */
     public void addNewSpot(View view) {
-        if (txtLat.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in latitude", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Double lat = Double.valueOf(txtLat.getText().toString());
-        if (txtLong.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in longitude", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Double lng = Double.valueOf(txtLong.getText().toString());
-        if (txtName.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String name = txtName.getText().toString();
-        if (txtDescription.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Fill in description", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String description = txtDescription.getText().toString();
-        if (currentCategory == null) {
-            Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Category category = getCategoryEnum(currentCategory);
-        boolean visibility = visibilityCheckbox.isChecked();
-        Bitmap image = null;
+        if(isOnline()) {
+            if (txtLat.getText().toString().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Fill in latitude", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Double lat = Double.valueOf(txtLat.getText().toString());
+            if (txtLong.getText().toString().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Fill in longitude", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Double lng = Double.valueOf(txtLong.getText().toString());
+            if (txtName.getText().toString().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String name = txtName.getText().toString();
+            if (txtDescription.getText().toString().isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Fill in description", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String description = txtDescription.getText().toString();
+            if (currentCategory == null) {
+                Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Category category = getCategoryEnum(currentCategory);
+            boolean visibility = visibilityCheckbox.isChecked();
+            Bitmap image = null;
 
-        //Open connection to database and save the spot on the database.
-        Database database = Database.getInstance();
+            //Open connection to database and save the spot on the database.
+            Database database = Database.getInstance();
 
-        // Saving the current Spot and then adding it to a list of Spots added during current run.
-        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility, CurrentRun.getActiveUser().getId()));
-        finish();
+            // Saving the current Spot and then adding it to a list of Spots added during current run.
+            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, lat, lng, description, category, image, visibility, CurrentRun.getActiveUser().getId()));
+            finish();
+        }
+        else{
+            Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                    "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
