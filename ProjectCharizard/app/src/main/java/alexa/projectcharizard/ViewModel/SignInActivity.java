@@ -162,13 +162,10 @@ public class SignInActivity extends Activity {
      * @return True if connected to internet, false otherwise
      */
     public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (netInfo != null && netInfo.isAvailable() && netInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        //we are connected to a network
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 
 }
