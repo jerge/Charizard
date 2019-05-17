@@ -1,10 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -41,11 +38,10 @@ public class SignUpActivity extends Activity {
 
 
         //When the 'Sign up' button is clicked, this is what happens
-        //'Sign up' doesn't work if there is no internet connection
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isOnline()) {
+
                     //Checking whether the user has entered information in all the fields
                     if (areFieldsFilledIn()) {
 
@@ -78,10 +74,6 @@ public class SignUpActivity extends Activity {
                             startActivity(mapActivity);
                         }
                     }
-                } else{
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-                }
 
             }
         });
@@ -159,18 +151,5 @@ public class SignUpActivity extends Activity {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    /**
-     * Method for checking if connected to internet.
-     * @return True if connected to internet, false otherwise
-     */
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 }

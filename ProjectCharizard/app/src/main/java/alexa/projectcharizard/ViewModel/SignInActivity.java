@@ -57,9 +57,11 @@ public class SignInActivity extends Activity {
         credErrorText.setVisibility(View.INVISIBLE);
         logoImage.setImageResource(R.drawable.project_icon);
 
-        if(!isOnline()) {
-            Toast.makeText(getBaseContext(), "You are not connected to internet. ", Toast.LENGTH_LONG).show();
-
+        // Check for Internet Connection
+        if (isOnline()) {
+            Toast.makeText(getApplicationContext(), "Internet Connected", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
 
         /**
@@ -69,12 +71,12 @@ public class SignInActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isOnline()) {
+           //     if(isOnline()) {
                     validate(username.getText().toString(), password.getText().toString());
-                }else{
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-                }
+             //   }else{
+            //        Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+             //               "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+             //   }
 
             }
         });
@@ -82,13 +84,13 @@ public class SignInActivity extends Activity {
         signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isOnline()) {
+            //    if(isOnline()) {
                     Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                     startActivity(intent);
-                }else {
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
-                }
+            //    }else {
+            //        Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+            //                "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+           //     }
             }
         });
 
@@ -161,8 +163,8 @@ public class SignInActivity extends Activity {
      */
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
+        NetworkInfo netInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (netInfo != null && netInfo.isAvailable() && netInfo.isConnected()) {
             return true;
         } else {
             return false;
