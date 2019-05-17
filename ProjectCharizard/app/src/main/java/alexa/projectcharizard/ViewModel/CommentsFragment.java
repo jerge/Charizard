@@ -63,30 +63,39 @@ public class CommentsFragment extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DateTime dateTime = new DateTime();
-                String dateString = "20" + dateTime.getYearOfCentury()
-                        + "/" + dateTime.getMonthOfYear()
-                        + "/" + dateTime.getDayOfMonth()
-                        + "  " + dateTime.getHourOfDay()
-                        + ":" + getMinuteOfHour(dateTime);
-                // The comment that is supposed to be saved.
-                Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
-                        dateString);
-                // Saves comment to the database.
-                database.saveComment(newComment, spot.getId());
-                // Saves comment to the commentlist.
-                spot.getCommentList().add(newComment);
-
-                // Resets the text in the comment zone, and resets the focus
-                comment.setText("");
-                comment.clearFocus();
-
-                // Refills the comments into the list
-                CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList());
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                recyclerView.setAdapter(commentsAdapter);
+                for (Spot s: currentRun.getSpots()){
+                    if (s.getId().equals(spot.getId())){
+                        System.out.println("Första forloopen");
+                        addComment();
+                    }
+                }
             }
         });
+    }
+
+    private void addComment() {
+        DateTime dateTime = new DateTime();
+        String dateString = "20" + dateTime.getYearOfCentury()
+                + "/" + dateTime.getMonthOfYear()
+                + "/" + dateTime.getDayOfMonth()
+                + "  " + dateTime.getHourOfDay()
+                + ":" + getMinuteOfHour(dateTime);
+        // The comment that is supposed to be saved.
+        Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
+                dateString);
+        // Saves comment to the database.
+        database.saveComment(newComment, spot.getId());
+        // Saves comment to the commentlist.
+        spot.getCommentList().add(newComment);
+
+        // Resets the text in the comment zone, and resets the focus
+        comment.setText("");
+        comment.clearFocus();
+
+        // Refills the comments into the list
+        CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(commentsAdapter);
     }
 
     /**
