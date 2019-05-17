@@ -85,10 +85,7 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     private void changeUserName(String newUserName) {
         dataReference.child(CurrentRun.getActiveUser().getId()).child("username").setValue(newUserName);
-        //currentRun.getActiveUser().setUsername(newUserName);
         userNameView.setText(newUserName);
-        // For debugging purposes
-        Toast.makeText(getApplicationContext(),newUserName, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -99,72 +96,66 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     private void changeName(String newName) {
         dataReference.child(CurrentRun.getActiveUser().getId()).child("fullname").setValue(newName);
-        //currentRun.getActiveUser().setFullName(newName);
         nameView.setText(newName);
-        // For debugging purposes
-        Toast.makeText(getApplicationContext(), newName, Toast.LENGTH_SHORT).show();
     }
 
     /**
      * Spawns a dialog where the user can enter in a new username and
      * calls the method changeUserName in order to change user information
-     *
-     * @param c the context to show this dialog in
      */
-    private void showChangeUserNameDialog(Context c) {
-        final EditText newUserNameField = new EditText(c);
-        AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("Change username")
-                .setMessage("Type in new username")
-                .setView(newUserNameField)
-                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newUserName = newUserNameField.getText().toString();
-                        changeUserName(newUserName);
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
+    private void showChangeUserNameDialog() {
+        final EditText newUserNameField = new EditText(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setView(newUserNameField);
+        builder.setTitle("Change username");
+        builder.setMessage("Type in new name");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newUserName = newUserNameField.getText().toString();
+                changeUserName(newUserName);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+
     }
 
     /**
      * Spawns a dialog where the user can enter in a new name and
      * calls the method changeName in order to change user information
-     *
-     * @param c the context to shoe this dialog in
      */
-    private void showChangeNameDialog(Context c) {
-        final EditText newNameField = new EditText(c);
-        AlertDialog dialog = new AlertDialog.Builder(c)
-                .setTitle("Change name")
-                .setMessage("Type in new username")
-                .setView(newNameField)
-                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newName = newNameField.getText().toString();
-                        changeName(newName);
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
+    private void showChangeNameDialog() {
+        final EditText newNameField = new EditText(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setView(newNameField);
+        builder.setTitle("Change name");
+        builder.setMessage("Type in new name");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newName = newNameField.getText().toString();
+                changeName(newName);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     /**
      * @param view the view which calls this method on click
      */
     public void changeUserNameAction(View view) {
-        showChangeUserNameDialog(this);
+        showChangeUserNameDialog();
     }
 
     /**
      * @param view the view which calls this method on click
      */
     public void changeNameAction(View view) {
-        showChangeNameDialog(this);
+        showChangeNameDialog();
     }
 
     /**
