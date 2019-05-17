@@ -6,11 +6,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
@@ -65,9 +68,13 @@ public class CommentsFragment extends Fragment {
             public void onClick(View v) {
                 for (Spot s: currentRun.getSpots()){
                     if (s.getId().equals(spot.getId())){
-                        System.out.println("Första forloopen");
                         addComment();
+                        return;
                     }
+                    Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
+                    TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
+                    if (t != null) t.setGravity(Gravity.CENTER);
+                    toast.show();
                 }
             }
         });
