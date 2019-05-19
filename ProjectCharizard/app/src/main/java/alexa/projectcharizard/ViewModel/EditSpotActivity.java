@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -220,15 +221,20 @@ public class EditSpotActivity extends MapsActivity {
 
     /**
      * Spawns a dialog in which the user can type in the new spot name, changes the textview to
-     * display the new name
+     * display the new name. A InputFilter is used to limit the input to 50 characters, excess
+     * character are filtered away into a buffer.
      *
      * @param view the view to show the dialog in
      */
     public void showChangeSpotNameDialog(View view) {
         final EditText newSpotNameField = new EditText(this);
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray [0] = new InputFilter.LengthFilter(50);
+        newSpotNameField.setFilters(filterArray);
+
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Change spot name")
-                .setMessage("Type in new spot name")
+                .setMessage("Type in new spot name (40 characters max)")
                 .setView(newSpotNameField)
                 .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
