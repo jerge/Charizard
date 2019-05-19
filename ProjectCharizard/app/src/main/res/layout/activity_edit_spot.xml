@@ -137,7 +137,7 @@
         app:layout_constraintTop_toBottomOf="@+id/divider6" />
 
     <Switch
-        android:id="@+id/editSpotVisSwitch"
+        android:id="@+id/editSpotPrivacySwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -156,7 +156,7 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSpotVisSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/editSpotPrivacySwitch"
         tools:context=".ViewModel.MapsActivity" />
 
     <Button

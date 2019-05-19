@@ -50,11 +50,11 @@ public class EditSpotActivity extends MapsActivity {
 
     private Spinner editSpotCatSpinner;
 
-    private Switch editSpotVisSwitch;
+    private Switch editSpotPrivacySwitch;
 
     private String currentCategory;
 
-    private boolean spotVis;
+    private boolean spotPrivacy;
 
     // Override super class methods
     @Override
@@ -108,7 +108,7 @@ public class EditSpotActivity extends MapsActivity {
         editSpotLongView = findViewById(R.id.editSpotLongView);
         editSpotDescText = findViewById(R.id.editSpotDescText);
         editSpotCatSpinner = findViewById(R.id.editSpotCatSpinner);
-        editSpotVisSwitch = findViewById(R.id.editSpotVisSwitch);
+        editSpotPrivacySwitch = findViewById(R.id.editSpotPrivacySwitch);
         setInitText();
     }
 
@@ -147,13 +147,17 @@ public class EditSpotActivity extends MapsActivity {
      * Sets the switch depending on the visibility of the spot
      */
     private void initSwitch() {
-        editSpotVisSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        editSpotPrivacySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                spotVis = isChecked;
+                if (editSpotPrivacySwitch.isChecked()) {
+                    spotPrivacy = true;
+                } else {
+                    spotPrivacy = false;
+                }
             }
         });
-        editSpotVisSwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
+        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
     }
 
     /**
@@ -258,7 +262,7 @@ public class EditSpotActivity extends MapsActivity {
             dataRef.child("longitude").setValue(Double.parseDouble(editSpotLongView.getText().toString()));
             dataRef.child("description").setValue(editSpotDescText.getText().toString());
             dataRef.child("category").setValue(spotCategory);
-            dataRef.child("visibility").setValue(spotVis);
+            dataRef.child("privacy").setValue(spotPrivacy);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
