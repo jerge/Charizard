@@ -264,6 +264,8 @@ public class EditSpotActivity extends MapsActivity {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(this, "Details changed", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(EditSpotActivity.this, MapsActivity.class);
+        startActivity(intent);
     }
 
     /**
