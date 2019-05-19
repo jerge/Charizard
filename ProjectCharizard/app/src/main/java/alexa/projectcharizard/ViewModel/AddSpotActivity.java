@@ -44,8 +44,6 @@ public class AddSpotActivity extends MapsActivity {
 
     private TextView privateSwitchText;
 
-    private ImageView backButton;
-
     private String currentCategory;
 
     private Spinner categorySpinner;
@@ -145,8 +143,6 @@ public class AddSpotActivity extends MapsActivity {
 
         txtName = findViewById(R.id.txtName);
         txtDescription = findViewById(R.id.txtDescription);
-
-        backButton = findViewById(R.id.backArrow);
 
         // Set default parameters
         currentCategory = "Other";
