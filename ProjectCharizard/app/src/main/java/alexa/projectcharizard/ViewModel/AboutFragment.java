@@ -15,13 +15,20 @@ import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
+/**
+ * Fragment for the about-page of a spot in the detailed view activity
+ * @author Filip Andréasson
+ */
 public class AboutFragment extends Fragment {
 
     TextView spotDescription;
     TextView spotName;
+    TextView spotCategory;
+    TextView spotCreator;
+
     private Button removeBtn;
     private Database database;
-    TextView spotCreator;
+
     final CurrentRun currentRun = CurrentRun.getInstance();
 
 
@@ -29,6 +36,13 @@ public class AboutFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Set default values to gui elements
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,9 +50,14 @@ public class AboutFragment extends Fragment {
 
         initFragment(v);
 
+
+        //Collects extra intent from the previous activity
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
         spotName.setText(getActivity().getIntent().getStringExtra("SpotName"));
+        spotCategory.setText(getActivity().getIntent().getStringExtra("SpotCategory"));
 
+        //Gets the creator of the spot
+        //TODO does not work, need to figure out how to get users from currentrun to aboutfragment
         for (User user : currentRun.getUsers()) {
             System.out.println(user.getId());
             if (getActivity().getIntent().getStringExtra("SpotCreator").equals(user.getId())) {
@@ -52,10 +71,12 @@ public class AboutFragment extends Fragment {
         return v;
     }
 
+    //Initializes the GUI elements and connects listener to delete button
     private void initFragment(View v) {
         spotDescription = (TextView) v.findViewById(R.id.spotDescription);
         spotName = (TextView) v.findViewById(R.id.spotName);
         spotCreator = (TextView) v.findViewById(R.id.creatorText);
+        spotCategory = (TextView) v.findViewById(R.id.spotCategory);
         removeBtn = (Button) v.findViewById(R.id.removeBtn);
         database = Database.getInstance();
 
