@@ -71,7 +71,9 @@ public class AboutFragment extends Fragment {
         return v;
     }
 
-    //Initializes the GUI elements and connects listener to delete button
+    /**
+     * Initializes the GUI elements and connects listener to delete button
+     */
     private void initFragment(View v) {
         spotDescription = (TextView) v.findViewById(R.id.spotDescription);
         spotName = (TextView) v.findViewById(R.id.spotName);
@@ -80,6 +82,9 @@ public class AboutFragment extends Fragment {
         removeBtn = (Button) v.findViewById(R.id.removeBtn);
         database = Database.getInstance();
 
+
+        // Checks if the spot is owned by the current user, if it is the remove spot button appears and becomes activated
+        // Otherwise it will not appear nor be activated
         if (getActivity().getIntent().getStringExtra("SpotCreator").equals(CurrentRun.getActiveUser())) {
             removeBtn.setActivated(true);
             removeBtn.setVisibility(View.VISIBLE);
