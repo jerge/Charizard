@@ -104,14 +104,16 @@ public class AddSpotActivity extends MapsActivity {
             String description = txtDescription.getText().toString();
     
             Bitmap image = null;
-        }
 
             //Open connection to database and save the spot on the database.
             Database database = Database.getInstance();
 
-        // Saving the current Spot and then adding it to a list of Spots added during current run.
-        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category,
-                image, CurrentRun.getActiveUser().getId(), privateSwitch.isChecked()));
+            // Saving the current Spot and then adding it to a list of Spots added during current run.
+            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category,
+                    image, CurrentRun.getActiveUser().getId(), privateSwitch.isChecked()));
+        }
+
+
         finish();
     }
 
