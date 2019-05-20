@@ -166,7 +166,6 @@ public class EditSpotActivity extends MapsActivity {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editSpotCatSpinner.setAdapter(categoryAdapter);
 
-        String category = getIntent().getStringExtra("SpotCategory");
         editSpotCatSpinner.setSelection(categoryAdapter.getPosition(getIntent().getStringExtra("SpotCategory")));
     }
 
@@ -261,34 +260,6 @@ public class EditSpotActivity extends MapsActivity {
         currentMarker = mMap.addMarker(new MarkerOptions()
                 .position(latlng)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
-    }
-
-    /**
-     * Spawns a dialog in which the user can type in the new spot name, changes the textview to
-     * display the new name. A InputFilter is used to limit the input to 50 characters, excess
-     * character are filtered away into a buffer.
-     *
-     * @param view the view to show the dialog in
-     */
-    public void showChangeSpotNameDialog(View view) {
-        final EditText newSpotNameField = new EditText(this);
-        InputFilter[] filterArray = new InputFilter[1];
-        filterArray [0] = new InputFilter.LengthFilter(40);
-        newSpotNameField.setFilters(filterArray);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setView(newSpotNameField);
-        builder.setTitle("Change spot name");
-        builder.setMessage("Type in new name (40 characters max)");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                editSpotNameView.setText(newSpotNameField.getText().toString());
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
     }
 
     /**
