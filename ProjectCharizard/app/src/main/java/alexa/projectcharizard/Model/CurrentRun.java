@@ -69,4 +69,5 @@ public class CurrentRun {
     public void setActiveUser(User activeUser) {
         this.activeUser = activeUser;
     }
+
 }

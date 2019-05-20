@@ -1,21 +1,22 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
 
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
@@ -39,6 +40,8 @@ public class SignInActivity extends Activity {
     private ImageView logoImage;
     final Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +59,40 @@ public class SignInActivity extends Activity {
         credErrorText.setVisibility(View.INVISIBLE);
         logoImage.setImageResource(R.drawable.project_icon);
 
+        if (!isOnline()) {
+            Toast.makeText(getBaseContext(), "You are not connected to internet. ", Toast.LENGTH_LONG).show();
+
+        }
 
         /**
          * Add listeners for every clickable element
          */
+        //Internet connection is required to be able to sign in
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validate(username.getText().toString(), password.getText().toString());
-
+                if (isOnline()) {
+                    //if connected to internet, validate username and password
+                    validate(username.getText().toString(), password.getText().toString());
+                } else {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.",
+                                Toast.LENGTH_LONG).show();
+                }
             }
         });
 
+        //Internet connection is required to be able to sign up
         signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-                startActivity(intent);
+                if (isOnline()) {
+                    Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -102,12 +122,13 @@ public class SignInActivity extends Activity {
 
     /**
      * Validates if there is a user with that name, and if the password matches that particular user
+     *
      * @param usernameInput the text from the username field in the gui
      * @param passwordInput the text from the password field in the gui
      */
     private void validate(String usernameInput, String passwordInput) {
 
-        if(usernameInput.equals("")){           //there is no input in the username field
+        if (usernameInput.equals("")) {           //there is no input in the username field
             credErrorText.setVisibility(View.VISIBLE);
             credErrorText.setText(getString(R.string.missing_credential_username));
         } else if (passwordInput.equals("")) {  //there is no input in the password field
@@ -134,4 +155,39 @@ public class SignInActivity extends Activity {
             }
         }
     }
+
+    /**
+     * Method for checking if connected to internet.
+     *
+     * @return True if connected to internet, false otherwise
+     */
+    public boolean isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(
+                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(
+                        ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+    }
+
+    /**
+     * Method to avoid the user returning to the previous page. Instead,
+     * the back button closes the application if pressed twice quickly.
+     */
+    @Override
+    public void onBackPressed(){
+
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
+
+        mBackPressed = System.currentTimeMillis();
+    }
+
+
 }
