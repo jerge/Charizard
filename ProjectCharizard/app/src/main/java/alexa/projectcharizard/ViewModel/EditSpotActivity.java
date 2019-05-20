@@ -2,6 +2,7 @@ package alexa.projectcharizard.ViewModel;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -73,6 +74,7 @@ public class EditSpotActivity extends MapsActivity {
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
         initLocationOnClickListener();
+        initSpotLocationOnMap();
     }
 
     @Override
@@ -127,7 +129,6 @@ public class EditSpotActivity extends MapsActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                editSpotCatSpinner.setSelection(0);
             }
         });
 
@@ -140,8 +141,8 @@ public class EditSpotActivity extends MapsActivity {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editSpotCatSpinner.setAdapter(categoryAdapter);
 
-        String spotCategory = (getIntent().getStringExtra("SpotCategory"));
-        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(spotCategory));
+        String category = getIntent().getStringExtra("SpotCategory");
+        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(getIntent().getStringExtra("SpotCategory")));
     }
 
     /**
@@ -217,6 +218,21 @@ public class EditSpotActivity extends MapsActivity {
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
             }
         });
+    }
+
+    /**
+     * Sets a initial marker on map
+     */
+    private void initSpotLocationOnMap() {
+        if (currentMarker != null) {
+            currentMarker.remove();
+        }
+        LatLng latlng = new LatLng(
+                        getIntent().getDoubleExtra("SpotLatitude", 57.0),
+                        getIntent().getDoubleExtra("SpotLongitude", 12.0));
+        currentMarker = mMap.addMarker(new MarkerOptions()
+                .position(latlng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
     }
 
     /**

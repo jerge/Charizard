@@ -49,8 +49,6 @@ public class AddSpotActivity extends MapsActivity {
     private Spinner categorySpinner;
     private Spinner propertySpinner;
 
-    private ArrayAdapter<String> categoryArrayAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,7 +162,7 @@ public class AddSpotActivity extends MapsActivity {
         }
 
         //Set the layout for the category spinner.
-        categoryArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryList);
+        ArrayAdapter<String> categoryArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categoryList);
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryArrayAdapter);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
