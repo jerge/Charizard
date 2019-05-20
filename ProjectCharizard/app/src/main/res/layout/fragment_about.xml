@@ -6,62 +6,91 @@
     tools:context=".ViewModel.AboutFragment">
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:minHeight="730dp">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="24dp"
+                android:background="#FF6E73"
+                app:layout_constraintBottom_toTopOf="@+id/txtName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/parentLayout"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/spotName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="32dp"
+                    android:gravity="bottom"
+                    android:text="Spot name"
+                    android:textColor="#fff"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toBottomOf="@id/frameLayout"
+                    app:layout_constraintStart_toStartOf="@id/frameLayout"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+
 
             <TextView
-                android:id="@+id/spotName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/spotDescription"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="15dp"
-                android:breakStrategy="simple"
-                android:text="Example spot"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:id="@+id/spotCategory"
+                android:text="Category"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/frameLayout"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/creatorText"
+                android:text="Creator"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/frameLayout"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:textSize="20dp"/>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/listDivider"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:layout_alignStart="@+id/spotName"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="53dp"
-                android:text="Added DD/MM/YY"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.031"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/spotCategory" />
 
             <TextView
                 android:id="@+id/spotDescription"
-                android:layout_width="356dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="83dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:breakStrategy="simple"
                 android:text="text"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-            <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/spotName"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="49dp"
-                android:text="5 av 5 toasters" />
+                app:layout_constraintTop_toBottomOf="@id/divider"/>
 
             <Button
                 android:id="@+id/removeBtn"
@@ -69,10 +98,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:text="Remove Spot" />
 
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

@@ -13,12 +13,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:exported="true"
         android:theme="@style/AppTheme">
@@ -41,8 +42,10 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ViewModel.AddSpotActivity"/>
+        <activity android:name=".ViewModel.ChangeEmailActivity" />
+        <activity android:name=".ViewModel.ChangePasswordActivity" />
+        <activity android:name=".ViewModel.AccountPageActivity" />
         <activity android:name=".ViewModel.EditSpotActivity" />
-
         <activity
             android:name=".ViewModel.SignInActivity"
             android:label="@string/app_name">

@@ -23,7 +23,8 @@ public class CurrentRun {
 
     public static CurrentRun getInstance() {
         if (instance == null) {
-            return new CurrentRun();
+            instance = new CurrentRun();
+            return instance;
         }
         return instance;
     }
@@ -69,4 +70,5 @@ public class CurrentRun {
     public void setActiveUser(User activeUser) {
         this.activeUser = activeUser;
     }
+
 }
