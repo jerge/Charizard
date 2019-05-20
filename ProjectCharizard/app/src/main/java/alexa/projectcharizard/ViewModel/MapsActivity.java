@@ -234,6 +234,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
                         intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
                         intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
+                        intent.putExtra("SpotCategory", spotDetailViewAdapter.getSpot().getCategory());
+                        intent.putExtra("SpotLatitude", spotDetailViewAdapter.getSpot().getLatitude());
+                        intent.putExtra("SpotLongitude", spotDetailViewAdapter.getSpot().getLongitude());
+                        intent.putExtra("SpotVisibility", spotDetailViewAdapter.getSpot().isVisibility());
+                        intent.putExtra("SpotImage", spotDetailViewAdapter.getSpot().getImage());
                         startActivity(intent);
                     }
                 });

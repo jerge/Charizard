@@ -1,9 +1,11 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import alexa.projectcharizard.R;
 
@@ -45,5 +47,20 @@ public class DetailedViewActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void openEditSpotActivity(View view) {
+        Intent intent = new Intent(DetailedViewActivity.this, EditSpotActivity.class);
+
+        intent.putExtra("SpotName", getIntent().getStringExtra("SpotName"));
+        intent.putExtra("SpotId", getIntent().getStringExtra("SpotId"));
+        intent.putExtra("SpotLatitude", getIntent().getDoubleExtra("SpotLatitude", 57.0));
+        intent.putExtra("SpotLongitude", getIntent().getDoubleExtra("SpotLongitude", 12.0));
+        intent.putExtra("SpotDescription", getIntent().getStringExtra("SpotDescription"));
+        intent.putExtra("SpotCategory", getIntent().getStringExtra("SpotCategory"));
+        intent.putExtra("SpotVisibility", getIntent().getStringExtra("SpotVisibility"));
+        intent.putExtra("SpotImage", getIntent().getStringExtra("SpotImage"));
+
+        startActivity(intent);
     }
 }
