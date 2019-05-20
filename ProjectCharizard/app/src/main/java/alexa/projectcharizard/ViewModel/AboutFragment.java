@@ -17,6 +17,7 @@ import alexa.projectcharizard.R;
 
 /**
  * Fragment for the about-page of a spot in the detailed view activity
+ *
  * @author Filip Andréasson
  */
 public class AboutFragment extends Fragment {
@@ -31,13 +32,13 @@ public class AboutFragment extends Fragment {
 
     final CurrentRun currentRun = CurrentRun.getInstance();
 
-
     public AboutFragment() {
         // Required empty public constructor
     }
 
     /**
      * Set default values to gui elements
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -50,14 +51,12 @@ public class AboutFragment extends Fragment {
 
         initFragment(v);
 
-
-        //Collects extra intent from the previous activity
+        //Collects extra intent from the previous activity and edits the relevant TextViews
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
         spotName.setText(getActivity().getIntent().getStringExtra("SpotName"));
         spotCategory.setText(getActivity().getIntent().getStringExtra("SpotCategory"));
 
-        //Gets the creator of the spot
-        //TODO does not work, need to figure out how to get users from currentrun to aboutfragment
+        //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
             System.out.println(user.getId());
             if (getActivity().getIntent().getStringExtra("SpotCreator").equals(user.getId())) {
@@ -65,8 +64,6 @@ public class AboutFragment extends Fragment {
                 break;
             }
         }
-
-
         // Inflate the layout for this fragment
         return v;
     }
@@ -101,7 +98,5 @@ public class AboutFragment extends Fragment {
             removeBtn.setActivated(false);
             removeBtn.setVisibility(View.INVISIBLE);
         }
-
     }
-
 }
