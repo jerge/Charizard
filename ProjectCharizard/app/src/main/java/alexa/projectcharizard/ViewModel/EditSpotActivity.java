@@ -235,6 +235,7 @@ public class EditSpotActivity extends MapsActivity {
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
     }
 
+    /**
      * Spawns a dialog in which the user can type in the new spot name, changes the textview to
      * display the new name. A InputFilter is used to limit the input to 50 characters, excess
      * character are filtered away into a buffer.
