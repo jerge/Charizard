@@ -70,20 +70,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
-    <TextView
-        android:id="@+id/privacyTextView"
-        android:layout_width="345dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="Should the spot be private?"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtDescription" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -93,8 +79,7 @@
         android:layout_marginEnd="4dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/privacyTextView">
+        app:layout_constraintTop_toBottomOf="@id/txtDescription">
 
         <Switch
             android:id="@+id/privateSwitch"
@@ -116,6 +101,18 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/addImage"
+        android:layout_width="224dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:hint="Add Image (Optional)"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"/>
+
+
     <Spinner
         android:id="@+id/categorySpinner"
         android:layout_width="353dp"
@@ -126,7 +123,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/addImage" />
 
 
     <fragment
@@ -159,5 +156,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/addedImage"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="32dp"
+        android:scaleType="fitStart"
+        app:layout_constraintStart_toEndOf="@+id/addImage"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"   />
 
 </android.support.constraint.ConstraintLayout>

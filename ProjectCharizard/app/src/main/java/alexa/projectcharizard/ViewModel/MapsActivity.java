@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -174,6 +175,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_ACCESS_FINE_LOCATION);
+        } else {
+            mMap.setMyLocationEnabled(true);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         } else {
             mMap.setMyLocationEnabled(true);
         }
@@ -360,6 +368,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
     }
 
     private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel, final boolean isPrivateBox) {
@@ -378,7 +387,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkBox.setButtonTintList(new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked}, // unchecked
-                        new int[]{android.R.attr.state_checked} , // checked
+                        new int[]{android.R.attr.state_checked}, // checked
                 },
                 new int[]{
                         Color.parseColor("#FF6E73"),

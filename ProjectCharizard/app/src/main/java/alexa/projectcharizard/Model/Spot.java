@@ -1,8 +1,5 @@
 package alexa.projectcharizard.Model;
 
-import android.graphics.Bitmap;
-
-
 /**
  * A class for saving the properties of a Spot
  */
@@ -12,7 +9,6 @@ public class Spot {
     private Double longitude;
     private String description;
     private Category category;
-    private Bitmap image;
     private String creatorId;
     private String id;
     private boolean privacy;
@@ -26,16 +22,14 @@ public class Spot {
      * @param longitude
      * @param description
      * @param category
-     * @param image
+     * @param privacy
      */
-    public Spot(String name, Double latitude, Double longitude, String description,
-                Category category, Bitmap image, String id, String creatorId, boolean privacy) {
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean privacy, String id, String creatorId) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = category;
-        this.image = image;
         this.id = id;
         this.creatorId = creatorId;
         this.privacy = privacy;
@@ -49,18 +43,16 @@ public class Spot {
      * @param longitude
      * @param description
      * @param category
-     * @param image
+     * @param privacy
      */
-    public Spot(String name, Double latitude, Double longitude, String description,
-                Category category, Bitmap image, String id, boolean privacy) {
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean privacy, String id) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = category;
-        this.image = image;
-        this.id = id;
         this.privacy = privacy;
+        this.id = id;
     }
 
     /**
@@ -70,16 +62,14 @@ public class Spot {
      * @param latitude
      * @param longitude
      * @param description
-     * @param image
+     * @param privacy
      */
-    public Spot(String name, Double latitude, Double longitude, String description,
-                Bitmap image, String creatorId, boolean privacy) {
+    public Spot(String name, Double latitude, Double longitude, String description, boolean privacy, String creatorId) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
         this.category = Category.OTHER;
-        this.image = image;
         this.creatorId = creatorId;
         this.privacy = privacy;
     }
@@ -106,10 +96,6 @@ public class Spot {
 
     public Category getCategory() {
         return category;
-    }
-
-    public Bitmap getImage() {
-        return image;
     }
 
     public String getCreatorId() {
