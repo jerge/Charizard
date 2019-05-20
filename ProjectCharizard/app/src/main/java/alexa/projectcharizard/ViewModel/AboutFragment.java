@@ -49,15 +49,13 @@ public class AboutFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
 
         initFragment(v);
-
-
-        //Collects extra intent from the previous activity
+        
+        //Collects extra intent from the previous activity and edits the relevant TextViews
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
         spotName.setText(getActivity().getIntent().getStringExtra("SpotName"));
         spotCategory.setText(getActivity().getIntent().getStringExtra("SpotCategory"));
 
-        //Gets the creator of the spot
-        //TODO does not work, need to figure out how to get users from currentrun to aboutfragment
+        //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
             System.out.println(user.getId());
             if (getActivity().getIntent().getStringExtra("SpotCreator").equals(user.getId())) {
