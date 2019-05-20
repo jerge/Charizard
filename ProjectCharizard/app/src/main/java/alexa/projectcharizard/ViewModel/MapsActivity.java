@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -74,6 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initPlsBtn();
         initFilterBtn();
+        initTmpAccountBtn();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -310,6 +312,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
                     startActivity(intent);
                 }
+
+            }
+        });
+    }
+
+    protected void initTmpAccountBtn() {
+        // Find the plus button
+        Button accountbtn = (Button) findViewById(R.id.accountbtn);
+        // Set a listener on the plus button
+        accountbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if no internet connection, show a message
+                Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
+                startActivity(intent);
 
             }
         });
