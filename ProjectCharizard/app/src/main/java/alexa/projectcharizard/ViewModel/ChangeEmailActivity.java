@@ -83,8 +83,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
             CurrentRun.getActiveUser().setEmail(newEmail);
             currentEmailView.setText(newEmail);
             Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ChangeEmailActivity.this, AccountPageActivity.class);
-            startActivity(intent);
+            finish();
         } else if (isValidEmail(newEmail)) {
             // Return error message that the verification field does not match
             Toast.makeText(getApplicationContext(), "Email does not match", Toast.LENGTH_SHORT).show();
