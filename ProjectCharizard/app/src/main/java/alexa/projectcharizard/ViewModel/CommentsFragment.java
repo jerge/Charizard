@@ -88,11 +88,8 @@ public class CommentsFragment extends Fragment {
                 + "/" + dateTime.getDayOfMonth()
                 + "  " + addZero(dateTime.getHourOfDay())
                 + ":" + addZero(dateTime.getMinuteOfHour());
-        // The comment that is supposed to be saved.
-        Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
-                dateString);
         // Saves comment to the database.
-        database.saveComment(newComment, spot.getId());
+        Comment newComment = database.saveComment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),dateString, spot.getId());
         // Saves comment to the commentlist.
         spot.getCommentList().add(newComment);
 

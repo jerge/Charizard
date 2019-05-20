@@ -1,16 +1,20 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
 
 import alexa.projectcharizard.Model.Comment;
+import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.R;
 
 /**
@@ -22,6 +26,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
 
     private Context context;
     private List<Comment> commentList;
+    private Dialog dialog;
 
     public CommentsAdapter(Context context, List<Comment> commentList) {
         this.context = context;
@@ -32,7 +37,40 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(context).inflate(R.layout.comment, viewGroup, false);
-        return new MyViewHolder(v);
+        final MyViewHolder myViewHolder = new MyViewHolder(v);
+
+        dialog = new Dialog(context);
+        dialog.setContentView(R.layout.delete_comment);
+
+        myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button deleteBtn = (Button) dialog.findViewById(R.id.deleteComentBtn);
+                deleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Database.getInstance().removeComment(commentList.get(myViewHolder.getAdapterPosition()).getCommentId());
+                        //commentList.remove(commentList.get(myViewHolder.getAdapterPosition()));
+                        // TODO: Remove from database
+                        // TODO: Remove from current spot
+                        dialog.dismiss();
+                    }
+                });
+
+                Button cancelBtn = (Button) dialog.findViewById(R.id.cancelDeleteCommentBtn);
+                cancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
+
+        return myViewHolder;
     }
 
     /**
@@ -62,10 +100,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
      */
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView textBody, name, date;
+        private ConstraintLayout delete;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            delete = (ConstraintLayout) itemView.findViewById(R.id.deleteCommentConstraint);
             textBody = (TextView) itemView.findViewById(R.id.commentText);
             name = (TextView) itemView.findViewById(R.id.usernameText);
             date = (TextView) itemView.findViewById(R.id.timeStampTxt);

@@ -12,11 +12,13 @@ public class Comment implements Serializable {
     private String username;
     private String comment;
     private String dateTime;
+    private String commentId;
 
-    public Comment(String username, String comment, String dateTime) {
+    public Comment(String username, String comment, String dateTime, String commentId) {
         this.username = username;
         this.comment = comment;
         this.dateTime = dateTime;
+        this.commentId = commentId;
     }
 
     public Comment() {
@@ -47,4 +49,7 @@ public class Comment implements Serializable {
         this.dateTime = dateTime;
     }
 
+    public String getCommentId() {
+        return commentId;
+    }
 }

@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.List;
+
 /**
  * A class used to retrieve and store data on the Firebase Database.
  */
@@ -75,24 +77,67 @@ public class Database {
      *
      * @param id The id of the spot to be removed
      */
-    public void remove(String id) {
+    public void removeSpot(String id) {
         Database.getInstance().getDatabaseReference().child("Spots").child(id).removeValue();
-        for (Spot spot : currentRun.getSpots()) {
-            if (spot.getId().equals(id)) {
-                currentRun.getSpots().remove(spot);
-                return;
-            }
-        }
+        Spot spotToRemove = findSpot(id);
+        currentRun.getSpots().remove(spotToRemove);
     }
 
-    /**
-     * A method that saves a comment to the database in the specified spot.
-     *
-     * @param comment The comment to be saved
-     * @param spotId The spot the comment is to be saved in
-     */
-    public void saveComment(Comment comment, String spotId) {
-        Database.getInstance().getDatabaseReference().child("Spots").child(spotId)
-                .child("comments").push().setValue(comment);
+    public Comment saveComment(String userName, String commentText, String dateTime, String spotId) {
+        String id = Database.getInstance().getDatabaseReference().child("Spots").child(spotId).push().getKey();
+        Comment comment = new Comment(userName, commentText, dateTime, id);
+        if (id != null) {
+            Database.getInstance().getDatabaseReference().child("Spots").child(spotId)
+                    .child("comments").child(id).setValue(comment);
+        }
+
+        return comment;
+    }
+
+    public void removeComment (String commentId){
+        Spot spot = findSpotWithComment(commentId);
+        System.out.println("Spot id: " + spot.getId());
+        System.out.println("Comment id: " + commentId);
+        Database.getInstance().getDatabaseReference()
+                .child("Spot").child(spot.getId()).child(commentId).removeValue();
+        Comment comment = findComment(spot.getCommentList(), commentId);
+        int index = findSpotIndex(spot.getId());
+        currentRun.getSpots().get(index).getCommentList().remove(comment);
+    }
+
+    private Spot findSpotWithComment(String commentId) {
+        for (Spot spot: currentRun.getSpots()){
+            if (findComment(spot.getCommentList(), commentId) != null){
+                return spot;
+            }
+        }
+        return null;
+    }
+
+    private int findSpotIndex(String spotId) {
+        for (int i = 0; i < currentRun.getSpots().size(); i++){
+            if (currentRun.getSpots().get(i).getId().equals(spotId)){
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private Spot findSpot(String id){
+        for (Spot spot: currentRun.getSpots()){
+            if (spot.getId().equals(id)){
+                return spot;
+            }
+        }
+        return null;
+    }
+
+    private Comment findComment (List<Comment> commentList, String commentId){
+        for (Comment comment: commentList){
+            if (comment.getCommentId().equals(commentId)){
+                return comment;
+            }
+        }
+        return null;
     }
 }
