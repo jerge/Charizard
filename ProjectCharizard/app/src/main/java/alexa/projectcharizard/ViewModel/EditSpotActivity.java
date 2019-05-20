@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -89,6 +90,7 @@ public class EditSpotActivity extends MapsActivity {
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
         initLocationOnClickListener();
+        initSpotLocationOnMap();
     }
 
     @Override
@@ -98,6 +100,13 @@ public class EditSpotActivity extends MapsActivity {
     @Override
     protected void initFilterBtn() {
 
+    }
+
+    /**
+     * Removes functionality of overridden parent class
+     */
+    @Override
+    protected void initTmpAccountBtn() {
     }
 
     @Override
@@ -145,7 +154,6 @@ public class EditSpotActivity extends MapsActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                editSpotCatSpinner.setSelection(0);
             }
         });
 
@@ -158,8 +166,8 @@ public class EditSpotActivity extends MapsActivity {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editSpotCatSpinner.setAdapter(categoryAdapter);
 
-        String spotCategory = (getIntent().getStringExtra("SpotCategory"));
-        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(spotCategory));
+        String category = getIntent().getStringExtra("SpotCategory");
+        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(getIntent().getStringExtra("SpotCategory")));
     }
 
     /**
@@ -176,7 +184,7 @@ public class EditSpotActivity extends MapsActivity {
                 }
             }
         });
-        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
+        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotPrivacy", false));
     }
 
     /**
@@ -241,26 +249,46 @@ public class EditSpotActivity extends MapsActivity {
     }
 
     /**
+     * Sets a initial marker on map
+     */
+    private void initSpotLocationOnMap() {
+        if (currentMarker != null) {
+            currentMarker.remove();
+        }
+        LatLng latlng = new LatLng(
+                        getIntent().getDoubleExtra("SpotLatitude", 57.0),
+                        getIntent().getDoubleExtra("SpotLongitude", 12.0));
+        currentMarker = mMap.addMarker(new MarkerOptions()
+                .position(latlng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
+    }
+
+    /**
      * Spawns a dialog in which the user can type in the new spot name, changes the textview to
-     * display the new name
+     * display the new name. A InputFilter is used to limit the input to 50 characters, excess
+     * character are filtered away into a buffer.
      *
      * @param view the view to show the dialog in
      */
     public void showChangeSpotNameDialog(View view) {
         final EditText newSpotNameField = new EditText(this);
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Change spot name")
-                .setMessage("Type in new spot name")
-                .setView(newSpotNameField)
-                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        editSpotNameView.setText(newSpotNameField.getText().toString());
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray [0] = new InputFilter.LengthFilter(40);
+        newSpotNameField.setFilters(filterArray);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setView(newSpotNameField);
+        builder.setTitle("Change spot name");
+        builder.setMessage("Type in new name (40 characters max)");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editSpotNameView.setText(newSpotNameField.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     /**
@@ -294,6 +322,8 @@ public class EditSpotActivity extends MapsActivity {
             uploadFile(intent, id);
         } else {
             startActivity(intent);
+            // Ends activity after saving
+            finish();
         }
     }
 
@@ -368,6 +398,8 @@ public class EditSpotActivity extends MapsActivity {
 
                             // Starts next activity
                             startActivity(intent);
+                            // Ends activity after saving
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -382,6 +414,8 @@ public class EditSpotActivity extends MapsActivity {
 
                             // Starts next activity
                             startActivity(intent);
+                            // Ends activity after saving
+                            finish();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
