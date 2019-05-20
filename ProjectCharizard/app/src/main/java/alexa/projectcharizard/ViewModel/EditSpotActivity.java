@@ -248,22 +248,22 @@ public class EditSpotActivity extends MapsActivity {
     public void showChangeSpotNameDialog(View view) {
         final EditText newSpotNameField = new EditText(this);
         InputFilter[] filterArray = new InputFilter[1];
-        filterArray [0] = new InputFilter.LengthFilter(50);
+        filterArray [0] = new InputFilter.LengthFilter(40);
         newSpotNameField.setFilters(filterArray);
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Change spot name")
-                .setMessage("Type in new spot name (40 characters max)")
-                .setView(newSpotNameField)
-                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        editSpotNameView.setText(newSpotNameField.getText().toString());
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        dialog.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
+        builder.setView(newSpotNameField);
+        builder.setTitle("Change spot name");
+        builder.setMessage("Type in new name (40 characters max)");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                editSpotNameView.setText(newSpotNameField.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     /**
