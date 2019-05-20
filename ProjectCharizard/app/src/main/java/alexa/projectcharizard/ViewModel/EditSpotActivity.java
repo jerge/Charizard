@@ -224,8 +224,8 @@ public class EditSpotActivity extends MapsActivity {
      * Sets a initial marker on map
      */
     private void initSpotLocationOnMap() {
-        if (currentMarker != null) {
             currentMarker.remove();
+        if (currentMarker != null) {
         }
         LatLng latlng = new LatLng(
                         getIntent().getDoubleExtra("SpotLatitude", 57.0),
@@ -235,26 +235,6 @@ public class EditSpotActivity extends MapsActivity {
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
     }
 
-    /**
-     * Redirects back to DetailViewActivity, called when save button is clicked to signify that
-     * the user is done editing
-     */
-    private void redirectToDetailView() {
-        Intent intent = new Intent(EditSpotActivity.this, DetailedViewActivity.class);
-
-        intent.putExtra("SpotName", getIntent().getStringExtra("SpotName"));
-        intent.putExtra("SpotId", getIntent().getStringExtra("SpotId"));
-        intent.putExtra("SpotLatitude", getIntent().getStringExtra("SpotLatitude"));
-        intent.putExtra("SpotLongitude", getIntent().getStringExtra("SpotLongitude"));
-        intent.putExtra("SpotDescription", getIntent().getStringExtra("SpotDescription"));
-        intent.putExtra("SpotCategory", getIntent().getStringExtra("SpotCategory"));
-        intent.putExtra("SpotVisibility", getIntent().getStringExtra("SpotVisibility"));
-        intent.putExtra("SpotImage", getIntent().getStringExtra("SpotImage"));
-
-        startActivity(intent);
-    }
-
-    /**
      * Spawns a dialog in which the user can type in the new spot name, changes the textview to
      * display the new name. A InputFilter is used to limit the input to 50 characters, excess
      * character are filtered away into a buffer.
@@ -305,7 +285,9 @@ public class EditSpotActivity extends MapsActivity {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(this, "Details changed", Toast.LENGTH_SHORT).show();
-        redirectToDetailView();
+
+        // Ends activity after saving
+        finish();
     }
 
     /**
