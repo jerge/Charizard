@@ -39,8 +39,6 @@ public class AccountPageActivity extends AppCompatActivity {
     private DatabaseReference dataReference;
     private Database database = Database.getInstance();;
 
-    Boolean deleteUser = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,12 +187,6 @@ public class AccountPageActivity extends AppCompatActivity {
 
         confirmDialog();
 
-        if (deleteUser){
-            database.deleteUser(CurrentRun.getActiveUser().getId());
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-            Toast.makeText(getApplicationContext(), "Your account has been deleted.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**
@@ -202,7 +194,8 @@ public class AccountPageActivity extends AppCompatActivity {
      * to confirm the choice.
      * @return True if the user says yes, otherwise no
      */
-    private Boolean confirmDialog() {
+    private void confirmDialog() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
         builder.setTitle("Delete account");
         builder.setMessage("You are about to delete your account. Do you want to proceed ?");
@@ -210,21 +203,21 @@ public class AccountPageActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // User chose yes, returns the user to the log in page
-                deleteUser = true;
+                // User chose yes, account is deleted and returns the user to the log in page
+                database.deleteUser(CurrentRun.getActiveUser().getId());
+                Intent intent = new Intent(AccountPageActivity.this, SignInActivity.class);
+                startActivity(intent);
             }
         });
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // User chose no, returning to account page
-                deleteUser = false;
+                // User chose no, nothing happens and returning to account page
             }
         });
 
         builder.show();
-        return deleteUser;
     }
 
 }
