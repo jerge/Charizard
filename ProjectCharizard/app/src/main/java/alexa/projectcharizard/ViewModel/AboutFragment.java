@@ -17,6 +17,7 @@ import alexa.projectcharizard.R;
 
 /**
  * Fragment for the about-page of a spot in the detailed view activity
+ *
  * @author Filip Andréasson
  */
 public class AboutFragment extends Fragment {
@@ -31,13 +32,13 @@ public class AboutFragment extends Fragment {
 
     final CurrentRun currentRun = CurrentRun.getInstance();
 
-
     public AboutFragment() {
         // Required empty public constructor
     }
 
     /**
      * Set default values to gui elements
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -49,7 +50,7 @@ public class AboutFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
 
         initFragment(v);
-        
+
         //Collects extra intent from the previous activity and edits the relevant TextViews
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
         spotName.setText(getActivity().getIntent().getStringExtra("SpotName"));
@@ -63,8 +64,6 @@ public class AboutFragment extends Fragment {
                 break;
             }
         }
-
-
         // Inflate the layout for this fragment
         return v;
     }
@@ -99,7 +98,5 @@ public class AboutFragment extends Fragment {
             removeBtn.setActivated(false);
             removeBtn.setVisibility(View.INVISIBLE);
         }
-
     }
-
 }
