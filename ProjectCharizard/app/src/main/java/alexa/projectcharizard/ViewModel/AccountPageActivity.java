@@ -51,6 +51,7 @@ public class AccountPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(AccountPageActivity.this, SignInActivity.class));
+                Toast.makeText(getBaseContext(), "You've been logged out.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -207,6 +208,7 @@ public class AccountPageActivity extends AppCompatActivity {
                 database.deleteUser(CurrentRun.getActiveUser().getId());
                 Intent intent = new Intent(AccountPageActivity.this, SignInActivity.class);
                 startActivity(intent);
+                Toast.makeText(getBaseContext(), "Your account has been deleted.", Toast.LENGTH_SHORT).show();
             }
         });
 
