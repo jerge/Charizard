@@ -32,6 +32,8 @@ public class SignUpActivity extends Activity {
     private TextView alreadySignedUp;
     final Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +179,25 @@ public class SignUpActivity extends Activity {
                 ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(
                         ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+    }
+
+    /**
+     * Method to avoid the user returning to the previous page. Instead,
+     * the back button closes the application if pressed twice quickly.
+     */
+    @Override
+    public void onBackPressed(){
+
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
+
+        mBackPressed = System.currentTimeMillis();
     }
 
 
