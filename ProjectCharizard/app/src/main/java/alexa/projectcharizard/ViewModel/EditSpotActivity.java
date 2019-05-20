@@ -224,8 +224,8 @@ public class EditSpotActivity extends MapsActivity {
      * Sets a initial marker on map
      */
     private void initSpotLocationOnMap() {
-            currentMarker.remove();
         if (currentMarker != null) {
+            currentMarker.remove();
         }
         LatLng latlng = new LatLng(
                         getIntent().getDoubleExtra("SpotLatitude", 57.0),
