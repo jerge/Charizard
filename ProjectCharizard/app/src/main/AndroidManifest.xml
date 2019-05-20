@@ -42,6 +42,9 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ViewModel.AddSpotActivity"/>
+        <activity android:name=".ViewModel.ChangeEmailActivity" />
+        <activity android:name=".ViewModel.ChangePasswordActivity" />
+        <activity android:name=".ViewModel.AccountPageActivity" />
         <activity android:name=".ViewModel.EditSpotActivity" />
 
         <activity
@@ -73,3 +76,22 @@
     </application>
 
 </manifest>
+
+        <activity
+            android:name=".ViewModel.ChangeEmailActivity"
+            android:label="Project Charizard">
+        </activity>
+        <activity
+            android:name=".ViewModel.ChangePasswordActivity"
+            android:label="Project Charizard">
+        </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".ViewModel.MapsActivity"
+            android:label="@string/title_activity_maps">
+        </activity>
+        <activity android:name=".ViewModel.LoginActivity" />
+    </application></manifest>

@@ -66,7 +66,6 @@ public class Database {
             databaseReference.child("Spots").child(id).setValue(spot);
         }
         currentRun.getSpots().add(spot);
-        //currentRun.getActiveUser().getUserSpots().add(spot); //TODO make this work pls lmao
         return spot;
     }
 
@@ -75,7 +74,7 @@ public class Database {
      *
      * @param id The id of the spot to be removed
      */
-    public void remove(String id) {
+    public void removeSpot(String id) {
         Database.getInstance().getDatabaseReference().child("Spots").child(id).removeValue();
         for (Spot spot : currentRun.getSpots()) {
             if (spot.getId().equals(id)) {
@@ -84,6 +83,24 @@ public class Database {
             }
         }
     }
+
+    /**
+     * A method for removing the user from the database. Called after the user presses the
+     * delete account button/text.
+     * @param id The ID of the user
+     */
+    public void deleteUser(String id) {
+        databaseReference.child(id).removeValue();
+        for (User user : currentRun.getUsers()) {
+            if (user.getId().equals(id)) {
+                System.out.println("Removing user " + user.getId());
+                Database.getInstance().getDatabaseReference().child("Users").child(id).removeValue();
+                currentRun.getUsers().remove(user);
+                return;
+            }
+        }
+    }
+
 
     /**
      * A method that saves a comment to the database in the specified spot.

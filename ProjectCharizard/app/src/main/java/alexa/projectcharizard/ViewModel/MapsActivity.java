@@ -55,8 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
-    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
-    private long mBackPressed;
 
     //The button for opening the filter
     private ImageButton filterBtn;
