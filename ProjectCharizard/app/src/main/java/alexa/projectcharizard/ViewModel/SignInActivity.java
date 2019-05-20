@@ -70,17 +70,13 @@ public class SignInActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (isOnline()) {
+                    //if connected to internet, validate username and password
                     validate(username.getText().toString(), password.getText().toString());
                 } else {
                     Toast.makeText(getBaseContext(), "You are not connected to internet. " +
                             "Please check your internet connection and try again.",
                                 Toast.LENGTH_LONG).show();
                 }
-                //if connected to internet, validate username and password
-                else{
-                    validate(username.getText().toString(), password.getText().toString());
-                }
-
             }
         });
 
