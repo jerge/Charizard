@@ -1,6 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -62,6 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // The list of all checkboxes
     private List<Category> checkBoxes = new ArrayList<>();
+    private boolean checkBoxOnlyPrivate = false; //local variable for when the checkbox for privacy is checked or not
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
 
@@ -179,16 +181,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Returns true if the spot's category is checked true in the checkbox, otherwise false
-     *
-     * @param s the spot to check
-     * @return true if the spot's category is checked true in the checkbox, otherwise false
-     */
-    private boolean filter(Spot s) {
-        return checkBoxes.contains(s.getCategory());
-    }
-
-    /**
      * A method for showing the user's location on the map
      */
     protected void showUserLocation() {
@@ -199,6 +191,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_ACCESS_FINE_LOCATION);
+        } else {
+            mMap.setMyLocationEnabled(true);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         } else {
             mMap.setMyLocationEnabled(true);
         }
@@ -240,26 +239,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         for (Spot spot : currentRun.getSpots()) {
             //Add all markers
-            if (filter(spot)) {
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
-                        .title(spot.getName())
-                        .icon(getMarkerIcon(spot.getCategory())));
-
-                // Saves the id of the spot in the snippet so that it can be accessed in the next
-                // activity
-                marker.setSnippet(spot.getId());
-                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                        intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
-                        intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
-                        intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
-                        startActivity(intent);
-                    }
-                });
+            if (filter(spot) && (privacyVisible(spot))) {
+                if (!checkBoxOnlyPrivate) {         //if the "Show only your spots checkbox is not checked, init marker
+                    initMarker(spot);
+                } else if(spot.getPrivacy()) {      //otherwise init marker only if it is a private
+                    initMarker(spot);
+                }
             }
+        }
+    }
+
+    /**
+     * Initializes a marker and places it on the map
+     * @param spot the spot correlated with the new marker
+     */
+    private void initMarker(Spot spot) {
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
+                .title(spot.getName())
+                .icon(getMarkerIcon(spot.getCategory())));
+
+        // Saves the id of the spot in the snippet so that it can be accessed in the next
+        // activity
+        marker.setSnippet(spot.getId());
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                intent.putExtra("SpotCreator", spotDetailViewAdapter.getSpot().getCreatorId());
+                intent.putExtra("SpotDescription", spotDetailViewAdapter.getSpot().getDescription());
+                intent.putExtra("SpotName", spotDetailViewAdapter.getSpot().getName());
+                intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
+                intent.putExtra("SpotCategory", spotDetailViewAdapter.getSpot().getCategory().toString());
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * Returns true if the spot's category is checked true in the checkbox, otherwise false
+     *
+     * @param s the spot to check
+     * @return true if the spot's category is checked true in the checkbox, otherwise false
+     */
+    private boolean filter(Spot s) {
+        return checkBoxes.contains(s.getCategory());
+    }
+
+    private boolean privacyVisible(Spot s) {
+        if (!s.getPrivacy() || s.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -319,7 +350,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void initTmpAccountBtn() {
         // Find the plus button
-        Button accountbtn = (Button) findViewById(R.id.accountbtn);
+        Button accountbtn = (Button) findViewById(R.id.accountPageBtn);
         // Set a listener on the plus button
         accountbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -342,11 +373,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int id = 5030201;
         // The amounts of lines currently added
         int counter = 0;
+
+        createCheckbox(id, counter, null, rel, true);
+        createTextView(id, counter, null, rel, true);
+        counter++;
+
         for (final Category category : Category.values()) {
             checkBoxes.add(category);
 
-            createCheckbox(id, counter, category, rel);
-            createTextView(id, counter, category, rel);
+            createCheckbox(id, counter, category, rel, false);
+            createTextView(id, counter, category, rel, false);
 
             counter++;
         }
@@ -363,21 +399,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
     }
 
-    private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel) {
+    private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel, final boolean isPrivateBox) {
         // Create parameters for the check box
         RelativeLayout.LayoutParams paramsCB = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         CheckBox checkBox = new CheckBox(this);
-        checkBox.setChecked(true);
+        if (isPrivateBox) {
+            checkBox.setChecked(false);
+        } else {
+            checkBox.setChecked(true);
+        }
         checkBox.setId(id);
         checkBox.setButtonTintList(new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked}, // unchecked
-                        new int[]{android.R.attr.state_checked} , // checked
+                        new int[]{android.R.attr.state_checked}, // checked
                 },
                 new int[]{
                         Color.parseColor("#FF6E73"),
@@ -389,8 +430,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (isChecked && !isPrivateBox) {
                     checkBoxes.add(category);
+                    updateMarkers();
+                } else if (isChecked && isPrivateBox) {
+                    checkBoxOnlyPrivate = true;
+                    updateMarkers();
+                } else if (isPrivateBox) {
+                    checkBoxOnlyPrivate = false;
                     updateMarkers();
                 } else {
                     checkBoxes.remove(category);
@@ -401,7 +448,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         rel.addView(checkBox, paramsCB);
     }
 
-    private void createTextView(int id, int counter, final Category category, RelativeLayout rel) {
+    private void createTextView(int id, int counter, final Category category, RelativeLayout rel, boolean isPrivateBox) {
         // Create parameters for the text view
         RelativeLayout.LayoutParams paramsTxt = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -412,7 +459,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TextView txt = new TextView(this);
         txt.setId(id + 1000);
         paramsTxt.setMargins(100, 30 + 60 * (counter), 0, 0);
-        txt.setText(category.toString());
+
+        if (isPrivateBox) {
+            txt.setText("Show only your spots");
+        } else {
+            txt.setText(category.toString());
+        }
         rel.addView(txt, paramsTxt);
     }
 

@@ -46,7 +46,6 @@
         <activity android:name=".ViewModel.ChangePasswordActivity" />
         <activity android:name=".ViewModel.AccountPageActivity" />
         <activity android:name=".ViewModel.EditSpotActivity" />
-
         <activity
             android:name=".ViewModel.SignInActivity"
             android:label="@string/app_name">

@@ -13,10 +13,9 @@ public class Spot {
     private Double longitude;
     private String description;
     private Category category;
-    private Bitmap image;
-    private boolean visibility;
     private String creatorId;
     private String id;
+    private boolean privacy;
     private List<Comment> commentList;
 
     /**
@@ -27,19 +26,56 @@ public class Spot {
      * @param longitude
      * @param description
      * @param category
-     * @param image
-     * @param visibility
+     * @param privacy
      */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id, String creatorId) {
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean privacy, String id, String creatorId) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
-        this.visibility = visibility;
         this.category = category;
-        this.image = image;
         this.id = id;
         this.creatorId = creatorId;
+        this.privacy = privacy;
+    }
+
+    /**
+     * Constructor for when creator id is missing
+     *
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param category
+     * @param privacy
+     */
+    public Spot(String name, Double latitude, Double longitude, String description, Category category, boolean privacy, String id) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.category = category;
+        this.privacy = privacy;
+        this.id = id;
+    }
+
+    /**
+     * Constructor for when category is missing
+     *
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param description
+     * @param privacy
+     */
+    public Spot(String name, Double latitude, Double longitude, String description, boolean privacy, String creatorId) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.category = Category.OTHER;
+        this.creatorId = creatorId;
+        this.privacy = privacy;
     }
 
     public Spot() {
@@ -65,14 +101,6 @@ public class Spot {
         return category;
     }
 
-    public boolean isVisibility() {
-        return visibility;
-    }
-
-    public Bitmap getImage() {
-        return image;
-    }
-
     public String getCreatorId() {
         return creatorId;
     }
@@ -87,5 +115,9 @@ public class Spot {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public boolean getPrivacy() {
+        return privacy;
     }
 }

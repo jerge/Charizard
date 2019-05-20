@@ -1,9 +1,13 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -11,18 +15,26 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +52,11 @@ import alexa.projectcharizard.R;
 
 public class EditSpotActivity extends MapsActivity {
 
+    // a constant to track the file chooser intent
+    private static final int PICK_IMAGE_REQUEST = 234;
+    // a Uri object to store file path
+    private Uri filePath;
+
     private Marker currentMarker;
 
     private TextView editSpotNameView;
@@ -47,14 +64,14 @@ public class EditSpotActivity extends MapsActivity {
     private TextView editSpotLongView;
 
     private EditText editSpotDescText;
-
     private Spinner editSpotCatSpinner;
 
-    private Switch editSpotVisSwitch;
+    private Switch editSpotPrivacySwitch;
+    private ImageButton currentImage;
 
     private String currentCategory;
 
-    private boolean spotVis;
+    private boolean spotPrivacy;
 
     // Override super class methods
     @Override
@@ -108,8 +125,11 @@ public class EditSpotActivity extends MapsActivity {
         editSpotLongView = findViewById(R.id.editSpotLongView);
         editSpotDescText = findViewById(R.id.editSpotDescText);
         editSpotCatSpinner = findViewById(R.id.editSpotCatSpinner);
-        editSpotVisSwitch = findViewById(R.id.editSpotVisSwitch);
+        editSpotPrivacySwitch = findViewById(R.id.editSpotPrivacySwitch);
+        currentImage = findViewById(R.id.addedImage);
         setInitText();
+        initImageButton();
+        importPicture();
     }
 
     /**
@@ -121,7 +141,6 @@ public class EditSpotActivity extends MapsActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentCategory = (String) parent.getItemAtPosition(position);
-
             }
 
             @Override
@@ -147,13 +166,17 @@ public class EditSpotActivity extends MapsActivity {
      * Sets the switch depending on the visibility of the spot
      */
     private void initSwitch() {
-        editSpotVisSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        editSpotPrivacySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                spotVis = isChecked;
+                if (editSpotPrivacySwitch.isChecked()) {
+                    spotPrivacy = true;
+                } else {
+                    spotPrivacy = false;
+                }
             }
         });
-        editSpotVisSwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
+        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
     }
 
     /**
@@ -182,7 +205,6 @@ public class EditSpotActivity extends MapsActivity {
             return Category.OTHER;
         }
     }
-
 
     /**
      * Sets the textviews when clicking on the map to correspond with the latitude and longitude
@@ -249,8 +271,9 @@ public class EditSpotActivity extends MapsActivity {
      * @param view the view which this action takes place in
      */
     public void changeSpotInfoAction(View view) {
+        String id = getIntent().getStringExtra("SpotId");
         DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child("Spots")
-                                    .child(getIntent().getStringExtra("SpotId"));
+                                    .child(id);
         Category spotCategory = getCategoryEnum(this.currentCategory);
         try {
             dataRef.child("name").setValue(editSpotNameView.getText().toString());
@@ -258,14 +281,20 @@ public class EditSpotActivity extends MapsActivity {
             dataRef.child("longitude").setValue(Double.parseDouble(editSpotLongView.getText().toString()));
             dataRef.child("description").setValue(editSpotDescText.getText().toString());
             dataRef.child("category").setValue(spotCategory);
-            dataRef.child("visibility").setValue(spotVis);
+            dataRef.child("privacy").setValue(spotPrivacy);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(this, "Details changed", Toast.LENGTH_SHORT).show();
+
+        // Uploads a file before switching activity if a file has been changed, otherwise just start new activity
         Intent intent = new Intent(EditSpotActivity.this, MapsActivity.class);
-        startActivity(intent);
+        if (filePath != null) {
+            uploadFile(intent, id);
+        } else {
+            startActivity(intent);
+        }
     }
 
     /**
@@ -276,6 +305,120 @@ public class EditSpotActivity extends MapsActivity {
     public void notifyUserToUseMap(View view) {
         Toast.makeText(this, "Please use the map below to change latitude/longitude",
                         Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Makes the button for selecting image clickable
+     */
+    private void initImageButton() {
+        currentImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            }
+        });
+    }
+
+    private void importPicture() {
+        // Gets the location in Storage of the picture
+        StorageReference imageReference = Database.getInstance().getStorageReference()
+                .child("images/" + getIntent().getStringExtra("SpotId"));
+        // Tries to download from the url
+        imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageURL = uri.toString();
+                Glide.with(getApplicationContext()).load(imageURL).into(currentImage);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Will throw error, but is fine
+            }
+        });
+    }
+
+    /**
+     * Uploads and replaces a file in the firebase storage.
+     * It shows a progress bar until done and then finishes the activity
+     */
+    private void uploadFile(final Intent intent, String id) {
+        // If the user has selected a file
+        if (filePath != null) {
+            //displaying a progress dialog while upload is going on
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+
+            // Names the image the same as the spot ID and puts it in folder /images/
+            StorageReference imageRef = Database.getInstance().getStorageReference().child("images/" + id);
+            imageRef.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //if the upload is successful
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            // and displaying a success toast
+                            Toast.makeText(getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+
+                            // Starts next activity
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // if the upload is not successful
+                            // hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            // and displaying error message
+                            Toast.makeText(getApplicationContext(), exception.getMessage() + " . Spot not saved, please try again", Toast.LENGTH_LONG).show();
+
+                            // Starts next activity
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //calculating progress percentage
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                            //displaying percentage in progress dialog
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+        }
+    }
+
+
+    /**
+     * Upon choosing a file, this method is called to update the filePath.
+     * Also sets the picture of addedImage to the choosen file.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                currentImage.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
