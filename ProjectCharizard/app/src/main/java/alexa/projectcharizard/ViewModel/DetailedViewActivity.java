@@ -49,6 +49,11 @@ public class DetailedViewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Starts EditSpotActivity by getting spot information passed by intent created by MapsActivity
+     *
+     * @param view the view which this method is called in
+     */
     public void openEditSpotActivity(View view) {
         Intent intent = new Intent(DetailedViewActivity.this, EditSpotActivity.class);
 
