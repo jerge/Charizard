@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.Comment;
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
@@ -136,6 +137,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 currentRun.getSpots().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
+
+                    // Initializes the comment list.
+                    spot.setCommentList(new ArrayList<Comment>());
+
+                    // Checks if the current spot has any comments.
+                    if (data.child("comments").getValue() != null){
+                        // Loads the comments separately since it is a different class.
+                        for (DataSnapshot d: data.child("comments").getChildren()){
+                            // Saves the comment in a new object.
+                            Comment comment = d.getValue(Comment.class);
+
+                            // Saves the comment in a list in the spot.
+                            spot.getCommentList().add(comment);
+                        }
+                    }
                     currentRun.getSpots().add(spot);
                 }
                 updateMarkers();

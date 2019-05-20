@@ -2,6 +2,7 @@ package alexa.projectcharizard.Model;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
 
 /**
  * A class for saving the properties of a Spot
@@ -16,7 +17,7 @@ public class Spot {
     private boolean visibility;
     private String creatorId;
     private String id;
-
+    private List<Comment> commentList;
 
     /**
      * Constructor for when all variables are present
@@ -41,52 +42,8 @@ public class Spot {
         this.creatorId = creatorId;
     }
 
-    /**
-     * Constructor for when creator id is missing
-     *
-     * @param name
-     * @param latitude
-     * @param longitude
-     * @param description
-     * @param category
-     * @param image
-     * @param visibility
-     */
-    public Spot(String name, Double latitude, Double longitude, String description, Category category, Bitmap image, boolean visibility, String id) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.description = description;
-        this.category = category;
-        this.image = image;
-        this.visibility = visibility;
-        this.id = id;
-    }
-
-    /**
-     * Constructor for when category is missing
-     *
-     * @param name
-     * @param latitude
-     * @param longitude
-     * @param description
-     * @param image
-     * @param visibility
-     */
-    public Spot(String name, Double latitude, Double longitude, String description, Bitmap image, boolean visibility, String creatorId) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.description = description;
-        this.category = Category.OTHER;
-        this.visibility = visibility;
-        this.image = image;
-        this.creatorId = creatorId;
-    }
-
     public Spot() {
     }
-
 
     public String getName() {
         return name;
@@ -122,5 +79,13 @@ public class Spot {
 
     public String getId() {
         return id;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

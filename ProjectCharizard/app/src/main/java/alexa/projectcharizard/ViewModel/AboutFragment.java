@@ -13,8 +13,8 @@ import alexa.projectcharizard.R;
 
 public class AboutFragment extends Fragment {
 
-    TextView spotDescription;
-    TextView spotName;
+    private TextView spotDescription;
+    private TextView spotName;
     private Button removeBtn;
     private Database database;
 
