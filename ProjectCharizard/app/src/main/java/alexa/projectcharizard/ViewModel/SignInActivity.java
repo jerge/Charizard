@@ -57,6 +57,11 @@ public class SignInActivity extends Activity {
         credErrorText.setVisibility(View.INVISIBLE);
         logoImage.setImageResource(R.drawable.project_icon);
 
+        if (!isOnline()) {
+            Toast.makeText(getBaseContext(), "You are not connected to internet. ", Toast.LENGTH_LONG).show();
+
+        }
+
         /**
          * Add listeners for every clickable element
          */
@@ -64,8 +69,9 @@ public class SignInActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if no internet connection, show a message
-                if(!isOnline()) {
+                if (isOnline()) {
+                    validate(username.getText().toString(), password.getText().toString());
+                } else {
                     Toast.makeText(getBaseContext(), "You are not connected to internet. " +
                             "Please check your internet connection and try again.",
                                 Toast.LENGTH_LONG).show();
@@ -82,16 +88,12 @@ public class SignInActivity extends Activity {
         signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //if no internet connection, show a message
-                if(!isOnline()) {
-                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.",
-                                Toast.LENGTH_LONG).show();
-                }
-                //If connected to internet, redirect to SignUpActivity
-                else {
+                if (isOnline()) {
                     Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -122,12 +124,13 @@ public class SignInActivity extends Activity {
 
     /**
      * Validates if there is a user with that name, and if the password matches that particular user
+     *
      * @param usernameInput the text from the username field in the gui
      * @param passwordInput the text from the password field in the gui
      */
     private void validate(String usernameInput, String passwordInput) {
 
-        if(usernameInput.equals("")){           //there is no input in the username field
+        if (usernameInput.equals("")) {           //there is no input in the username field
             credErrorText.setVisibility(View.VISIBLE);
             credErrorText.setText(getString(R.string.missing_credential_username));
         } else if (passwordInput.equals("")) {  //there is no input in the password field
@@ -157,6 +160,7 @@ public class SignInActivity extends Activity {
 
     /**
      * Method for checking if connected to internet.
+     *
      * @return True if connected to internet, false otherwise
      */
     public boolean isOnline() {
