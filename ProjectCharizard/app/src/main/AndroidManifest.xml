@@ -42,6 +42,9 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ViewModel.AddSpotActivity"/>
+        <activity android:name=".ViewModel.ChangeEmailActivity" />
+        <activity android:name=".ViewModel.ChangePasswordActivity" />
+        <activity android:name=".ViewModel.AccountPageActivity" />
         <activity android:name=".ViewModel.EditSpotActivity" />
         <activity
             android:name=".ViewModel.SignInActivity"

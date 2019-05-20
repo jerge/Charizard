@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.Comment;
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
@@ -55,8 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
-    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
-    private long mBackPressed;
 
     //The button for opening the filter
     private ImageButton filterBtn;
@@ -77,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initPlsBtn();
         initFilterBtn();
+        initTmpAccountBtn();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -138,6 +139,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 currentRun.getSpots().clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     Spot spot = data.getValue(Spot.class);
+
+                    // Initializes the comment list.
+                    spot.setCommentList(new ArrayList<Comment>());
+
+                    // Checks if the current spot has any comments.
+                    if (data.child("comments").getValue() != null){
+                        // Loads the comments separately since it is a different class.
+                        for (DataSnapshot d: data.child("comments").getChildren()){
+                            // Saves the comment in a new object.
+                            Comment comment = d.getValue(Comment.class);
+
+                            // Saves the comment in a list in the spot.
+                            spot.getCommentList().add(comment);
+                        }
+                    }
                     currentRun.getSpots().add(spot);
                 }
                 updateMarkers();
@@ -327,6 +343,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
                     startActivity(intent);
                 }
+
+            }
+        });
+    }
+
+    protected void initTmpAccountBtn() {
+        // Find the plus button
+        Button accountbtn = (Button) findViewById(R.id.accountbtn);
+        // Set a listener on the plus button
+        accountbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if no internet connection, show a message
+                Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
+                startActivity(intent);
 
             }
         });

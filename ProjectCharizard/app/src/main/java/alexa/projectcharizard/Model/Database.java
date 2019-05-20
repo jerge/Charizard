@@ -1,10 +1,11 @@
 package alexa.projectcharizard.Model;
 
+import android.graphics.Bitmap;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 
 /**
  * A class used to retrieve and store data on the Firebase Database.
@@ -96,7 +97,6 @@ public class Database {
             databaseReference.child("Spots").child(id).setValue(spot);
         }
         currentRun.getSpots().add(spot);
-        //currentRun.getActiveUser().getUserSpots().add(spot); //TODO make this work pls lmao
         return spot;
     }
 
@@ -105,14 +105,43 @@ public class Database {
      * Also removes the spot from storage
      * @param id The id of the spot to be removed
      */
-    public void remove(String id) {
+    public void removeSpot(String id) {
         Database.getInstance().getDatabaseReference().child("Spots").child(id).removeValue();
         for (Spot spot : currentRun.getSpots()) {
             if (spot.getId().equals(id)) {
                 currentRun.getSpots().remove(spot);
+                return;
             }
         }
         storageReference.child("images/" + id).delete();
     }
 
+    /**
+     * A method for removing the user from the database. Called after the user presses the
+     * delete account button/text.
+     * @param id The ID of the user
+     */
+    public void deleteUser(String id) {
+        databaseReference.child(id).removeValue();
+        for (User user : currentRun.getUsers()) {
+            if (user.getId().equals(id)) {
+                System.out.println("Removing user " + user.getId());
+                Database.getInstance().getDatabaseReference().child("Users").child(id).removeValue();
+                currentRun.getUsers().remove(user);
+                return;
+            }
+        }
+    }
+
+
+    /**
+     * A method that saves a comment to the database in the specified spot.
+     *
+     * @param comment The comment to be saved
+     * @param spotId The spot the comment is to be saved in
+     */
+    public void saveComment(Comment comment, String spotId) {
+        Database.getInstance().getDatabaseReference().child("Spots").child(spotId)
+                .child("comments").push().setValue(comment);
+    }
 }
