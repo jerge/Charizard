@@ -21,7 +21,6 @@ import alexa.projectcharizard.R;
  */
 public class ChangePasswordActivity extends AppCompatActivity {
 
-    private TextView currentPasswordView;
     private EditText newPasswordField;
     private EditText verifNewPasswordField;
 
@@ -35,7 +34,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         initView();
-        initText();
 
         userId = CurrentRun.getActiveUser().getId();
 
@@ -49,17 +47,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
      * Initialises Android view elements
      */
     private void initView() {
-        currentPasswordView = findViewById(R.id.currentPasswordView);
         newPasswordField = findViewById(R.id.newPasswordField);
         verifNewPasswordField = findViewById(R.id.verifNewPasswordField);
-    }
-
-    /**
-     * Sets initial text
-     */
-    private void initText() {
-        String currentPassword = CurrentRun.getActiveUser().getPassword();
-        currentPasswordView.setText(currentPassword);
     }
 
     /**
@@ -72,17 +61,17 @@ public class ChangePasswordActivity extends AppCompatActivity {
     public void changePasswordAction(View view) {
         String newPassword = newPasswordField.getText().toString();
         String verifNewPassword = verifNewPasswordField.getText().toString();
-        if (newPassword.equals(intent.getStringExtra("UserPassword"))) {
-            Toast.makeText(getApplicationContext(), "New password is the same as the old password", Toast.LENGTH_SHORT).show();
+        String currentPassword = CurrentRun.getActiveUser().getPassword();
+
+        if (newPassword.equals(currentPassword)) {
+            Toast.makeText(getApplicationContext(), "New password can not be the same as the old password", Toast.LENGTH_SHORT).show();
         } else if (!newPassword.equals(verifNewPassword)) {
             Toast.makeText(getApplicationContext(), "Password does not match", Toast.LENGTH_SHORT).show();
         } else {
             dataReference.child("password").setValue(newPassword);
             CurrentRun.getActiveUser().setPassword(newPassword);
-            currentPasswordView.setText(newPassword);
             Toast.makeText(getApplicationContext(), "Password changed", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ChangePasswordActivity.this, AccountPageActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 
