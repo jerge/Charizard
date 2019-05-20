@@ -71,11 +71,12 @@ public class CommentsFragment extends Fragment {
                         addComment();
                         return;
                     }
-                    Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
-                    TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
-                    if (t != null) t.setGravity(Gravity.CENTER);
-                    toast.show();
                 }
+                // If spot isn't found in currentRun, a Toast appears with this text.
+                Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
+                TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
+                if (t != null) t.setGravity(Gravity.CENTER);
+                toast.show();
             }
         });
     }
@@ -85,8 +86,8 @@ public class CommentsFragment extends Fragment {
         String dateString = "20" + dateTime.getYearOfCentury()
                 + "/" + dateTime.getMonthOfYear()
                 + "/" + dateTime.getDayOfMonth()
-                + "  " + dateTime.getHourOfDay()
-                + ":" + getMinuteOfHour(dateTime);
+                + "  " + addZero(dateTime.getHourOfDay())
+                + ":" + addZero(dateTime.getMinuteOfHour());
         // The comment that is supposed to be saved.
         Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
                 dateString);
@@ -126,11 +127,11 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    private String getMinuteOfHour(DateTime dateTime) {
-        if (dateTime.getMinuteOfHour() < 10){
-            return "0"+dateTime.getMinuteOfHour();
+    private String addZero(int dateTime) {
+        if (dateTime < 10){
+            return "0"+dateTime;
         }
-        return dateTime.getMinuteOfHour() + "";
+        return dateTime + "";
     }
 
     /**
