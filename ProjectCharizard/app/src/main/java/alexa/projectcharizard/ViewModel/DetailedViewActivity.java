@@ -95,8 +95,7 @@ public class DetailedViewActivity extends AppCompatActivity {
         intent.putExtra("SpotLongitude", getIntent().getDoubleExtra("SpotLongitude", 12.0));
         intent.putExtra("SpotDescription", getIntent().getStringExtra("SpotDescription"));
         intent.putExtra("SpotCategory", getIntent().getStringExtra("SpotCategory"));
-        intent.putExtra("SpotVisibility", getIntent().getStringExtra("SpotVisibility"));
-        intent.putExtra("SpotImage", getIntent().getStringExtra("SpotImage"));
+        intent.putExtra("SpotPrivacy", getIntent().getStringExtra("SpotPrivacy"));
 
         startActivity(intent);
     }

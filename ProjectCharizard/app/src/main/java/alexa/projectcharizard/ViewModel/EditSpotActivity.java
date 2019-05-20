@@ -102,6 +102,13 @@ public class EditSpotActivity extends MapsActivity {
 
     }
 
+    /**
+     * Removes functionality of overridden parent class
+     */
+    @Override
+    protected void initTmpAccountBtn() {
+    }
+
     @Override
     protected float initZoom() {
         return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
@@ -177,7 +184,7 @@ public class EditSpotActivity extends MapsActivity {
                 }
             }
         });
-        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotVisibility", false));
+        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotPrivacy", false));
     }
 
     /**
@@ -315,10 +322,9 @@ public class EditSpotActivity extends MapsActivity {
             uploadFile(intent, id);
         } else {
             startActivity(intent);
+            // Ends activity after saving
+            finish();
         }
-
-        // Ends activity after saving
-        finish();
     }
 
     /**
@@ -392,6 +398,8 @@ public class EditSpotActivity extends MapsActivity {
 
                             // Starts next activity
                             startActivity(intent);
+                            // Ends activity after saving
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -406,6 +414,8 @@ public class EditSpotActivity extends MapsActivity {
 
                             // Starts next activity
                             startActivity(intent);
+                            // Ends activity after saving
+                            finish();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
