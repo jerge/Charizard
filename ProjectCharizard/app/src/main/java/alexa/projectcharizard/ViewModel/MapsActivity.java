@@ -350,7 +350,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void initTmpAccountBtn() {
         // Find the plus button
-        Button accountbtn = (Button) findViewById(R.id.accountbtn);
+        Button accountbtn = (Button) findViewById(R.id.accountPageBtn);
         // Set a listener on the plus button
         accountbtn.setOnClickListener(new View.OnClickListener() {
             @Override

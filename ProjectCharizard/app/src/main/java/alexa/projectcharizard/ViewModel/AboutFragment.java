@@ -86,7 +86,7 @@ public class AboutFragment extends Fragment {
             removeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    database.remove(getActivity().getIntent().getStringExtra("SpotId"));
+                    database.removeSpot(getActivity().getIntent().getStringExtra("SpotId"));
 
                     //closes the activity and returns to previous
                     getActivity().onBackPressed();

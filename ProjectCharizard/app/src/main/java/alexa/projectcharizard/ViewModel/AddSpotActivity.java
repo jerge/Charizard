@@ -171,7 +171,6 @@ public class AddSpotActivity extends MapsActivity {
      * Couples the GUI with functionality as well as preparing the elements
      */
     private void initView() {
-
         txtName = findViewById(R.id.txtName);
         txtDescription = findViewById(R.id.txtDescription);
         btnImage = findViewById(R.id.addImage);
@@ -288,6 +287,13 @@ public class AddSpotActivity extends MapsActivity {
      */
     @Override
     protected void initPlsBtn() {
+    }
+
+    /**
+     * Removes functionality of overridden parent class
+     */
+    @Override
+    protected void initTmpAccountBtn() {
     }
 
     /**
