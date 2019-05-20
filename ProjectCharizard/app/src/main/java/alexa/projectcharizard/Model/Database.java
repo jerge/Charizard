@@ -30,7 +30,8 @@ public class Database {
      */
     public static Database getInstance() {
         if (instance == null) {
-            return new Database();
+            instance = new Database();
+            return instance;
         }
         return instance;
     }
