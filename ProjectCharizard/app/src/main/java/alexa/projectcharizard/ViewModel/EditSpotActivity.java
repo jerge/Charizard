@@ -1,16 +1,17 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.text.InputFilter;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,6 +42,7 @@ import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.Database;
+import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
 /**
@@ -55,6 +57,8 @@ public class EditSpotActivity extends MapsActivity {
 
     // a constant to track the file chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
+
+    private final int MY_PERMISSION_READ_EXTERNAL_STORAGE = 42;
     // a Uri object to store file path
     private Uri filePath;
 
@@ -255,8 +259,8 @@ public class EditSpotActivity extends MapsActivity {
             currentMarker.remove();
         }
         LatLng latlng = new LatLng(
-                        getIntent().getDoubleExtra("SpotLatitude", 57.0),
-                        getIntent().getDoubleExtra("SpotLongitude", 12.0));
+                getIntent().getDoubleExtra("SpotLatitude", 57.0),
+                getIntent().getDoubleExtra("SpotLongitude", 12.0));
         currentMarker = mMap.addMarker(new MarkerOptions()
                 .position(latlng)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
@@ -272,7 +276,7 @@ public class EditSpotActivity extends MapsActivity {
     public void changeSpotInfoAction(View view) {
         String id = getIntent().getStringExtra("SpotId");
         DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child("Spots")
-                                    .child(id);
+                .child(id);
         Category spotCategory = getCategoryEnum(this.currentCategory);
         try {
             dataRef.child("name").setValue(editSpotNameView.getText().toString());
@@ -305,7 +309,7 @@ public class EditSpotActivity extends MapsActivity {
      */
     public void notifyUserToUseMap(View view) {
         Toast.makeText(this, "Please use the map below to change latitude/longitude",
-                        Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -315,10 +319,7 @@ public class EditSpotActivity extends MapsActivity {
         currentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                askForExternalStoragePermission();
             }
         });
     }
@@ -422,6 +423,70 @@ public class EditSpotActivity extends MapsActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Updates the marker options for the map marker.
+     * Sets the icon for the map marker to the icon for the corresponding category.
+     */
+    protected void updateMarkers() {
+        mMap.clear();
+        for (Spot spot : currentRun.getSpots()) {
+            //Add all markers
+            initMarker(spot);
+        }
+    }
+
+    /**
+     * Checks if the user has granted access to read external storage and starts image selector
+     * upon granting access
+     */
+    private void askForExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_READ_EXTERNAL_STORAGE);
+        } else {
+            selectImage();
+        }
+    }
+
+    /**
+     * Starts the image selector
+     */
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    /**
+     * A method which is called upon getting a result from a permissions request
+     * And then it does the thing that required permission
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
+     * @param permissions
+     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
+     *                     a location in the array if that specific permission is granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        selectImage();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
             }
         }
     }
