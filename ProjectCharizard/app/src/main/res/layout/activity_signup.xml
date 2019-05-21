@@ -69,6 +69,7 @@
         android:layout_marginBottom="88dp"
         android:background="@drawable/rounded_button"
         android:text="@string/promt_signUp_button"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
