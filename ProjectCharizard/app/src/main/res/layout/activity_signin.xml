@@ -90,7 +90,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:src="@drawable/project_icon" />
+        tools:src="@drawable/project_Icon" />
+
 
     <TextView
         android:id="@+id/credErrorText"
