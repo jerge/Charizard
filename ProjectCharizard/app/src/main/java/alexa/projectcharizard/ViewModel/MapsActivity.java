@@ -397,6 +397,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (findViewById(R.id.filterBoxes).getVisibility() == View.VISIBLE){
+                    ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.INVISIBLE);
+                    return;
+                }
                 ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.VISIBLE);
             }
         });
