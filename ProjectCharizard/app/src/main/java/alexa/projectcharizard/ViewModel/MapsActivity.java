@@ -463,7 +463,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         paramsTxt.setMargins(100, 30 + 60 * (counter), 0, 0);
 
         if (isPrivateBox) {
-            txt.setText("Show only your spots");
+            txt.setText("Private");
         } else {
             txt.setText(category.toString());
         }
