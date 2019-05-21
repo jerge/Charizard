@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -28,9 +29,7 @@ import alexa.projectcharizard.R;
 
 public class CommentsFragment extends Fragment {
 
-    private EditText comment;
-    private Button send;
-    private Button createCommentButton;
+    private FloatingActionButton createCommentButton;
     private RecyclerView recyclerView;
 
     private Spot spot;
@@ -129,7 +128,7 @@ public class CommentsFragment extends Fragment {
      */
     private void initFragment(View v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.comment_recyclerView);
-        createCommentButton = (Button) v.findViewById(R.id.createCommentBtn);
+        createCommentButton = (FloatingActionButton) v.findViewById(R.id.createCommentFAB);
     }
 
     /**
