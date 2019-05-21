@@ -397,6 +397,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (findViewById(R.id.filterBoxes).getVisibility() == View.VISIBLE){
+                    ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.INVISIBLE);
+                    return;
+                }
                 ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.VISIBLE);
             }
         });
@@ -463,7 +467,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         paramsTxt.setMargins(100, 30 + 60 * (counter), 0, 0);
 
         if (isPrivateBox) {
-            txt.setText("Show only your spots");
+            txt.setText("Private");
         } else {
             txt.setText(category.toString());
         }
