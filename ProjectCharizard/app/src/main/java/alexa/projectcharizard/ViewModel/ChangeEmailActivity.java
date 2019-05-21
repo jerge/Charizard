@@ -74,7 +74,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
     public void changeEmailButtonAction(View view) {
         String newEmail = newEmailView.getText().toString();
         String verifMail = verifyNewEmailView.getText().toString();
-        if (newEmail.equals(intent.getStringExtra("UserEmail"))) {
+        if (newEmail.equals(CurrentRun.getActiveUser().getEmail())) {
             // Return error message that the new email is the same as the old one
             Toast.makeText(getApplicationContext(), "New email is the same as the old email", Toast.LENGTH_SHORT).show();
         } else if (isValidEmail(newEmail) && newEmail.equals(verifMail)) {
@@ -83,8 +83,7 @@ public class ChangeEmailActivity extends AppCompatActivity {
             CurrentRun.getActiveUser().setEmail(newEmail);
             currentEmailView.setText(newEmail);
             Toast.makeText(getApplicationContext(), "Email changed", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ChangeEmailActivity.this, AccountPageActivity.class);
-            startActivity(intent);
+            finish();
         } else if (isValidEmail(newEmail)) {
             // Return error message that the verification field does not match
             Toast.makeText(getApplicationContext(), "Email does not match", Toast.LENGTH_SHORT).show();
