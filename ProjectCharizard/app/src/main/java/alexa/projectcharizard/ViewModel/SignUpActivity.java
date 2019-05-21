@@ -3,6 +3,7 @@ package alexa.projectcharizard.ViewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -40,6 +41,10 @@ public class SignUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         setUpUIViews();
+
+        //Sets the status bar to a white color and the elements in the status bar to a darker color
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(Color.WHITE);
 
         //When the 'Sign up' button is clicked, this is what happens
         //Internet connection is required to be able to sign up.

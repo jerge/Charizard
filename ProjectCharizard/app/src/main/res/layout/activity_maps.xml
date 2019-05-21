@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -17,7 +18,8 @@
         android:layout_marginEnd="-10dp"
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintTop_toTopOf="parent"
-        tools:context=".ViewModel.MapsActivity" />
+        tools:context=".ViewModel.MapsActivity"
+        android:fitsSystemWindows="true"/>
 
     <ImageButton
         android:id="@+id/plsbtn"
@@ -37,7 +39,7 @@
         android:layout_width="55dp"
         android:layout_height="54dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="20dp"
         android:background="@color/colorWhiteBackground"
         android:elevation="4dp"
         android:contentDescription="@string/filterbtn"
