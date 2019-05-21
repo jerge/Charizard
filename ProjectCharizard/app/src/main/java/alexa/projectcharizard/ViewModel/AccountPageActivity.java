@@ -1,9 +1,10 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -50,12 +51,14 @@ public class AccountPageActivity extends AppCompatActivity {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                removeLocalUser();
                 startActivity(new Intent(AccountPageActivity.this, SignInActivity.class));
                 Toast.makeText(getBaseContext(), "You've been logged out.", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
+
     /**
      * Initialises Android view elements
      */
@@ -220,6 +223,18 @@ public class AccountPageActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    /**
+     * A method that writes empty string to the locally saved username and password so that the
+     * user that just signed-out does not automatically sign in next time they open the application.
+     */
+    private void removeLocalUser() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", "");
+        editor.putString("password", "");
+        editor.apply();
     }
 
 }

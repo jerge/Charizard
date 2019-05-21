@@ -3,15 +3,19 @@ package alexa.projectcharizard.ViewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
 
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
@@ -84,6 +88,7 @@ public class SignUpActivity extends Activity {
                             // Directing the user to Maps Activity
                             Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
                             startActivity(mapActivity);
+                            saveLocalUser(usernameInput,passwordInput);
                         }
                     }
                 }
@@ -200,5 +205,18 @@ public class SignUpActivity extends Activity {
         mBackPressed = System.currentTimeMillis();
     }
 
-
+    /**
+     * A method that saves the logged-in user locally, so that the user will automatically be
+     * logged-in next time they start the application.
+     *
+     * @param usernameInput The username to be saved to next run.
+     * @param passwordInput The password to be saved to next run.
+     */
+    private void saveLocalUser(String usernameInput, String passwordInput) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", usernameInput);
+        editor.putString("password", passwordInput);
+        editor.apply();
+    }
 }

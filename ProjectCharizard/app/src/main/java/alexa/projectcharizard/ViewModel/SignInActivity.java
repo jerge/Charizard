@@ -3,20 +3,17 @@ package alexa.projectcharizard.ViewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
@@ -60,13 +57,11 @@ public class SignInActivity extends Activity {
         logoImage.setImageResource(R.drawable.project_icon);
 
         if (!isOnline()) {
-            Toast.makeText(getBaseContext(), "You are not connected to internet. ", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "You are not connected to internet. "
+                    , Toast.LENGTH_LONG).show();
 
         }
 
-        /**
-         * Add listeners for every clickable element
-         */
         //Internet connection is required to be able to sign in
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,37 +82,16 @@ public class SignInActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (isOnline()) {
-                    Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+                    Intent intent = new Intent(SignInActivity.this
+                            , SignUpActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.", Toast.LENGTH_LONG).show();
+                            "Please check your internet connection and try again."
+                            , Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-
-        /**
-         * Add listener to database for Users data. This reads from the database once initially and
-         * then every time any data changes in the Users tree
-         */
-        database.getDatabaseReference().child("Users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentRun.getUsers().clear();                                //clears the outdated user list
-                for (DataSnapshot data : dataSnapshot.getChildren()) {      //loops through every entry found in the database
-                    User user = data.getValue(User.class);
-                    currentRun.getUsers().add(user);                          //adds the updated users to the user list
-                }
-                CurrentRun.setCurrentRunUsers(currentRun.getUsers());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
     /**
@@ -131,11 +105,12 @@ public class SignInActivity extends Activity {
         if (usernameInput.equals("")) {           //there is no input in the username field
             credErrorText.setVisibility(View.VISIBLE);
             credErrorText.setText(getString(R.string.missing_credential_username));
+            return;
         } else if (passwordInput.equals("")) {  //there is no input in the password field
             credErrorText.setVisibility(View.VISIBLE);
             credErrorText.setText(getString(R.string.missing_credential_password));
+            return;
         }
-
 
         for (User user : currentRun.getUsers()) {     //checks every user in the user list
             if (user.getUsername().equals(usernameInput)) {         //if the username matches
@@ -144,6 +119,7 @@ public class SignInActivity extends Activity {
                     Intent intent = new Intent(this, MapsActivity.class);
                     startActivity(intent);
                     credErrorText.setVisibility(View.INVISIBLE);
+                    saveLocalUser(usernameInput, passwordInput);
                     break;
                 } else {        //if the password doesn't match
                     credErrorText.setVisibility(View.VISIBLE);
@@ -184,10 +160,24 @@ public class SignInActivity extends Activity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
-        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
+        else { Toast.makeText(getBaseContext(), "Tap button again to exit application",
+                Toast.LENGTH_SHORT).show(); }
 
         mBackPressed = System.currentTimeMillis();
     }
 
-
+    /**
+     * A method that saves the logged-in user locally, so that the user will automatically be
+     * logged-in next time they start the application.
+     *
+     * @param localUsername The username to be saved to next run
+     * @param localPassword The password to be saved to next run
+     */
+    private void saveLocalUser(String localUsername, String localPassword){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", localUsername);
+        editor.putString("password", localPassword);
+        editor.apply();
+    }
 }
