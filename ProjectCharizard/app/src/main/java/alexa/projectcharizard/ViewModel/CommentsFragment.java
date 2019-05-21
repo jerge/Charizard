@@ -1,5 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,11 +29,14 @@ public class CommentsFragment extends Fragment {
 
     private EditText comment;
     private Button send;
+    private Button createCommentButton;
     private RecyclerView recyclerView;
 
     private Spot spot;
     private Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+
+    private String m_Text = ""; // The input for comment from user
 
 
     public CommentsFragment() {
@@ -54,6 +59,43 @@ public class CommentsFragment extends Fragment {
         final CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(commentsAdapter);
+
+        // Create an onClickListener for createCommentButton
+        createCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Title");
+
+                // I'm using fragment here so I'm using getView() to provide ViewGroup
+                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
+                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_inpu_password, (ViewGroup) getView(), false);
+
+                // Set up the input
+                final EditText input = (EditText) viewInflated.findViewById(R.id.input);
+
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                builder.setView(viewInflated);
+
+
+                // Set up the buttons
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        m_Text = input.getText().toString();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
 
         initButton();
 
@@ -144,6 +186,7 @@ public class CommentsFragment extends Fragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.comment_recyclerView);
         comment = (EditText) v.findViewById(R.id.postTxt);
         send = (Button) v.findViewById(R.id.sentBtn);
+        createCommentButton = (Button) v.findViewById(R.id.createCommentBtn);
         // Starts the button as not enabled since there is no text to be used as a comment
         send.setEnabled(false);
         initCommentSection();
