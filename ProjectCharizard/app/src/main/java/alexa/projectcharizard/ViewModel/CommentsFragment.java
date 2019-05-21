@@ -1,12 +1,13 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,7 +37,7 @@ public class CommentsFragment extends Fragment {
     private Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
 
-    private String m_Text = ""; // The input for comment from user
+    private String commentInput = ""; // The input for comment from user
 
 
     public CommentsFragment() {
@@ -64,63 +65,11 @@ public class CommentsFragment extends Fragment {
         createCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Title");
-
-                // I'm using fragment here so I'm using getView() to provide ViewGroup
-                // but you can provide here any other instance of ViewGroup from your Fragment / Activity
-                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.text_inpu_password, (ViewGroup) getView(), false);
-
-                // Set up the input
-                final EditText input = (EditText) viewInflated.findViewById(R.id.input);
-
-                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                builder.setView(viewInflated);
-
-
-                // Set up the buttons
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        m_Text = input.getText().toString();
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                commentDialog();
             }
         });
-
-        initButton();
-
 
         return v;
-    }
-
-    private void initButton() {
-        // Button that saves and uploads a new comment.
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (Spot s: currentRun.getSpots()){
-                    if (s.getId().equals(spot.getId())){
-                        addComment();
-                        return;
-                    }
-                }
-                // If spot isn't found in currentRun, a Toast appears with this text.
-                Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
-                TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
-                if (t != null) t.setGravity(Gravity.CENTER);
-                toast.show();
-            }
-        });
     }
 
     private void addComment() {
@@ -131,16 +80,12 @@ public class CommentsFragment extends Fragment {
                 + "  " + addZero(dateTime.getHourOfDay())
                 + ":" + addZero(dateTime.getMinuteOfHour());
         // The comment that is supposed to be saved.
-        Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
+        Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), commentInput,
                 dateString);
         // Saves comment to the database.
         database.saveComment(newComment, spot.getId());
         // Saves comment to the commentlist.
         spot.getCommentList().add(newComment);
-
-        // Resets the text in the comment zone, and resets the focus
-        comment.setText("");
-        comment.clearFocus();
 
         // Refills the comments into the list
         CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList());
@@ -184,37 +129,85 @@ public class CommentsFragment extends Fragment {
      */
     private void initFragment(View v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.comment_recyclerView);
-        comment = (EditText) v.findViewById(R.id.postTxt);
-        send = (Button) v.findViewById(R.id.sentBtn);
         createCommentButton = (Button) v.findViewById(R.id.createCommentBtn);
-        // Starts the button as not enabled since there is no text to be used as a comment
-        send.setEnabled(false);
-        initCommentSection();
     }
 
     /**
-     * A method that lets tells the send-button if there is text to be sent as a comment
+     * The AlertDialog box that allows the user to leave a comment.
+     * Pops up after the user presses the FAB button
      */
-    private void initCommentSection() {
-        comment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private void commentDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
+        builder.setTitle("Leave a comment");
 
-            }
+        // Set up the input
+        final EditText input = new EditText(getContext());
 
+        // Allowing multi-line for text input when leaving a comment
+        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setSingleLine(false);
+        input.setLines(5);
+        input.setMaxLines(5);
+        input.setGravity(Gravity.LEFT | Gravity.TOP);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().trim().length()==0){
-                    send.setEnabled(false);
-                } else {
-                    send.setEnabled(true);
+            public void onClick(DialogInterface dialog, int which) {
+                commentInput = input.getText().toString();
+
+                // Adding comment to spot
+                for (Spot s: currentRun.getSpots()){
+                    if (s.getId().equals(spot.getId())){
+                        addComment();
+                        return;
+                    }
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                // If spot isn't found in currentRun, a Toast appears with this text.
+                Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
+                TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
+                if (t != null) t.setGravity(Gravity.CENTER);
+                toast.show();
             }
         });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        // Set the send button to initially disabled
+        final Button sendButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        sendButton.setEnabled(false);
+
+        // Adding textChangedListener to Send button - not possible to send message if
+        // text field is empty
+        input.addTextChangedListener(new TextWatcher() {
+            private void handleText() {
+                if(input.getText().length() == 0) {
+                    sendButton.setEnabled(false);
+                } else {
+                    sendButton.setEnabled(true);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                handleText();
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Nothing to do
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Nothing to do
+            }
+        });
+
     }
 }
