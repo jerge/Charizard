@@ -15,7 +15,6 @@ import java.util.List;
  */
 
 public class User {         //TODO hash passwords?
-    private String fullName;
     private String username;
     private Bitmap profileImage;
     private String password;
@@ -26,9 +25,8 @@ public class User {         //TODO hash passwords?
     /**
      * Constructor for creating user from database that has all parameters
      */
-    public User(String username, String fullName, String password, Bitmap profileImage, List<Spot> userSpots, String id) {
+    public User(String username, String password, Bitmap profileImage, List<Spot> userSpots, String id) {
         this.username = username;
-        this.fullName = fullName;
         this.password = password;
         this.profileImage = profileImage;
         this.userSpots = userSpots;
@@ -47,29 +45,7 @@ public class User {         //TODO hash passwords?
     }
 
     /**
-     * Constructor for creating user from database that is missing full name
-     */
-    public User(String username, String password, Bitmap profileImage, List<Spot> userSpots, String id) {
-        this.username = username;
-        this.password = password;
-        this.profileImage = profileImage;
-        this.userSpots = userSpots;
-        this.id = id;
-    }
-
-    /**
      *  Constructor for creating user from database that is missing profile image
-     */
-    public User(String username, String fullName, String password, List<Spot> userSpots, String id) {
-        this.username = username;
-        this.fullName = fullName;
-        this.password = password;
-        this.userSpots = userSpots;
-        this.id = id;
-    }
-
-    /**
-     *  Constructor for creating user from database that is missing profile image and full name
      */
     public User(String username, String password, List<Spot> userSpots, String id) {
         this.username = username;
@@ -81,9 +57,9 @@ public class User {         //TODO hash passwords?
     /**
      *  Constructor for when creating a user for the first time that has all parameters
      */
-    public User(String username, String fullName, String password, Bitmap profileImage, String id) {
+    public User(String username, String password, Bitmap profileImage, String id) {
         this.username = username;
-        this.fullName = fullName;
+  //      this.fullName = fullName;
         this.password = password;
         this.profileImage = profileImage;
         this.userSpots = new ArrayList<>();
@@ -118,10 +94,6 @@ public class User {         //TODO hash passwords?
      * ****** GETTERS *******
      */
 
-    public String getFullName() {
-        return fullName;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -149,10 +121,6 @@ public class User {         //TODO hash passwords?
     /**
      * ****** SETTERS *******
      */
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
 
     public void setUsername(String username) {
         this.username = username;
