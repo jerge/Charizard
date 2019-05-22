@@ -94,6 +94,7 @@ public class SignUpActivity extends Activity {
                             Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
                             startActivity(mapActivity);
                             saveLocalUser(usernameInput,passwordInput);
+                            finish();
                         }
                     }
                 }
