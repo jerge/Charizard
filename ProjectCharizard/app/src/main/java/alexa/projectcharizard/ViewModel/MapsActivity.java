@@ -1,7 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Context;
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -149,9 +148,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     spot.setCommentList(new ArrayList<Comment>());
 
                     // Checks if the current spot has any comments.
-                    if (data.child("comments").getValue() != null){
+                    if (data.child("comments").getValue() != null) {
                         // Loads the comments separately since it is a different class.
-                        for (DataSnapshot d: data.child("comments").getChildren()){
+                        for (DataSnapshot d : data.child("comments").getChildren()) {
                             // Saves the comment in a new object.
                             Comment comment = d.getValue(Comment.class);
 
@@ -199,13 +198,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             mMap.setMyLocationEnabled(true);
         }
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // If not request permission to access fine location
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        } else {
-            mMap.setMyLocationEnabled(true);
-        }
     }
 
     /**
@@ -240,14 +232,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Updates the marker options for the map marker.
      * Sets the icon for the map marker to the icon for the corresponding category.
      */
-    private void updateMarkers() {
+    protected void updateMarkers() {
         mMap.clear();
         for (Spot spot : currentRun.getSpots()) {
             //Add all markers
             if (filter(spot) && (privacyVisible(spot))) {
                 if (!checkBoxOnlyPrivate) {         //if the "Show only your spots checkbox is not checked, init marker
                     initMarker(spot);
-                } else if(spot.getPrivacy()) {      //otherwise init marker only if it is a private
+                } else if (spot.getPrivacy()) {      //otherwise init marker only if it is a private
                     initMarker(spot);
                 }
             }
@@ -256,9 +248,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Initializes a marker and places it on the map
+     *
      * @param spot the spot correlated with the new marker
      */
-    private void initMarker(final Spot spot) {
+    protected void initMarker(final Spot spot) {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                 .title(spot.getName())
@@ -337,13 +330,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 //if no internet connection, show a message
-                if(!isOnline()) {
+                if (!isOnline()) {
                     Toast.makeText(getBaseContext(), "You are not connected to internet. " +
-                            "Please check your internet connection and try again.",
-                                Toast.LENGTH_LONG).show();
+                                    "Please check your internet connection and try again.",
+                            Toast.LENGTH_LONG).show();
                 }
                 //If there is an internet connection, redirect to the AddSpotActivity
-                else{
+                else {
                     Intent intent = new Intent(MapsActivity.this, AddSpotActivity.class);
                     intent.putExtra("ViewedLocationLat", mMap.getCameraPosition().target.latitude);
                     intent.putExtra("ViewedLocationLong", mMap.getCameraPosition().target.longitude);
@@ -402,7 +395,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (findViewById(R.id.filterBoxes).getVisibility() == View.VISIBLE){
+                if (findViewById(R.id.filterBoxes).getVisibility() == View.VISIBLE) {
                     ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.INVISIBLE);
                     return;
                 }
@@ -489,6 +482,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Method for checking if connected to internet.
+     *
      * @return True if connected to internet, false otherwise
      */
     public boolean isOnline() {

@@ -1,19 +1,22 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -39,6 +42,7 @@ import java.util.List;
 import alexa.projectcharizard.Model.Category;
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
+import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
 /**
@@ -50,6 +54,8 @@ public class AddSpotActivity extends MapsActivity {
 
     //a constant to track the file chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
+    private final int MY_PERMISSION_READ_EXTERNAL_STORAGE = 42;
+
     //a Uri object to store file path
     private Uri filePath;
 
@@ -97,33 +103,31 @@ public class AddSpotActivity extends MapsActivity {
     public void addNewSpot(View view) {
 
         // if no internet connection, show a message
-        if(!isOnline()) {
-            Toast.makeText(getBaseContext(),"You are not connected to internet. " +
+        if (!isOnline()) {
+            Toast.makeText(getBaseContext(), "You are not connected to internet. " +
                             "Please check your internet connection and try again.",
-                                Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_LONG).show();
         }
         // If there is an internet connection, check if fields are empty. Then save spot.
-        else{
+        else {
             if (latitude == null || longitude == null) {    //creates a toast if no spot location has been chosen
                 Toast.makeText(getApplicationContext(), "Choose the location of your spot", Toast.LENGTH_SHORT).show();
                 return;
             }
-    
+
             if (txtName.getText().toString().isEmpty()) {   //creates a toast if no name has been chosen for the spot
                 Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
                 return;
             }
             String name = txtName.getText().toString();
-    
+
             if (currentCategory == null) {  //creates a toast if no category has been chosen for the spot
                 Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
                 return;
             }
             Category category = getCategoryEnum(currentCategory);
-    
+
             String description = txtDescription.getText().toString();
-    
-            Bitmap image = null;
 
             //Open connection to database and save the spot on the database.
             Database database = Database.getInstance();
@@ -139,8 +143,10 @@ public class AddSpotActivity extends MapsActivity {
         }
         finish();
     }
-/**
+
+    /**
      * When the back button gets pressed
+     *
      * @param view the view from which this function takes you away from
      */
     public void backButtonOnClick(View view) {
@@ -305,6 +311,7 @@ public class AddSpotActivity extends MapsActivity {
 
     /**
      * Initial zoom value of the map
+     *
      * @return
      */
     @Override
@@ -314,6 +321,7 @@ public class AddSpotActivity extends MapsActivity {
 
     /**
      * Initial location showing on the map
+     *
      * @return
      */
     @Override
@@ -326,10 +334,7 @@ public class AddSpotActivity extends MapsActivity {
         btnImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                askForExternalStoragePermission();
             }
         });
     }
@@ -354,6 +359,17 @@ public class AddSpotActivity extends MapsActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Updates the marker options for the map marker without filter
+     */
+    protected void updateMarkers() {
+        mMap.clear();
+        for (Spot spot : currentRun.getSpots()) {
+            //Add all markers
+            initMarker(spot);
         }
     }
 
@@ -425,6 +441,57 @@ public class AddSpotActivity extends MapsActivity {
         }
     }
 
+    /**
+     * Checks if the user has granted access to read external storage and starts image selector
+     * upon granting access
+     */
+    private void askForExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_READ_EXTERNAL_STORAGE);
+        } else {
+            selectImage();
+        }
+    }
+
+    /**
+     * Starts the image selector
+     */
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    /**
+     * A method which is called upon getting a result from a permissions request
+     * And then it does the thing that required permission
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
+     * @param permissions
+     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
+     *                     a location in the array if that specific permission is granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        selectImage();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+        }
+    }
 
     @Override
     protected void contentView() {
