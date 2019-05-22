@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -78,10 +79,17 @@ public class EditSpotActivity extends MapsActivity {
 
     private boolean spotPrivacy;
 
+    private Spot currentSpot;
+
+    private CurrentRun currentRun = CurrentRun.getInstance();
+
     // Override super class methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentSpot = getSpot(getIntent().getStringExtra("SpotId"));
+
         initView();
         initSpinner();
         initSwitch();
@@ -115,13 +123,13 @@ public class EditSpotActivity extends MapsActivity {
 
     @Override
     protected float initZoom() {
-        return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
+        return getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
     }
 
     @Override
     protected LatLng initLoc() {
-        return new LatLng(getIntent().getDoubleExtra("SpotLatitude", 57),
-                getIntent().getDoubleExtra("SpotLongitude", 12));
+        return new LatLng(currentSpot.getLatitude(),
+                currentSpot.getLongitude());
     }
 
     @Override
@@ -170,7 +178,7 @@ public class EditSpotActivity extends MapsActivity {
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editSpotCatSpinner.setAdapter(categoryAdapter);
 
-        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(getIntent().getStringExtra("SpotCategory")));
+        editSpotCatSpinner.setSelection(categoryAdapter.getPosition(currentSpot.getCategory().toString()));
     }
 
     /**
@@ -187,7 +195,7 @@ public class EditSpotActivity extends MapsActivity {
                 }
             }
         });
-        editSpotPrivacySwitch.setChecked(getIntent().getBooleanExtra("SpotPrivacy", false));
+        editSpotPrivacySwitch.setChecked(currentSpot.getPrivacy());
     }
 
     /**
@@ -196,10 +204,10 @@ public class EditSpotActivity extends MapsActivity {
     private void setInitText() {
         Intent intent = getIntent();
 
-        editSpotNameView.setText(intent.getStringExtra("SpotName"));
-        editSpotLatView.setText(Double.toString(intent.getDoubleExtra("SpotLatitude", 57)));
-        editSpotLongView.setText(Double.toString(intent.getDoubleExtra("SpotLongitude", 12)));
-        editSpotDescText.setText(intent.getStringExtra("SpotDescription"));
+        editSpotNameView.setText(currentSpot.getName());
+        editSpotLatView.setText(Double.toString(currentSpot.getLatitude()));
+        editSpotLongView.setText(Double.toString(currentSpot.getLongitude()));
+        editSpotDescText.setText(currentSpot.getDescription());
     }
 
     /**
@@ -258,11 +266,9 @@ public class EditSpotActivity extends MapsActivity {
         if (currentMarker != null) {
             currentMarker.remove();
         }
-        LatLng latlng = new LatLng(
-                getIntent().getDoubleExtra("SpotLatitude", 57.0),
-                getIntent().getDoubleExtra("SpotLongitude", 12.0));
+
         currentMarker = mMap.addMarker(new MarkerOptions()
-                .position(latlng)
+                .position(initLoc())
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
     }
 
@@ -274,7 +280,7 @@ public class EditSpotActivity extends MapsActivity {
      * @param view the view which this action takes place in
      */
     public void changeSpotInfoAction(View view) {
-        String id = getIntent().getStringExtra("SpotId");
+        String id = currentSpot.getId();
         DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child("Spots")
                 .child(id);
         Category spotCategory = getCategoryEnum(this.currentCategory);
@@ -423,70 +429,6 @@ public class EditSpotActivity extends MapsActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Updates the marker options for the map marker.
-     * Sets the icon for the map marker to the icon for the corresponding category.
-     */
-    protected void updateMarkers() {
-        mMap.clear();
-        for (Spot spot : currentRun.getSpots()) {
-            //Add all markers
-            initMarker(spot);
-        }
-    }
-
-    /**
-     * Checks if the user has granted access to read external storage and starts image selector
-     * upon granting access
-     */
-    private void askForExternalStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // If not request permission to access fine location
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_READ_EXTERNAL_STORAGE);
-        } else {
-            selectImage();
-        }
-    }
-
-    /**
-     * Starts the image selector
-     */
-    private void selectImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
-    /**
-     * A method which is called upon getting a result from a permissions request
-     * And then it does the thing that required permission
-     *
-     * @param requestCode  The int corresponding to the permission that's being regarded
-     * @param permissions
-     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
-     *                     a location in the array if that specific permission is granted
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSION_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    try {
-                        selectImage();
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
             }
         }
     }
