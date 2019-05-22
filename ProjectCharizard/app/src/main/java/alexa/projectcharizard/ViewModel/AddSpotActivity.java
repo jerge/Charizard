@@ -225,11 +225,11 @@ public class AddSpotActivity extends MapsActivity {
 
         //loop through all existing categories and add it to the list.
         for (Category cat : Category.values()) {
-            categoryList.add(cat.name());
+            categoryList.add(cat.toString());
         }
 
         //Set the layout for the category spinner.
-        categoryArrayAdapter = new ArrayAdapter<String>(this,
+        categoryArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, categoryList);
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryArrayAdapter);
