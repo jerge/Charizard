@@ -1,10 +1,7 @@
 package alexa.projectcharizard.ViewModel;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -54,13 +51,13 @@ public abstract class MapParentActivity extends FragmentActivity implements OnMa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        initContentView();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
+    protected abstract void initContentView();
 
     /**
      * Manipulates the map once available.
@@ -168,7 +165,7 @@ public abstract class MapParentActivity extends FragmentActivity implements OnMa
      * Updates the marker options for the map marker.
      * Sets the icon for the map marker to the icon for the corresponding category.
      */
-    private void updateMarkers() {
+    protected void updateMarkers() {
         mMap.clear();
         for (Spot spot : currentRun.getSpots()) {
             //Add all markers

@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
-import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -54,7 +53,7 @@ import alexa.projectcharizard.R;
  * @Author Stefan Chan
  */
 
-public class EditSpotActivity extends MapsActivity {
+public class EditSpotActivity extends MapParentActivity {
 
     // a constant to track the file chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
@@ -81,8 +80,6 @@ public class EditSpotActivity extends MapsActivity {
 
     private Spot currentSpot;
 
-    private CurrentRun currentRun = CurrentRun.getInstance();
-
     // Override super class methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,47 +92,29 @@ public class EditSpotActivity extends MapsActivity {
         initSwitch();
     }
 
+    @Override
+    protected void initContentView() {
+        setContentView(R.layout.activity_edit_spot);
+    }
+
     /**
      * Called when the map is ready for use
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        initZoom = getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
+        initLoc = new LatLng(currentSpot.getLatitude(), currentSpot.getLongitude());
         super.onMapReady(googleMap);
         initLocationOnClickListener();
         initSpotLocationOnMap();
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return true;
+            }
+        });
     }
 
-    @Override
-    protected void initPlsBtn() {
-    }
-
-    @Override
-    protected void initFilterBtn() {
-
-    }
-
-    /**
-     * Removes functionality of overridden parent class
-     */
-    @Override
-    protected void initTmpAccountBtn() {
-    }
-
-    @Override
-    protected float initZoom() {
-        return getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
-    }
-
-    @Override
-    protected LatLng initLoc() {
-        return new LatLng(currentSpot.getLatitude(),
-                currentSpot.getLongitude());
-    }
-
-    @Override
-    protected void contentView() {
-        setContentView(R.layout.activity_edit_spot);
-    }
 
     /**
      * Initialises text components
@@ -202,12 +181,22 @@ public class EditSpotActivity extends MapsActivity {
      * Sets the textviews with appropriate spot information
      */
     private void setInitText() {
-        Intent intent = getIntent();
-
         editSpotNameView.setText(currentSpot.getName());
         editSpotLatView.setText(Double.toString(currentSpot.getLatitude()));
         editSpotLongView.setText(Double.toString(currentSpot.getLongitude()));
         editSpotDescText.setText(currentSpot.getDescription());
+    }
+
+    /**
+     * Makes the button for selecting image clickable
+     */
+    private void initImageButton() {
+        currentImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askForExternalStoragePermission();
+            }
+        });
     }
 
     /**
@@ -268,7 +257,7 @@ public class EditSpotActivity extends MapsActivity {
         }
 
         currentMarker = mMap.addMarker(new MarkerOptions()
-                .position(initLoc())
+                .position(initLoc)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
     }
 
@@ -319,21 +308,12 @@ public class EditSpotActivity extends MapsActivity {
     }
 
     /**
-     * Makes the button for selecting image clickable
+     * Downloads the image and sets the image of the imageview
      */
-    private void initImageButton() {
-        currentImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                askForExternalStoragePermission();
-            }
-        });
-    }
-
     private void importPicture() {
         // Gets the location in Storage of the picture
         StorageReference imageReference = Database.getInstance().getStorageReference()
-                .child("images/" + getIntent().getStringExtra("SpotId"));
+                .child("images/" + currentSpot.getId());
         // Tries to download from the url
         imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -409,6 +389,29 @@ public class EditSpotActivity extends MapsActivity {
         }
     }
 
+    /**
+     * Checks if the user has granted access to read external storage and starts image selector
+     * upon granting access
+     */
+    private void askForExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_READ_EXTERNAL_STORAGE);
+        } else {
+            selectImage();
+        }
+    }
+
+    /**
+     * Starts the image selector
+     */
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
     /**
      * Upon choosing a file, this method is called to update the filePath.
@@ -431,6 +434,44 @@ public class EditSpotActivity extends MapsActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * A method which is called upon getting a result from a permissions request
+     * And then it does the thing that required permission
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
+     * @param permissions
+     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
+     *                     a location in the array if that specific permission is granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        selectImage();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private Spot getSpot(String spotId) {
+        for (Spot spot : currentRun.getSpots()) {
+            if (spot.getId().equals(spotId)) {
+                return spot;
+            }
+        }
+        return null;
     }
 
 }

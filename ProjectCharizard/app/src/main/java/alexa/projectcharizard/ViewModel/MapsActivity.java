@@ -1,17 +1,9 @@
 package alexa.projectcharizard.ViewModel;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,33 +14,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
-import alexa.projectcharizard.Model.Comment;
 import alexa.projectcharizard.Model.CurrentRun;
-import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
 /**
  * The activity for the MapView
  */
-public class MapsActivity extends MapParentActivity{
+public class MapsActivity extends MapParentActivity {
 
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
@@ -63,11 +45,13 @@ public class MapsActivity extends MapParentActivity{
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
 
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Connect to layout file
-        setContentView(R.layout.activity_maps);
+
 
         initPlsBtn();
         initFilterBtn();
@@ -78,24 +62,10 @@ public class MapsActivity extends MapParentActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
-    /**
-     * Method to avoid the user returning to the sign in / sign up page from the map view. Instead,
-     * the back button closes the application if pressed twice quickly.
-     */
-    /*@Override
-    public void onBackPressed(){
-
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
-
-        mBackPressed = System.currentTimeMillis();
-    }*/ //TODO Prevent this method to behave this way in AddSpotActivity
+    @Override
+    protected void initContentView() {
+        setContentView(R.layout.activity_maps);
+    }
 
     /**
      * Manipulates the map once available.
@@ -109,6 +79,7 @@ public class MapsActivity extends MapParentActivity{
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        super.onMapReady(googleMap);
         spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
         mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
@@ -121,23 +92,23 @@ public class MapsActivity extends MapParentActivity{
         });
     }
 
-
     /**
-     * Updates the marker options for the map marker.
-     * Sets the icon for the map marker to the icon for the corresponding category.
+     * Method to avoid the user returning to the sign in / sign up page from the map view. Instead,
+     * the back button closes the application if pressed twice quickly.
      */
-    protected void updateMarkers() {
-        mMap.clear();
-        for (Spot spot : currentRun.getSpots()) {
-            //Add all markers
-            if (filter(spot) && (privacyVisible(spot))) {
-                if (!checkBoxOnlyPrivate) {         //if the "Show only your spots checkbox is not checked, init marker
-                    initMarker(spot);
-                } else if (spot.getPrivacy()) {      //otherwise init marker only if it is a private
-                    initMarker(spot);
-                }
-            }
+    @Override
+    public void onBackPressed(){
+
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
+        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
+
+        mBackPressed = System.currentTimeMillis();
     }
 
     /**
@@ -168,24 +139,6 @@ public class MapsActivity extends MapParentActivity{
             return marker;
         }
         return null;
-    }
-
-    /**
-     * Returns true if the spot's category is checked true in the checkbox, otherwise false
-     *
-     * @param s the spot to check
-     * @return true if the spot's category is checked true in the checkbox, otherwise false
-     */
-    private boolean filter(Spot s) {
-        return checkBoxes.contains(s.getCategory());
-    }
-
-    private boolean privacyVisible(Spot s) {
-        if (!s.getPrivacy() || s.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
 
@@ -341,6 +294,24 @@ public class MapsActivity extends MapParentActivity{
             txt.setText(category.toString());
         }
         rel.addView(txt, paramsTxt);
+    }
+
+    /**
+     * Returns true if the spot's category is checked true in the checkbox, otherwise false
+     *
+     * @param s the spot to check
+     * @return true if the spot's category is checked true in the checkbox, otherwise false
+     */
+    private boolean filter(Spot s) {
+        return checkBoxes.contains(s.getCategory());
+    }
+
+    private boolean privacyVisible(Spot s) {
+        if (!s.getPrivacy() || s.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
