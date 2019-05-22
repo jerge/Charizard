@@ -60,6 +60,8 @@ public class AboutFragment extends Fragment {
             }
         }
 
+        System.out.println("Spot name: " + currentSpot.getName());
+
 
 
         //Collects extra intent from the previous activity and edits the relevant TextViews
