@@ -51,40 +51,40 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_about, container, false);
 
+        currentSpot = getSpot(getActivity().getIntent().getStringExtra("SpotId"));
+
         initFragment(v);
 
-        for (Spot spot: currentRun.getSpots()){
-            if (getActivity().getIntent().getStringExtra("SpotId").equals(spot.getId())){
-                currentSpot = spot;
-                break;
-            }
-        }
-
-        System.out.println("Spot name: " + currentSpot.getName());
-
-
-
         //Collects extra intent from the previous activity and edits the relevant TextViews
-        spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
-        spotName.setText(getActivity().getIntent().getStringExtra("SpotName"));
-        spotCategory.setText(getActivity().getIntent().getStringExtra("SpotCategory"));
+        spotDescription.setText(currentSpot.getDescription());
+        spotName.setText(currentSpot.getName());
+        spotCategory.setText(currentSpot.getCategory().toString());
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                database.removeSpot(getActivity().getIntent().getStringExtra("SpotId")); //closes the activity and returns to previous
+                database.removeSpot(currentSpot.getId()); //closes the activity and returns to previous
                 getActivity().onBackPressed();
             }
         });
 
         //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
-            if (getActivity().getIntent().getStringExtra("SpotCreator").equals(user.getId())) {
+            if (currentSpot.getCreatorId().equals(user.getId())) {
                 spotCreator.setText(user.getUsername());
                 break;
             }
         }
         // Inflate the layout for this fragment
         return v;
+    }
+
+    private Spot getSpot(String spotId) {
+        for (Spot spot: currentRun.getSpots()){
+            if (spot.getId().equals(spotId)){
+                return spot;
+            }
+        }
+        return null;
     }
 
     /**
@@ -97,10 +97,9 @@ public class AboutFragment extends Fragment {
         spotCategory = (TextView) v.findViewById(R.id.spotCategory);
         removeBtn = (Button) v.findViewById(R.id.removeBtn);
 
-/*
         // Checks if the spot is owned by the current user, if it is the remove spot button appears and becomes activated
         // Otherwise it will not appear nor be activated
-        if (getActivity().getIntent().getStringExtra("SpotCreator").equals(CurrentRun.getActiveUser().getId())) {
+        if (currentSpot.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
             removeBtn.setActivated(true);
             removeBtn.setVisibility(View.VISIBLE);
             removeBtn.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +114,6 @@ public class AboutFragment extends Fragment {
         } else {
             removeBtn.setActivated(false);
             removeBtn.setVisibility(View.INVISIBLE);
-        }*/
+        }
     }
 }

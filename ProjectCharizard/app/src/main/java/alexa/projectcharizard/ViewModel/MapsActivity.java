@@ -258,7 +258,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Initializes a marker and places it on the map
      * @param spot the spot correlated with the new marker
      */
-    private void initMarker(final Spot spot) {
+    private void initMarker(Spot spot) {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                 .title(spot.getName())
@@ -271,13 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                intent.putExtra("SpotCreator", spot.getCreatorId());
-                intent.putExtra("SpotDescription", spot.getDescription());
-                intent.putExtra("SpotName", spot.getName());
-                intent.putExtra("SpotId", spot.getId());
-                intent.putExtra("SpotCategory", spot.getCategory().toString());
-                intent.putExtra("SpotLatitude", spot.getLatitude());
-                intent.putExtra("SpotLongitude", spot.getLongitude());
+                intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
                 startActivity(intent);
             }
         });
