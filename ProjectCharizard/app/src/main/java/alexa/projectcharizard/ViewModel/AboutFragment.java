@@ -58,7 +58,6 @@ public class AboutFragment extends Fragment {
 
         //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
-            System.out.println(user.getId());
             if (getActivity().getIntent().getStringExtra("SpotCreator").equals(user.getId())) {
                 spotCreator.setText(user.getUsername());
                 break;
@@ -82,7 +81,7 @@ public class AboutFragment extends Fragment {
 
         // Checks if the spot is owned by the current user, if it is the remove spot button appears and becomes activated
         // Otherwise it will not appear nor be activated
-        if (getActivity().getIntent().getStringExtra("SpotCreator").equals(CurrentRun.getActiveUser())) {
+        if (getActivity().getIntent().getStringExtra("SpotCreator").equals(CurrentRun.getActiveUser().getId())) {
             removeBtn.setActivated(true);
             removeBtn.setVisibility(View.VISIBLE);
             removeBtn.setOnClickListener(new View.OnClickListener() {
