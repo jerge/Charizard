@@ -12,6 +12,7 @@ import org.w3c.dom.Text;
 
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
+import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.Model.User;
 import alexa.projectcharizard.R;
 
@@ -22,15 +23,16 @@ import alexa.projectcharizard.R;
  */
 public class AboutFragment extends Fragment {
 
-    TextView spotDescription;
-    TextView spotName;
-    TextView spotCategory;
-    TextView spotCreator;
-
+    private TextView spotDescription;
+    private TextView spotName;
+    private TextView spotCategory;
+    private TextView spotCreator;
     private Button removeBtn;
-    private Database database;
 
-    final CurrentRun currentRun = CurrentRun.getInstance();
+    private Database database = Database.getInstance();
+    private CurrentRun currentRun = CurrentRun.getInstance();
+
+    private Spot currentSpot;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -51,10 +53,26 @@ public class AboutFragment extends Fragment {
 
         initFragment(v);
 
+        for (Spot spot: currentRun.getSpots()){
+            if (getActivity().getIntent().getStringExtra("SpotId").equals(spot.getId())){
+                currentSpot = spot;
+                break;
+            }
+        }
+
+
+
         //Collects extra intent from the previous activity and edits the relevant TextViews
         spotDescription.setText(getActivity().getIntent().getStringExtra("SpotDescription"));
         spotName.setText(getActivity().getIntent().getStringExtra("SpotName"));
         spotCategory.setText(getActivity().getIntent().getStringExtra("SpotCategory"));
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                database.removeSpot(getActivity().getIntent().getStringExtra("SpotId")); //closes the activity and returns to previous
+                getActivity().onBackPressed();
+            }
+        });
 
         //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
@@ -76,9 +94,8 @@ public class AboutFragment extends Fragment {
         spotCreator = (TextView) v.findViewById(R.id.creatorText);
         spotCategory = (TextView) v.findViewById(R.id.spotCategory);
         removeBtn = (Button) v.findViewById(R.id.removeBtn);
-        database = Database.getInstance();
 
-
+/*
         // Checks if the spot is owned by the current user, if it is the remove spot button appears and becomes activated
         // Otherwise it will not appear nor be activated
         if (getActivity().getIntent().getStringExtra("SpotCreator").equals(CurrentRun.getActiveUser().getId())) {
@@ -96,6 +113,6 @@ public class AboutFragment extends Fragment {
         } else {
             removeBtn.setActivated(false);
             removeBtn.setVisibility(View.INVISIBLE);
-        }
+        }*/
     }
 }
