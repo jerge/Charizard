@@ -127,7 +127,8 @@ public class SignInActivity extends Activity {
                     startActivity(intent);
                     credErrorText.setVisibility(View.INVISIBLE);
                     saveLocalUser(usernameInput, passwordInput);
-                    break;
+                    finish();
+                    return;
                 } else {        //if the password doesn't match
                     credErrorText.setVisibility(View.VISIBLE);
                     credErrorText.setText(getString(R.string.wrong_credentials));
