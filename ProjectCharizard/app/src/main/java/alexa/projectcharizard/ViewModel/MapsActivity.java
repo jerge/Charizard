@@ -168,8 +168,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
-        spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
-        mMap.setInfoWindowAdapter(spotDetailViewAdapter);
+        //spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
+        //mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 
         // Add marker on all 'spot's in spots
         updateMarkers();
@@ -253,13 +253,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     protected void initMarker(final Spot spot) {
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
-                .title(spot.getName())
-                .icon(getMarkerIcon(spot.getCategory())));
+                .position(new LatLng(spot.getLatitude(), spot.getLongitude())));
+                //.title(spot.getName())
+                //.icon(getMarkerIcon(spot.getCategory())));
 
         // Saves the id of the spot in the snippet so that it can be accessed in the next
         // activity
-        marker.setSnippet(spot.getId());
+        /*marker.setSnippet(spot.getId());
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -273,7 +273,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 intent.putExtra("SpotLongitude", spot.getLongitude());
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     /**
