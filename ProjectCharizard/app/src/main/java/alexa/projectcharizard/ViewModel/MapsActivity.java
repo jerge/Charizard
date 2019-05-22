@@ -48,12 +48,8 @@ import alexa.projectcharizard.R;
 /**
  * The activity for the MapView
  */
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends MapParentActivity{
 
-    final Database database = Database.getInstance();
-    final CurrentRun currentRun = CurrentRun.getInstance();
-    // The GoogleMap instance
-    protected GoogleMap mMap;
     // All spots that will be added upon map refresh
     // The button for redirecting to Add Spot Activity
     private ImageButton plsBtn;
@@ -67,13 +63,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
 
-    final int MY_PERMISSIONS_ACCESS_FINE_LOCATION = 47;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Connect to layout file
-        contentView();
+        setContentView(R.layout.activity_maps);
 
         initPlsBtn();
         initFilterBtn();
@@ -82,18 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Sets the status bar to a white color and the elements in the status bar to a darker color
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     /**
@@ -127,52 +109,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setPadding(200, 50, 0, 0);
-        float initialZoomLevel = initZoom();
-        LatLng initialLocation = initLoc();
-
-        mMap.moveCamera(CameraUpdateFactory.
-                newLatLngZoom(initialLocation, initialZoomLevel));
-        showUserLocation();
-
-        //Open connection to database and add all existing spots to the spotlist.
-        database.getDatabaseReference().child("Spots").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentRun.getSpots().clear();
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    Spot spot = data.getValue(Spot.class);
-
-                    // Initializes the comment list.
-                    spot.setCommentList(new ArrayList<Comment>());
-
-                    // Checks if the current spot has any comments.
-                    if (data.child("comments").getValue() != null) {
-                        // Loads the comments separately since it is a different class.
-                        for (DataSnapshot d : data.child("comments").getChildren()) {
-                            // Saves the comment in a new object.
-                            Comment comment = d.getValue(Comment.class);
-
-                            // Saves the comment in a list in the spot.
-                            spot.getCommentList().add(comment);
-                        }
-                    }
-                    currentRun.getSpots().add(spot);
-                }
-                updateMarkers();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
         mMap.setInfoWindowAdapter(spotDetailViewAdapter);
-
-        // Add marker on all 'spot's in spots
-        updateMarkers();
 
         // Set a listener to make the RelativeLayout filterBoxes Gone when clicking on map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -181,52 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.GONE);
             }
         });
-
     }
 
-    /**
-     * A method for showing the user's location on the map
-     */
-    protected void showUserLocation() {
-        // Check if app has permission to access fine location
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // If not request permission to access fine location
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_ACCESS_FINE_LOCATION);
-        } else {
-            mMap.setMyLocationEnabled(true);
-        }
-    }
-
-    /**
-     * A method which is called upon getting a result from a permissions request
-     * And then it does the thing that required permission
-     *
-     * @param requestCode  The int corresponding to the permission that's being regarded
-     * @param permissions
-     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
-     *                     a location in the array if that specific permission is granted
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    try {
-                        mMap.setMyLocationEnabled(true);
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            }
-        }
-    }
 
     /**
      * Updates the marker options for the map marker.
@@ -251,23 +145,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      *
      * @param spot the spot correlated with the new marker
      */
-    protected void initMarker(Spot spot) {
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
-                .title(spot.getName())
-                .icon(getMarkerIcon(spot.getCategory())));
+    @Override
+    protected Marker initMarker(Spot spot) {
+        if ((filter(spot) && privacyVisible(spot)) &&
+                (spot.getPrivacy() || !checkBoxOnlyPrivate)) {
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
+                    .title(spot.getName())
+                    .icon(getMarkerIcon(spot.getCategory())));
 
-        // Saves the id of the spot in the snippet so that it can be accessed in the next
-        // activity
-        marker.setSnippet(spot.getId());
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
-                intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
-                startActivity(intent);
-            }
-        });
+            // Saves the id of the spot in the snippet so that it can be accessed in the next
+            // activity
+            marker.setSnippet(spot.getId());
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Intent intent = new Intent(MapsActivity.this, DetailedViewActivity.class);
+                    intent.putExtra("SpotId", spotDetailViewAdapter.getSpot().getId());
+                    startActivity(intent);
+                }
+            });
+            return marker;
+        }
+        return null;
     }
 
     /**
@@ -288,29 +188,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /**
-     * Identifies what category the specified spot belongs to and returns the corresponding icon for the category.
-     * If the category is OTHER it returns the icon of the map marker.
-     *
-     * @param category The category of the spot.
-     **/
-    private BitmapDescriptor getMarkerIcon(Category category) {
-        if (category.equals(Category.FRUIT)) {
-            return BitmapDescriptorFactory.fromResource(R.drawable.fruit);
-        } else if (category.equals(Category.VEGETABLE)) {
-            return BitmapDescriptorFactory.fromResource(R.drawable.carrot);
-        } else if (category.equals(Category.BERRY)) {
-            return BitmapDescriptorFactory.fromResource(R.drawable.red_strawberry);
-        } else if (category.equals(Category.MUSHROOM)) {
-            return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
-        } else {
-            return BitmapDescriptorFactory.fromResource(R.drawable.marker);
-        }
-    }
-
-    protected void contentView() {
-        setContentView(R.layout.activity_maps);
-    }
 
     /**
      * Initializes the plus button to redirect to the AddSpotActivity
@@ -464,28 +341,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             txt.setText(category.toString());
         }
         rel.addView(txt, paramsTxt);
-    }
-
-    protected float initZoom() {
-        return 10.0f;
-    }
-
-    protected LatLng initLoc() {
-        return new LatLng(57.7, 11.96);
-    }
-
-    /**
-     * Method for checking if connected to internet.
-     *
-     * @return True if connected to internet, false otherwise
-     */
-    public boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connectivityManager.getNetworkInfo(
-                ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(
-                        ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
     }
 
 }
