@@ -309,7 +309,7 @@ public class AddSpotActivity extends MapsActivity {
      */
     @Override
     protected float initZoom() {
-        return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
+        return getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
     }
 
     /**
