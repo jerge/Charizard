@@ -160,16 +160,22 @@ public class AddSpotActivity extends MapsActivity {
      */
     private Category getCategoryEnum(String currentCategory) {
 
-        if (currentCategory.equals("FRUIT")) {
-            return Category.FRUIT;
-        } else if (currentCategory.equals("VEGETABLE")) {
-            return Category.VEGETABLE;
-        } else if (currentCategory.equals("BERRY")) {
-            return Category.BERRY;
-        } else if (currentCategory.equals("MUSHROOM")) {
-            return Category.MUSHROOM;
-        } else {
-            return Category.OTHER;
+        switch (currentCategory){
+            case "Fruit": {
+                return Category.FRUIT;
+            }
+            case "Vegetable": {
+                return Category.VEGETABLE;
+            }
+            case "Berry": {
+                return Category.BERRY;
+            }
+            case "Mushroom": {
+                return Category.MUSHROOM;
+            }
+            default: {
+                return Category.OTHER;
+            }
         }
     }
 
@@ -225,11 +231,11 @@ public class AddSpotActivity extends MapsActivity {
 
         //loop through all existing categories and add it to the list.
         for (Category cat : Category.values()) {
-            categoryList.add(cat.name());
+            categoryList.add(cat.toString());
         }
 
         //Set the layout for the category spinner.
-        categoryArrayAdapter = new ArrayAdapter<String>(this,
+        categoryArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, categoryList);
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryArrayAdapter);

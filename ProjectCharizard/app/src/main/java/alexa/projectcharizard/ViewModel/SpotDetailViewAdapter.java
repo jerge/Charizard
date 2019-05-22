@@ -75,28 +75,7 @@ public class SpotDetailViewAdapter implements GoogleMap.InfoWindowAdapter {
         //Gets spot category from the Spot class and adds it to the GUI
         Category spotCategory = spot.getCategory();
         TextView category = (TextView) view.findViewById(R.id.category);
-        if (spotCategory != null)
-            switch (spotCategory) {
-                case OTHER:
-                    category.setText("Other");
-                    break;
-
-                case FRUIT:
-                    category.setText("Fruit");
-                    break;
-
-                case VEGETABLE:
-                    category.setText("Vegetable");
-                    break;
-
-                case BERRY:
-                    category.setText("Berry");
-                    break;
-
-                case MUSHROOM:
-                    category.setText("Mushroom");
-                    break;
-            }
+        category.setText(spotCategory.toString());
 
 
     }
