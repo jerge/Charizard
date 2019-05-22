@@ -293,13 +293,6 @@ public class AddSpotActivity extends MapsActivity {
      * Removes functionality of overridden parent class
      */
     @Override
-    protected void initTmpAccountBtn() {
-    }
-
-    /**
-     * Removes functionality of overridden parent class
-     */
-    @Override
     protected void initFilterBtn() {
     }
 

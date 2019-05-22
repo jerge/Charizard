@@ -64,14 +64,16 @@ public class AccountPageActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                System.out.println("ahhhhhhhhhhhhhhhhh");
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_profile:
                         break;
-                    case R.id.map:
-                        Intent intent = new Intent(AccountPageActivity.this, AccountPageActivity.class);
+                    case R.id.navigation_map:
+                        Intent intent = new Intent(AccountPageActivity.this, MapsActivity.class);
                         startActivity(intent);
                         break;
                 }
+                System.out.println(menuItem);
                 return false;
             }
         });

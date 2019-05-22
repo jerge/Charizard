@@ -85,7 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initPlsBtn();
         initFilterBtn();
-        initTmpAccountBtn();
 
         //Sets the status bar to a white color and the elements in the status bar to a darker color
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -97,6 +96,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -390,21 +390,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     intent.putExtra("ViewedLocationZoom", mMap.getCameraPosition().zoom);
                     startActivity(intent);
                 }
-
-            }
-        });
-    }
-
-    protected void initTmpAccountBtn() {
-        // Find the plus button
-        Button accountbtn = (Button) findViewById(R.id.accountPageBtn);
-        // Set a listener on the plus button
-        accountbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if no internet connection, show a message
-                Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
-                startActivity(intent);
 
             }
         });

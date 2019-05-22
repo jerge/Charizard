@@ -102,13 +102,6 @@ public class EditSpotActivity extends MapsActivity {
 
     }
 
-    /**
-     * Removes functionality of overridden parent class
-     */
-    @Override
-    protected void initTmpAccountBtn() {
-    }
-
     @Override
     protected float initZoom() {
         return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
