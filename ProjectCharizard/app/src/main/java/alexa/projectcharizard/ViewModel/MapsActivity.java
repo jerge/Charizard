@@ -317,7 +317,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else if (category.equals(Category.MUSHROOM)) {
             return BitmapDescriptorFactory.fromResource(R.drawable.mushroom);
         } else {
-            return BitmapDescriptorFactory.fromResource(R.drawable.marker);
+            return BitmapDescriptorFactory.fromResource(R.drawable.other);
         }
     }
 
