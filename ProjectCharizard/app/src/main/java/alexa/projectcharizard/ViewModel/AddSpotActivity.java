@@ -154,16 +154,22 @@ public class AddSpotActivity extends MapsActivity {
      */
     private Category getCategoryEnum(String currentCategory) {
 
-        if (currentCategory.equals("FRUIT")) {
-            return Category.FRUIT;
-        } else if (currentCategory.equals("VEGETABLE")) {
-            return Category.VEGETABLE;
-        } else if (currentCategory.equals("BERRY")) {
-            return Category.BERRY;
-        } else if (currentCategory.equals("MUSHROOM")) {
-            return Category.MUSHROOM;
-        } else {
-            return Category.OTHER;
+        switch (currentCategory){
+            case "Fruit": {
+                return Category.FRUIT;
+            }
+            case "Vegetable": {
+                return Category.VEGETABLE;
+            }
+            case "Berry": {
+                return Category.BERRY;
+            }
+            case "Mushroom": {
+                return Category.MUSHROOM;
+            }
+            default: {
+                return Category.OTHER;
+            }
         }
     }
 
