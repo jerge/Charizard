@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,10 @@ public class DetailedViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_view);
+
+        //Sets the status bar to a white color and the elements in the status bar to a darker color
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setStatusBarColor(Color.WHITE);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
