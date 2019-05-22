@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.User;
@@ -34,8 +32,10 @@ public class SignUpActivity extends Activity {
     private EditText signUpUsername, signUpPassword, signUpEmail;
     private Button signUpButton;
     private TextView alreadySignedUp;
-    final Database database = Database.getInstance();
+
+    private Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
 

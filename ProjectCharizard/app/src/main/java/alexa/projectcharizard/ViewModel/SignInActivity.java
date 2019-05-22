@@ -35,8 +35,10 @@ public class SignInActivity extends Activity {
     private TextView signUpText;
     private TextView credErrorText;
     private ImageView logoImage;
-    final Database database = Database.getInstance();
+
+    private Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
 
