@@ -1,5 +1,6 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.Manifest;
 import android.content.Intent;
@@ -8,12 +9,18 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -81,16 +88,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initTmpAccountBtn();
 
         //Sets the status bar to a white color and the elements in the status bar to a darker color
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_map:
+                        break;
+                    case R.id.navigation_profile:
+                        Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
+            }
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(navigation, (v, insets) -> {
+            ((ViewGroup.MarginLayoutParams) v.getLayoutParams()).bottomMargin =
+                    insets.getSystemWindowInsetBottom();
+            return insets.consumeSystemWindowInsets();
+        });
 
     }
+    /*
+    @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
+    @Override
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        int childCount = getChildCount();
+        for (int index = 0; index < childCount; index++)
+            getChildAt(index).dispatchApplyWindowInsets(insets); // let children know about WindowInsets
+
+        return insets;
+    }*/
 
     @Override
     protected void onResume() {

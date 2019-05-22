@@ -24,7 +24,12 @@
     </style>
 
     <style name="TranslucentStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="BottomNavigationTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/black</item>
     </style>
 
 </resources>

@@ -7,4 +7,5 @@
     <color name="colorWhiteBackground">#E6FFFFFF</color>
     <color name="smultron">#d3003f </color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
 </resources>
