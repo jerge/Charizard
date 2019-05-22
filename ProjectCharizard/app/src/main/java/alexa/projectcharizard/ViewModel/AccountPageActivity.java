@@ -19,7 +19,7 @@ import alexa.projectcharizard.R;
 
 /**
  * The Android Activity class for the account page where the user can manage their information
- * such as username, email and password. Queries the user through dialogs for username and name,
+ * such as username, email and password. Queries the user through dialogs for username,
  * starts a new activity for when changing email or password.
  *
  * @author Stefan Chan
