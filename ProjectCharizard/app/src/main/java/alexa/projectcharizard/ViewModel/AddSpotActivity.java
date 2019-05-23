@@ -322,7 +322,7 @@ public class AddSpotActivity extends MapParentActivity {
      * @param visibility
      * @param userId
      */
-    private void uploadFile(final String name, final double lat, final double lng, final String description, final Category category, final Boolean visibility, String userId) {
+    private void uploadFile(final String name, final double lat, final double lng, final String description, final Category category, final Boolean visibility, final String userId) {
         // If the user has selected a file
         if (filePath != null) {
             //displaying a progress dialog while upload is going on
@@ -348,7 +348,7 @@ public class AddSpotActivity extends MapParentActivity {
                             // Open connection to database and save the spot on the database.
                             Database database = Database.getInstance();
                             // Saving the current Spot and then adding it to a list of Spots added during current run.
-                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(id, name, lat, lng, description, category, visibility, CurrentRun.getActiveUser().getId()));
+                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(id, name, lat, lng, description, category, visibility, userId));
                             finish();
                         }
                     })
