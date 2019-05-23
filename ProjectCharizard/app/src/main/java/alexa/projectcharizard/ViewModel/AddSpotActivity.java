@@ -305,6 +305,9 @@ public class AddSpotActivity extends MapsActivity {
         return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
     }
 
+    @Override
+    protected void initNavBar(){}
+
     /**
      * Initial location showing on the map
      * @return

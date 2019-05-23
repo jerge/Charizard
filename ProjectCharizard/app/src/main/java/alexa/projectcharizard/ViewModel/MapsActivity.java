@@ -98,27 +98,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_map:
-                        break;
-                    case R.id.navigation_profile:
-                        Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
-                        startActivity(intent);
-                        break;
-                }
-                return false;
-            }
-        });
+        initNavBar();
 
+        /*
         ViewCompat.setOnApplyWindowInsetsListener(navigation, (v, insets) -> {
             ((ViewGroup.MarginLayoutParams) v.getLayoutParams()).bottomMargin =
                     insets.getSystemWindowInsetBottom();
             return insets.consumeSystemWindowInsets();
-        });
+        });*/
 
     }
     /*
@@ -523,6 +510,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(
                         ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+    }
+
+    protected void initNavBar() {
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_map:
+                        break;
+                    case R.id.navigation_profile:
+                        Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
 }
