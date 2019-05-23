@@ -130,8 +130,8 @@ public class SignUpActivity extends Activity {
      *
      * @return True if information has been entered in all the fields, false if not
      */
-    private Boolean areFieldsFilledIn() {
-        Boolean result = false;
+    private boolean areFieldsFilledIn() {
+        boolean result = false;
         String name = signUpUsername.getText().toString();
         String password = signUpPassword.getText().toString();
         String email = signUpEmail.getText().toString();
@@ -190,25 +190,6 @@ public class SignUpActivity extends Activity {
                 ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(
                         ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
-    }
-
-    /**
-     * Method to avoid the user returning to the previous page. Instead,
-     * the back button closes the application if pressed twice quickly.
-     */
-    @Override
-    public void onBackPressed(){
-
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
-
-        mBackPressed = System.currentTimeMillis();
     }
 
     /**

@@ -1,19 +1,23 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -46,10 +50,12 @@ import alexa.projectcharizard.R;
  * by activity_add.xml. Gets the data from the user interface, verifies that it is not
  * empty, creates a new spot from the data and adds it to the database.
  */
-public class AddSpotActivity extends MapsActivity {
+public class AddSpotActivity extends MapParentActivity {
 
     //a constant to track the file chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
+    private final int MY_PERMISSION_READ_EXTERNAL_STORAGE = 42;
+
     //a Uri object to store file path
     private Uri filePath;
 
@@ -76,7 +82,17 @@ public class AddSpotActivity extends MapsActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initView();
+
+        //Sets the status bar to a white color and the elements in the status bar to a darker color
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
+
+    @Override
+    protected void initContentView() {
+        setContentView(R.layout.activity_add);
     }
 
     /**
@@ -84,87 +100,17 @@ public class AddSpotActivity extends MapsActivity {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        initZoom = getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
+        initLoc = new LatLng(getIntent().getDoubleExtra("ViewedLocationLat", 57),
+                getIntent().getDoubleExtra("ViewedLocationLong", 12));
         super.onMapReady(googleMap);
         initLocationOnClickListener();
-    }
-
-    /**
-     * Saves a new spot to the database, but only if there is an internet connection.
-     * If connected, start checking if fields are empty
-     *
-     * @param view the view that contains the values for the spot
-     */
-    public void addNewSpot(View view) {
-
-        // if no internet connection, show a message
-        if(!isOnline()) {
-            Toast.makeText(getBaseContext(),"You are not connected to internet. " +
-                            "Please check your internet connection and try again.",
-                                Toast.LENGTH_LONG).show();
-        }
-        // If there is an internet connection, check if fields are empty. Then save spot.
-        else{
-            if (latitude == null || longitude == null) {    //creates a toast if no spot location has been chosen
-                Toast.makeText(getApplicationContext(), "Choose the location of your spot", Toast.LENGTH_SHORT).show();
-                return;
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return true;
             }
-    
-            if (txtName.getText().toString().isEmpty()) {   //creates a toast if no name has been chosen for the spot
-                Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String name = txtName.getText().toString();
-    
-            if (currentCategory == null) {  //creates a toast if no category has been chosen for the spot
-                Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Category category = getCategoryEnum(currentCategory);
-    
-            String description = txtDescription.getText().toString();
-    
-            Bitmap image = null;
-
-            //Open connection to database and save the spot on the database.
-            Database database = Database.getInstance();
-
-            if (filePath != null) {
-                // Call the upload file, which finishes the tasks upon completion of upload
-                uploadFile(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId());
-                return;
-            }
-
-            // Saving the current Spot and then adding it to a list of Spots added during current run.
-            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId()));
-        }
-        finish();
-    }
-/**
-     * When the back button gets pressed
-     * @param view the view from which this function takes you away from
-     */
-    public void backButtonOnClick(View view) {
-        finish();
-    }
-
-    /**
-     * Sets what category the spot should have.
-     *
-     * @param currentCategory The category of the spot.
-     */
-    private Category getCategoryEnum(String currentCategory) {
-
-        if (currentCategory.equals("FRUIT")) {
-            return Category.FRUIT;
-        } else if (currentCategory.equals("VEGETABLE")) {
-            return Category.VEGETABLE;
-        } else if (currentCategory.equals("BERRY")) {
-            return Category.BERRY;
-        } else if (currentCategory.equals("MUSHROOM")) {
-            return Category.MUSHROOM;
-        } else {
-            return Category.OTHER;
-        }
+        });
     }
 
     /**
@@ -219,11 +165,11 @@ public class AddSpotActivity extends MapsActivity {
 
         //loop through all existing categories and add it to the list.
         for (Category cat : Category.values()) {
-            categoryList.add(cat.name());
+            categoryList.add(cat.toString());
         }
 
         //Set the layout for the category spinner.
-        categoryArrayAdapter = new ArrayAdapter<String>(this,
+        categoryArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, categoryList);
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryArrayAdapter);
@@ -281,77 +227,95 @@ public class AddSpotActivity extends MapsActivity {
         });
     }
 
-
-    /**
-     * Removes functionality of overridden parent class
-     */
-    @Override
-    protected void initPlsBtn() {
+    private void initBtnImage() {
+        btnImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askForExternalStoragePermission();
+            }
+        });
     }
 
     /**
-     * Removes functionality of overridden parent class
+     * Saves a new spot to the database, but only if there is an internet connection.
+     * If connected, start checking if fields are empty
+     *
+     * @param view the view that contains the values for the spot
      */
     @Override
     protected void initFilterBtn() {
     }
+    
+    public void addNewSpot(View view) {
 
-    /**
-     * Initial zoom value of the map
-     * @return
-     */
-    @Override
-    protected float initZoom() {
-        return getIntent().getFloatExtra("ViewedLocationZoom", 15.0f);
+        // if no internet connection, show a message
+        if (!isOnline()) {
+            Toast.makeText(getBaseContext(), "You are not connected to internet. " +
+                            "Please check your internet connection and try again.",
+                    Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        // If there is an internet connection, check if fields are empty. Then save spot.
+        if (latitude == null || longitude == null) {    //creates a toast if no spot location has been chosen
+            Toast.makeText(getApplicationContext(), "Choose the location of your spot", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (txtName.getText().toString().isEmpty()) {   //creates a toast if no name has been chosen for the spot
+            Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String name = txtName.getText().toString();
+
+        if (currentCategory == null) {  //creates a toast if no category has been chosen for the spot
+            Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Category category = getCategoryEnum(currentCategory);
+
+        String description = txtDescription.getText().toString();
+
+        //Open connection to database and save the spot on the database.
+        Database database = Database.getInstance();
+
+        if (filePath != null) {
+            // Call the upload file, which finishes the tasks upon completion of upload
+            uploadFile(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId());
+            return;
+        }
+
+        // Saving the current Spot and then adding it to a list of Spots added during current run.
+        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId()));
+        finish();
     }
 
     @Override
     protected void initNavBar(){}
 
     /**
-     * Initial location showing on the map
-     * @return
+     * When the back button gets pressed
+     *
+     * @param view the view from which this function takes you away from
      */
-    @Override
-    protected LatLng initLoc() {
-        return new LatLng(getIntent().getDoubleExtra("ViewedLocationLat", 57),
-                getIntent().getDoubleExtra("ViewedLocationLong", 12));
-    }
-
-    private void initBtnImage() {
-        btnImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-            }
-        });
+    public void backButtonOnClick(View view) {
+        finish();
     }
 
     /**
-     * Upon choosing a file, this method is called to update the filePath.
-     * Also sets the picture of addedImage to the choosen file.
+     * Sets what category the spot should have.
      *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * @param currentCategory The category of the spot.
      */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                addedImage.setImageBitmap(bitmap);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private Category getCategoryEnum(String currentCategory) {
+        for (Category cat : Category.values()) {
+            if (currentCategory.equals(cat.toString()))
+                return cat;
         }
+        return Category.OTHER;
     }
+
 
     /**
      * Uploads a file to the firebase storage.
@@ -365,7 +329,7 @@ public class AddSpotActivity extends MapsActivity {
      * @param visibility
      * @param userId
      */
-    private void uploadFile(final String name, final double lat, final double lng, final String description, final Category category, final Boolean visibility, String userId) {
+    private void uploadFile(final String name, final double lat, final double lng, final String description, final Category category, final Boolean visibility, final String userId) {
         // If the user has selected a file
         if (filePath != null) {
             //displaying a progress dialog while upload is going on
@@ -391,7 +355,7 @@ public class AddSpotActivity extends MapsActivity {
                             // Open connection to database and save the spot on the database.
                             Database database = Database.getInstance();
                             // Saving the current Spot and then adding it to a list of Spots added during current run.
-                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(id, name, lat, lng, description, category, visibility, CurrentRun.getActiveUser().getId()));
+                            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(id, name, lat, lng, description, category, visibility, userId));
                             finish();
                         }
                     })
@@ -421,19 +385,81 @@ public class AddSpotActivity extends MapsActivity {
         }
     }
 
-
-    @Override
-    protected void contentView() {
-        setContentView(R.layout.activity_add);
+    /**
+     * Checks if the user has granted access to read external storage and starts image selector
+     * upon granting access
+     */
+    private void askForExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_READ_EXTERNAL_STORAGE);
+        } else {
+            selectImage();
+        }
     }
 
     /**
-     * Method to make back button behave as it normally would
+     * Starts the image selector
      */
-    /*@Override
-    public void onBackPressed() {
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
-    }*/ //TODO This method may need to be changed for parent method to behave correctly
+    /**
+     * Upon choosing a file, this method is called to update the filePath.
+     * Also sets the picture of addedImage to the choosen file.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                addedImage.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * A method which is called upon getting a result from a permissions request
+     * And then it does the thing that required permission
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
+     * @param permissions
+     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
+     *                     a location in the array if that specific permission is granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        selectImage();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+        }
+    }
 
 
 }

@@ -84,13 +84,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="60dp"
                 android:breakStrategy="simple"
                 android:text="text"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider"/>
+                app:layout_constraintTop_toBottomOf="@id/divider" />
 
             <Button
                 android:id="@+id/removeBtn"
@@ -98,9 +96,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="Remove Spot"
+                app:layout_constraintBottom_toTopOf="@+id/spotDescription"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:text="Remove Spot" />
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 
         </android.support.constraint.ConstraintLayout>
