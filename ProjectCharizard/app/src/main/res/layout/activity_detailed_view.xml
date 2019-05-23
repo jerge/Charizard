@@ -44,13 +44,15 @@
                 app:tabIndicatorColor="@android:color/white"
                 app:tabSelectedTextColor="@android:color/white"/>
 
-            <ImageButton
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/editButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:onClick="openEditSpotActivity"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/edit_pen" />
+                android:src="@android:drawable/ic_menu_edit"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

@@ -1,16 +1,17 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.text.InputFilter;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Category;
-import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -53,10 +53,12 @@ import alexa.projectcharizard.R;
  * @Author Stefan Chan
  */
 
-public class EditSpotActivity extends MapsActivity {
+public class EditSpotActivity extends MapParentActivity {
 
     // a constant to track the file chooser intent
     private static final int PICK_IMAGE_REQUEST = 234;
+
+    private final int MY_PERMISSION_READ_EXTERNAL_STORAGE = 42;
     // a Uri object to store file path
     private Uri filePath;
 
@@ -78,8 +80,6 @@ public class EditSpotActivity extends MapsActivity {
 
     private Spot currentSpot;
 
-    private CurrentRun currentRun = CurrentRun.getInstance();
-
     // Override super class methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,47 +92,29 @@ public class EditSpotActivity extends MapsActivity {
         initSwitch();
     }
 
+    @Override
+    protected void initContentView() {
+        setContentView(R.layout.activity_edit_spot);
+    }
+
     /**
      * Called when the map is ready for use
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        initZoom = getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
+        initLoc = new LatLng(currentSpot.getLatitude(), currentSpot.getLongitude());
         super.onMapReady(googleMap);
         initLocationOnClickListener();
         initSpotLocationOnMap();
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return true;
+            }
+        });
     }
 
-    @Override
-    protected void initPlsBtn() {
-    }
-
-    @Override
-    protected void initFilterBtn() {
-
-    }
-
-    /**
-     * Removes functionality of overridden parent class
-     */
-    @Override
-    protected void initTmpAccountBtn() {
-    }
-
-    @Override
-    protected float initZoom() {
-        return getIntent().getFloatExtra("ViewedLocationZoom", 12.0f);
-    }
-
-    @Override
-    protected LatLng initLoc() {
-        return new LatLng(currentSpot.getLatitude(),
-                currentSpot.getLongitude());
-    }
-
-    @Override
-    protected void contentView() {
-        setContentView(R.layout.activity_edit_spot);
-    }
 
     /**
      * Initialises view components
@@ -185,11 +167,7 @@ public class EditSpotActivity extends MapsActivity {
         editSpotPrivacySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (editSpotPrivacySwitch.isChecked()) {
-                    spotPrivacy = true;
-                } else {
-                    spotPrivacy = false;
-                }
+                spotPrivacy = editSpotPrivacySwitch.isChecked();
             }
         });
         editSpotPrivacySwitch.setChecked(currentSpot.getPrivacy());
@@ -206,6 +184,18 @@ public class EditSpotActivity extends MapsActivity {
     }
 
     /**
+     * Makes the button for selecting image clickable
+     */
+    private void initImageButton() {
+        currentImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                askForExternalStoragePermission();
+            }
+        });
+    }
+
+    /**
      * Converts the string to a Category enum equivalent, giving "OTHER" back if no equivalent
      * exist
      *
@@ -213,11 +203,11 @@ public class EditSpotActivity extends MapsActivity {
      * @return the enum, or OTHER if it no equivalent exists
      */
     private Category getCategoryEnum(String currentCategory) {
-        try {
-            return Category.valueOf(currentCategory);
-        } catch (IllegalArgumentException e) {
-            return Category.OTHER;
+        for (Category cat : Category.values()) {
+            if (currentCategory.equals(cat.toString()))
+                return cat;
         }
+        return Category.OTHER;
     }
 
     /**
@@ -263,7 +253,7 @@ public class EditSpotActivity extends MapsActivity {
         }
 
         currentMarker = mMap.addMarker(new MarkerOptions()
-                .position(initLoc())
+                .position(initLoc)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.current_marker)));
     }
 
@@ -277,7 +267,7 @@ public class EditSpotActivity extends MapsActivity {
     public void changeSpotInfoAction(View view) {
         String id = currentSpot.getId();
         DatabaseReference dataRef = Database.getInstance().getDatabaseReference().child("Spots")
-                                    .child(id);
+                .child(id);
         Category spotCategory = getCategoryEnum(this.currentCategory);
         try {
             dataRef.child("name").setValue(editSpotNameView.getText().toString());
@@ -310,28 +300,16 @@ public class EditSpotActivity extends MapsActivity {
      */
     public void notifyUserToUseMap(View view) {
         Toast.makeText(this, "Please use the map below to change latitude/longitude",
-                        Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * Makes the button for selecting image clickable
+     * Downloads the image and sets the image of the imageview
      */
-    private void initImageButton() {
-        currentImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-            }
-        });
-    }
-
     private void importPicture() {
         // Gets the location in Storage of the picture
         StorageReference imageReference = Database.getInstance().getStorageReference()
-                .child("images/" + getIntent().getStringExtra("SpotId"));
+                .child("images/" + currentSpot.getId());
         // Tries to download from the url
         imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -407,6 +385,29 @@ public class EditSpotActivity extends MapsActivity {
         }
     }
 
+    /**
+     * Checks if the user has granted access to read external storage and starts image selector
+     * upon granting access
+     */
+    private void askForExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // If not request permission to access fine location
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_READ_EXTERNAL_STORAGE);
+        } else {
+            selectImage();
+        }
+    }
+
+    /**
+     * Starts the image selector
+     */
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
     /**
      * Upon choosing a file, this method is called to update the filePath.
@@ -432,14 +433,43 @@ public class EditSpotActivity extends MapsActivity {
     }
 
     /**
+     * A method which is called upon getting a result from a permissions request
+     * And then it does the thing that required permission
+     *
+     * @param requestCode  The int corresponding to the permission that's being regarded
+     * @param permissions
+     * @param grantResults An int array which has the value of PackageManager.PERMISSION_GRANTED on
+     *                     a location in the array if that specific permission is granted
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        selectImage();
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    /**
      * A method that finds Spot in use based on the ID sent from previous activity
      *
      * @param spotId The Spot ID of the Spot to be found
      * @return The Spot found, null if no such Spot is found
      */
     private Spot getSpot(String spotId) {
-        for (Spot spot: currentRun.getSpots()){
-            if (spot.getId().equals(spotId)){
+        for (Spot spot : currentRun.getSpots()) {
+            if (spot.getId().equals(spotId)) {
                 return spot;
             }
         }

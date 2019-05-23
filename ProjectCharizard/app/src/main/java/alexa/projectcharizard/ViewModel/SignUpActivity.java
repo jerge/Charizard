@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -31,8 +33,10 @@ public class SignUpActivity extends Activity {
     private EditText signUpUsername, signUpPassword, signUpEmail;
     private Button signUpButton;
     private TextView alreadySignedUp;
-    final Database database = Database.getInstance();
+
+    private Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
 
@@ -89,6 +93,8 @@ public class SignUpActivity extends Activity {
                             // Directing the user to Maps Activity
                             Intent mapActivity = new Intent(SignUpActivity.this, MapsActivity.class);
                             startActivity(mapActivity);
+                            saveLocalUser(usernameInput,passwordInput);
+                            finish();
                         }
                     }
                 }
@@ -187,23 +193,17 @@ public class SignUpActivity extends Activity {
     }
 
     /**
-     * Method to avoid the user returning to the previous page. Instead,
-     * the back button closes the application if pressed twice quickly.
+     * A method that saves the logged-in user locally, so that the user will automatically be
+     * logged-in next time they start the application.
+     *
+     * @param usernameInput The username to be saved to next run.
+     * @param passwordInput The password to be saved to next run.
      */
-    @Override
-    public void onBackPressed(){
-
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
-
-        mBackPressed = System.currentTimeMillis();
+    private void saveLocalUser(String usernameInput, String passwordInput) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", usernameInput);
+        editor.putString("password", passwordInput);
+        editor.apply();
     }
-
-
 }
