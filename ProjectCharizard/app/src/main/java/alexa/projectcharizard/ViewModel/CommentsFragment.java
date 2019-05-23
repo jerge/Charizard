@@ -50,15 +50,18 @@ public class CommentsFragment extends Fragment {
         // Finds the current spot among all available spots
         findSpot(getActivity().getIntent().getStringExtra("SpotId"));
 
-        // Creates an adapter for showing the comments connected to the spot
-        final CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(commentsAdapter);
-
         initButton();
 
+        refreshComments();
 
         return v;
+    }
+
+    void refreshComments() {
+        // Creates an adapter for showing the comments connected to the spot
+        final CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList(), spot, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(commentsAdapter);
     }
 
     private void initButton() {
@@ -66,14 +69,14 @@ public class CommentsFragment extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Spot s: currentRun.getSpots()){
-                    if (s.getId().equals(spot.getId())){
+                for (Spot s : currentRun.getSpots()) {
+                    if (s.getId().equals(spot.getId())) {
                         addComment();
                         return;
                     }
                 }
                 // If spot isn't found in currentRun, a Toast appears with this text.
-                Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getContext(), "The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
                 TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
                 if (t != null) t.setGravity(Gravity.CENTER);
                 toast.show();
@@ -92,18 +95,14 @@ public class CommentsFragment extends Fragment {
         Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
                 dateString);
         // Saves comment to the database.
-        database.saveComment(newComment, spot.getId());
-        // Saves comment to the commentlist.
-        spot.getCommentList().add(newComment);
+        database.saveComment(newComment, spot);
 
         // Resets the text in the comment zone, and resets the focus
         comment.setText("");
         comment.clearFocus();
 
         // Refills the comments into the list
-        CommentsAdapter commentsAdapter = new CommentsAdapter(getContext(), spot.getCommentList());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(commentsAdapter);
+        refreshComments();
     }
 
     /**
@@ -128,8 +127,8 @@ public class CommentsFragment extends Fragment {
     }
 
     private String addZero(int dateTime) {
-        if (dateTime < 10){
-            return "0"+dateTime;
+        if (dateTime < 10) {
+            return "0" + dateTime;
         }
         return dateTime + "";
     }
@@ -161,7 +160,7 @@ public class CommentsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().trim().length()==0){
+                if (s.toString().trim().length() == 0) {
                     send.setEnabled(false);
                 } else {
                     send.setEnabled(true);

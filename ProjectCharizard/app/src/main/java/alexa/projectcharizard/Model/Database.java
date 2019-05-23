@@ -1,7 +1,5 @@
 package alexa.projectcharizard.Model;
 
-import android.graphics.Bitmap;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -103,6 +101,7 @@ public class Database {
     /**
      * A method for removing a spot, also removes from the list of spots
      * Also removes the spot from storage
+     *
      * @param id The id of the spot to be removed
      */
     public void removeSpot(String id) {
@@ -119,6 +118,7 @@ public class Database {
     /**
      * A method for removing the user from the database. Called after the user presses the
      * delete account button/text.
+     *
      * @param id The ID of the user
      */
     public void deleteUser(String id) {
@@ -138,10 +138,26 @@ public class Database {
      * A method that saves a comment to the database in the specified spot.
      *
      * @param comment The comment to be saved
-     * @param spotId The spot the comment is to be saved in
+     * @param spot    The spot the comment is owned by
      */
-    public void saveComment(Comment comment, String spotId) {
-        Database.getInstance().getDatabaseReference().child("Spots").child(spotId)
-                .child("comments").push().setValue(comment);
+    public Comment saveComment(Comment comment, Spot spot) {
+        String id = databaseReference.child("Spots").child(spot.getId()).child("comments").push().getKey();
+        comment.setId(id);
+        if (id != null) {
+            databaseReference.child("Spots").child(spot.getId()).child("comments").child(id).setValue(comment);
+        }
+        spot.getCommentList().add(comment);
+        return comment;
+    }
+
+    public void deleteComment(String commentId, Spot spot) {
+        databaseReference.child("Spots").child(spot.getId()).child("comments").child(commentId).removeValue();
+        System.out.println(databaseReference.child(commentId).getParent());
+        for (Comment comment : spot.getCommentList()) {
+            if (comment.getId().equals(commentId)) {
+                spot.getCommentList().remove(comment);
+                return;
+            }
+        }
     }
 }
