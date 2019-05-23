@@ -249,40 +249,41 @@ public class AddSpotActivity extends MapParentActivity {
             Toast.makeText(getBaseContext(), "You are not connected to internet. " +
                             "Please check your internet connection and try again.",
                     Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
+
         // If there is an internet connection, check if fields are empty. Then save spot.
-        else {
-            if (latitude == null || longitude == null) {    //creates a toast if no spot location has been chosen
-                Toast.makeText(getApplicationContext(), "Choose the location of your spot", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (txtName.getText().toString().isEmpty()) {   //creates a toast if no name has been chosen for the spot
-                Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String name = txtName.getText().toString();
-
-            if (currentCategory == null) {  //creates a toast if no category has been chosen for the spot
-                Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Category category = getCategoryEnum(currentCategory);
-
-            String description = txtDescription.getText().toString();
-
-            //Open connection to database and save the spot on the database.
-            Database database = Database.getInstance();
-
-            if (filePath != null) {
-                // Call the upload file, which finishes the tasks upon completion of upload
-                uploadFile(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId());
-                return;
-            }
-
-            // Saving the current Spot and then adding it to a list of Spots added during current run.
-            CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId()));
+        if (latitude == null || longitude == null) {    //creates a toast if no spot location has been chosen
+            Toast.makeText(getApplicationContext(), "Choose the location of your spot", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        if (txtName.getText().toString().isEmpty()) {   //creates a toast if no name has been chosen for the spot
+            Toast.makeText(getApplicationContext(), "Fill in name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String name = txtName.getText().toString();
+
+        if (currentCategory == null) {  //creates a toast if no category has been chosen for the spot
+            Toast.makeText(getApplicationContext(), "Select a category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Category category = getCategoryEnum(currentCategory);
+
+        String description = txtDescription.getText().toString();
+
+        //Open connection to database and save the spot on the database.
+        Database database = Database.getInstance();
+
+        if (filePath != null) {
+            // Call the upload file, which finishes the tasks upon completion of upload
+            uploadFile(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId());
+            return;
+        }
+
+        // Saving the current Spot and then adding it to a list of Spots added during current run.
+        CurrentRun.getCurrentRunAddedSpots().add(database.saveSpot(name, latitude, longitude, description, category, privateSwitch.isChecked(), CurrentRun.getActiveUser().getId()));
         finish();
     }
 

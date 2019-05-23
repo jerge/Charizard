@@ -167,11 +167,7 @@ public class EditSpotActivity extends MapParentActivity {
         editSpotPrivacySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (editSpotPrivacySwitch.isChecked()) {
-                    spotPrivacy = true;
-                } else {
-                    spotPrivacy = false;
-                }
+                spotPrivacy = editSpotPrivacySwitch.isChecked();
             }
         });
         editSpotPrivacySwitch.setChecked(currentSpot.getPrivacy());

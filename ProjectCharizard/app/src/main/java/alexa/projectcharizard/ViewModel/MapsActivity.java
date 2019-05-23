@@ -87,7 +87,7 @@ public class MapsActivity extends MapParentActivity {
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.GONE);
+                findViewById(R.id.filterBoxes).setVisibility(View.GONE);
             }
         });
     }
@@ -148,7 +148,7 @@ public class MapsActivity extends MapParentActivity {
      */
     protected void initPlsBtn() {
         // Find the plus button
-        plsBtn = (ImageButton) findViewById(R.id.plsbtn);
+        plsBtn = findViewById(R.id.plsbtn);
         // Set a listener on the plus button
         plsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +174,7 @@ public class MapsActivity extends MapParentActivity {
 
     protected void initTmpAccountBtn() {
         // Find the plus button
-        Button accountbtn = (Button) findViewById(R.id.accountPageBtn);
+        Button accountbtn = findViewById(R.id.accountPageBtn);
         // Set a listener on the plus button
         accountbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,7 +192,7 @@ public class MapsActivity extends MapParentActivity {
      * clicking elsewhere. That is done in onMapReady
      */
     protected void initFilterBtn() {
-        RelativeLayout rel = ((RelativeLayout) findViewById(R.id.filterBoxes));
+        RelativeLayout rel = findViewById(R.id.filterBoxes);
         // Arbitrary number for ID which hopefully doesn't collide with other ID
         int id = 5030201;
         // The amounts of lines currently added
@@ -213,17 +213,18 @@ public class MapsActivity extends MapParentActivity {
         rel.getLayoutParams().height = 50 + 60 * counter;
 
         // Find the filter button
-        filterBtn = (ImageButton) findViewById(R.id.filterbtn);
+        filterBtn = findViewById(R.id.filterbtn);
 
         // Set a listener to make the RelativeLayout visible
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (findViewById(R.id.filterBoxes).getVisibility() == View.VISIBLE) {
-                    ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.INVISIBLE);
+                RelativeLayout filterBoxes = findViewById(R.id.filterBoxes);
+                if (filterBoxes.getVisibility() == View.VISIBLE) {
+                    filterBoxes.setVisibility(View.INVISIBLE);
                     return;
                 }
-                ((RelativeLayout) findViewById(R.id.filterBoxes)).setVisibility(View.VISIBLE);
+                filterBoxes.setVisibility(View.VISIBLE);
             }
         });
 
@@ -237,12 +238,10 @@ public class MapsActivity extends MapParentActivity {
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         CheckBox checkBox = new CheckBox(this);
-        if (isPrivateBox) {
-            checkBox.setChecked(false);
-        } else {
-            checkBox.setChecked(true);
-        }
+        checkBox.setChecked(!isPrivateBox);
+
         checkBox.setId(id);
+        // Sets the color of the box in a crude way
         checkBox.setButtonTintList(new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked}, // unchecked
@@ -260,17 +259,14 @@ public class MapsActivity extends MapParentActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked && !isPrivateBox) {
                     checkBoxes.add(category);
-                    updateMarkers();
                 } else if (isChecked && isPrivateBox) {
                     checkBoxOnlyPrivate = true;
-                    updateMarkers();
                 } else if (isPrivateBox) {
                     checkBoxOnlyPrivate = false;
-                    updateMarkers();
                 } else {
                     checkBoxes.remove(category);
-                    updateMarkers();
                 }
+                updateMarkers();
             }
         });
         rel.addView(checkBox, paramsCB);
@@ -307,11 +303,8 @@ public class MapsActivity extends MapParentActivity {
     }
 
     private boolean privacyVisible(Spot s) {
-        if (!s.getPrivacy() || s.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
-            return true;
-        } else {
-            return false;
-        }
+        return (!s.getPrivacy() ||
+                s.getCreatorId().equals(CurrentRun.getActiveUser().getId()));
     }
 
 }
