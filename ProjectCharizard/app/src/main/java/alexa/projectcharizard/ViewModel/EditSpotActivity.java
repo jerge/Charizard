@@ -135,7 +135,7 @@ public class EditSpotActivity extends MapsActivity {
     }
 
     /**
-     * Initialises text components
+     * Initialises view components
      */
     private void initView() {
         editSpotNameView = findViewById(R.id.editSpotNameView);
@@ -199,8 +199,6 @@ public class EditSpotActivity extends MapsActivity {
      * Sets the textviews with appropriate spot information
      */
     private void setInitText() {
-        Intent intent = getIntent();
-
         editSpotNameView.setText(currentSpot.getName());
         editSpotLatView.setText(Double.toString(currentSpot.getLatitude()));
         editSpotLongView.setText(Double.toString(currentSpot.getLongitude()));
