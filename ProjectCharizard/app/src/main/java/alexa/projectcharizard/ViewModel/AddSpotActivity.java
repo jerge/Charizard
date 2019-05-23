@@ -302,24 +302,11 @@ public class AddSpotActivity extends MapParentActivity {
      * @param currentCategory The category of the spot.
      */
     private Category getCategoryEnum(String currentCategory) {
-
-        switch (currentCategory) {
-            case "Fruit": {
-                return Category.FRUIT;
-            }
-            case "Vegetable": {
-                return Category.VEGETABLE;
-            }
-            case "Berry": {
-                return Category.BERRY;
-            }
-            case "Mushroom": {
-                return Category.MUSHROOM;
-            }
-            default: {
-                return Category.OTHER;
-            }
+        for (Category cat : Category.values()) {
+            if (currentCategory.equals(cat.toString()))
+                return cat;
         }
+        return Category.OTHER;
     }
 
 

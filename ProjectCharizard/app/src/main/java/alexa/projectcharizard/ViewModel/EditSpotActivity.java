@@ -203,11 +203,11 @@ public class EditSpotActivity extends MapParentActivity {
      * @return the enum, or OTHER if it no equivalent exists
      */
     private Category getCategoryEnum(String currentCategory) {
-        try {
-            return Category.valueOf(currentCategory);
-        } catch (IllegalArgumentException e) {
-            return Category.OTHER;
+        for (Category cat : Category.values()) {
+            if (currentCategory.equals(cat.toString()))
+                return cat;
         }
+        return Category.OTHER;
     }
 
     /**
