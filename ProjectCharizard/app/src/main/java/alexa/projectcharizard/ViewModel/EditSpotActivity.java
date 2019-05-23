@@ -461,6 +461,12 @@ public class EditSpotActivity extends MapParentActivity {
         }
     }
 
+    /**
+     * A method that finds Spot in use based on the ID sent from previous activity
+     *
+     * @param spotId The Spot ID of the Spot to be found
+     * @return The Spot found, null if no such Spot is found
+     */
     private Spot getSpot(String spotId) {
         for (Spot spot : currentRun.getSpots()) {
             if (spot.getId().equals(spotId)) {
