@@ -58,21 +58,24 @@
         app:layout_constraintLeft_toLeftOf="@id/filterbtn"
         app:layout_constraintTop_toBottomOf="@id/filterbtn">
 
-        <!--<TextView-->
-            <!--android:id="@+id/text"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignStart="@id/checkbox"-->
-            <!--android:layout_alignTop="@id/checkbox"-->
-            <!--android:layout_marginStart="30dp"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:text="text"-->
-            <!--android:textAlignment="gravity" />-->
+        <CheckBox
+            android:id="@+id/privateCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="5dp"/>
 
-        <!--<CheckBox-->
-            <!--android:id="@+id/checkbox"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
+        <TextView
+            android:id="@+id/privateTextview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/privateCheckbox"
+            android:layout_alignTop="@id/privateCheckbox"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="6dp"
+            android:text="Only private"
+            android:textAlignment="gravity" />
 
         <!--<TextView-->
             <!--android:id="@+id/text2"-->

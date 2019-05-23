@@ -41,7 +41,6 @@ public class MapsActivity extends MapParentActivity {
 
     // The list of all checkboxes
     private List<Category> checkBoxes = new ArrayList<>();
-    private boolean checkBoxOnlyPrivate = false; //local variable for when the checkbox for privacy is checked or not
 
     private SpotDetailViewAdapter spotDetailViewAdapter;
 
@@ -97,16 +96,16 @@ public class MapsActivity extends MapParentActivity {
      * the back button closes the application if pressed twice quickly.
      */
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
 
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_HOME);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        } else {
+            Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show();
         }
-        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
 
         mBackPressed = System.currentTimeMillis();
     }
@@ -118,8 +117,10 @@ public class MapsActivity extends MapParentActivity {
      */
     @Override
     protected Marker initMarker(Spot spot) {
+        CheckBox cb = findViewById(R.id.privateCheckbox);
+
         if ((filter(spot) && privacyVisible(spot)) &&
-                (spot.getPrivacy() || !checkBoxOnlyPrivate)) {
+                (spot.getPrivacy() || !cb.isChecked())) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(spot.getLatitude(), spot.getLongitude()))
                     .title(spot.getName())
@@ -195,18 +196,15 @@ public class MapsActivity extends MapParentActivity {
         RelativeLayout rel = findViewById(R.id.filterBoxes);
         // Arbitrary number for ID which hopefully doesn't collide with other ID
         int id = 5030201;
-        // The amounts of lines currently added
-        int counter = 0;
 
-        createCheckbox(id, counter, null, rel, true);
-        createTextView(id, counter, null, rel, true);
-        counter++;
+        // The amounts of lines currently added
+        int counter = 1;
 
         for (final Category category : Category.values()) {
             checkBoxes.add(category);
 
-            createCheckbox(id, counter, category, rel, false);
-            createTextView(id, counter, category, rel, false);
+            createCheckbox(id, counter, category, rel);
+            createTextView(id, counter, category, rel);
 
             counter++;
         }
@@ -228,17 +226,24 @@ public class MapsActivity extends MapParentActivity {
             }
         });
 
-
+        // Find the private checkbox and make sure the markers are updated upon oncheckchanged
+        CheckBox cb = findViewById(R.id.privateCheckbox);
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                updateMarkers();
+            }
+        });
     }
 
-    private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel, final boolean isPrivateBox) {
+    private void createCheckbox(int id, int counter, final Category category, RelativeLayout rel) {
         // Create parameters for the check box
         RelativeLayout.LayoutParams paramsCB = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         CheckBox checkBox = new CheckBox(this);
-        checkBox.setChecked(!isPrivateBox);
+        checkBox.setChecked(true);
 
         checkBox.setId(id);
         // Sets the color of the box in a crude way
@@ -257,12 +262,8 @@ public class MapsActivity extends MapParentActivity {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked && !isPrivateBox) {
+                if (isChecked) {
                     checkBoxes.add(category);
-                } else if (isChecked && isPrivateBox) {
-                    checkBoxOnlyPrivate = true;
-                } else if (isPrivateBox) {
-                    checkBoxOnlyPrivate = false;
                 } else {
                     checkBoxes.remove(category);
                 }
@@ -272,7 +273,15 @@ public class MapsActivity extends MapParentActivity {
         rel.addView(checkBox, paramsCB);
     }
 
-    private void createTextView(int id, int counter, final Category category, RelativeLayout rel, boolean isPrivateBox) {
+    /**
+     * Creates a textview for the checkbox from createCheckbox method
+     *
+     * @param id       the intended id of the textView
+     * @param counter  the amounts of textviews already created
+     * @param category the category whom's text shall be shown
+     * @param rel
+     */
+    private void createTextView(int id, int counter, final Category category, RelativeLayout rel) {
         // Create parameters for the text view
         RelativeLayout.LayoutParams paramsTxt = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -284,24 +293,23 @@ public class MapsActivity extends MapParentActivity {
         txt.setId(id + 1000);
         paramsTxt.setMargins(100, 30 + 60 * (counter), 0, 0);
 
-        if (isPrivateBox) {
-            txt.setText("Private");
-        } else {
-            txt.setText(category.toString());
-        }
+        txt.setText(category.toString());
+
         rel.addView(txt, paramsTxt);
     }
 
     /**
-     * Returns true if the spot's category is checked true in the checkbox, otherwise false
-     *
      * @param s the spot to check
-     * @return true if the spot's category is checked true in the checkbox, otherwise false
+     * @return true if the spot's category is checked true in the checkbox (the spot should be shown)
      */
     private boolean filter(Spot s) {
         return checkBoxes.contains(s.getCategory());
     }
 
+    /**
+     * @param s the spot to check
+     * @return true if the spot is public or the spot belongs to the owner
+     */
     private boolean privacyVisible(Spot s) {
         return (!s.getPrivacy() ||
                 s.getCreatorId().equals(CurrentRun.getActiveUser().getId()));
