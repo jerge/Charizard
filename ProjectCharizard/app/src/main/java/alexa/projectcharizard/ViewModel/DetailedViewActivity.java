@@ -16,12 +16,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
+import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
 public class DetailedViewActivity extends AppCompatActivity {
-    TabLayout tabLayout;
-    ViewPager viewPager;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
+    private Spot currentSpot;
+
+    private CurrentRun currentRun = CurrentRun.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,8 @@ public class DetailedViewActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
 
         importPicture();
+
+        currentSpot = getSpot(getIntent().getStringExtra("SpotId"));
 
         tabLayout.addTab(tabLayout.newTab().setText("About"));
         tabLayout.addTab(tabLayout.newTab().setText("Comments"));
@@ -84,8 +92,6 @@ public class DetailedViewActivity extends AppCompatActivity {
         });
     }
 
-
-
     /**
      * Starts EditSpotActivity by getting spot information passed by intent created by MapsActivity
      *
@@ -93,15 +99,22 @@ public class DetailedViewActivity extends AppCompatActivity {
      */
     public void openEditSpotActivity(View view) {
         Intent intent = new Intent(DetailedViewActivity.this, EditSpotActivity.class);
-
-        intent.putExtra("SpotName", getIntent().getStringExtra("SpotName"));
         intent.putExtra("SpotId", getIntent().getStringExtra("SpotId"));
-        intent.putExtra("SpotLatitude", getIntent().getDoubleExtra("SpotLatitude", 57.0));
-        intent.putExtra("SpotLongitude", getIntent().getDoubleExtra("SpotLongitude", 12.0));
-        intent.putExtra("SpotDescription", getIntent().getStringExtra("SpotDescription"));
-        intent.putExtra("SpotCategory", getIntent().getStringExtra("SpotCategory"));
-        intent.putExtra("SpotPrivacy", getIntent().getStringExtra("SpotPrivacy"));
-
         startActivity(intent);
+    }
+
+    /**
+     * A method that finds Spot in use based on the ID sent from previous activity
+     *
+     * @param spotId The Spot ID of the Spot to be found
+     * @return The Spot found, null if no such Spot is found
+     */
+    private Spot getSpot(String spotId) {
+        for (Spot spot: currentRun.getSpots()){
+            if (spot.getId().equals(spotId)){
+                return spot;
+            }
+        }
+        return null;
     }
 }
