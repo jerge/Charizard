@@ -117,7 +117,7 @@ public class EditSpotActivity extends MapParentActivity {
 
 
     /**
-     * Initialises text components
+     * Initialises view components
      */
     private void initView() {
         editSpotNameView = findViewById(R.id.editSpotNameView);
