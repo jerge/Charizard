@@ -193,25 +193,6 @@ public class SignUpActivity extends Activity {
     }
 
     /**
-     * Method to avoid the user returning to the previous page. Instead,
-     * the back button closes the application if pressed twice quickly.
-     */
-    @Override
-    public void onBackPressed(){
-
-        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
-        {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        else { Toast.makeText(getBaseContext(), "Tap button again to exit application", Toast.LENGTH_SHORT).show(); }
-
-        mBackPressed = System.currentTimeMillis();
-    }
-
-    /**
      * A method that saves the logged-in user locally, so that the user will automatically be
      * logged-in next time they start the application.
      *
