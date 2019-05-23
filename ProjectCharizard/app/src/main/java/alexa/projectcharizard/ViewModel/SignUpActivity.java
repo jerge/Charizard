@@ -130,8 +130,8 @@ public class SignUpActivity extends Activity {
      *
      * @return True if information has been entered in all the fields, false if not
      */
-    private Boolean areFieldsFilledIn() {
-        Boolean result = false;
+    private boolean areFieldsFilledIn() {
+        boolean result = false;
         String name = signUpUsername.getText().toString();
         String password = signUpPassword.getText().toString();
         String email = signUpEmail.getText().toString();
