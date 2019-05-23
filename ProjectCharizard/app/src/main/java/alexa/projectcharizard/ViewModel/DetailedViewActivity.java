@@ -1,10 +1,11 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import alexa.projectcharizard.R;
 public class DetailedViewActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FloatingActionButton editBtn;
 
     private Spot currentSpot;
 
@@ -33,17 +35,22 @@ public class DetailedViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_view);
+        currentSpot = getSpot(getIntent().getStringExtra("SpotId"));
 
+        initView();
+    }
+
+    private void initView() {
         //Sets the status bar to a white color and the elements in the status bar to a darker color
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         getWindow().setStatusBarColor(Color.WHITE);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
+        editBtn = findViewById(R.id.editButton);
+
 
         importPicture();
-
-        currentSpot = getSpot(getIntent().getStringExtra("SpotId"));
 
         tabLayout.addTab(tabLayout.newTab().setText("About"));
         tabLayout.addTab(tabLayout.newTab().setText("Comments"));
@@ -69,6 +76,14 @@ public class DetailedViewActivity extends AppCompatActivity {
 
             }
         });
+
+        // Checks if the spot is owned by the current user, if it is the remove spot button appears and becomes activated
+        // Otherwise it will not appear nor be activated
+        if (currentSpot.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
+            editBtn.show();
+        } else {
+            editBtn.hide();
+        }
     }
 
     private void importPicture() {
@@ -110,8 +125,8 @@ public class DetailedViewActivity extends AppCompatActivity {
      * @return The Spot found, null if no such Spot is found
      */
     private Spot getSpot(String spotId) {
-        for (Spot spot: currentRun.getSpots()){
-            if (spot.getId().equals(spotId)){
+        for (Spot spot : currentRun.getSpots()) {
+            if (spot.getId().equals(spotId)) {
                 return spot;
             }
         }
