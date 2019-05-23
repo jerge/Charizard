@@ -108,8 +108,8 @@
 
     <Button
         android:id="@+id/addImage"
-        android:layout_width="224dp"
-        android:layout_height="53dp"
+        android:layout_width="250dp"
+        android:layout_height="51dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:hint="Add Image (Optional)"
@@ -123,7 +123,7 @@
         android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.571"
@@ -162,9 +162,9 @@
 
     <ImageView
         android:id="@+id/addedImage"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="32dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="16dp"
         android:scaleType="fitStart"
         app:layout_constraintStart_toEndOf="@+id/addImage"
