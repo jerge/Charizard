@@ -1,10 +1,14 @@
 package alexa.projectcharizard.ViewModel;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,13 +29,15 @@ import alexa.projectcharizard.R;
 
 public class CommentsFragment extends Fragment {
 
-    private EditText comment;
-    private Button send;
+    private FloatingActionButton createCommentButton;
     private RecyclerView recyclerView;
 
     private Spot spot;
     private Database database = Database.getInstance();
     private CurrentRun currentRun = CurrentRun.getInstance();
+
+    private String commentInput = ""; // The input for comment from user
+
 
 
     public CommentsFragment() {
@@ -50,7 +56,14 @@ public class CommentsFragment extends Fragment {
         // Finds the current spot among all available spots
         findSpot(getActivity().getIntent().getStringExtra("SpotId"));
 
-        initButton();
+        // Create an onClickListener for createCommentButton
+        createCommentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commentDialog();
+            }
+        });
+
 
         refreshComments();
 
@@ -64,26 +77,6 @@ public class CommentsFragment extends Fragment {
         recyclerView.setAdapter(commentsAdapter);
     }
 
-    private void initButton() {
-        // Button that saves and uploads a new comment.
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (Spot s : currentRun.getSpots()) {
-                    if (s.getId().equals(spot.getId())) {
-                        addComment();
-                        return;
-                    }
-                }
-                // If spot isn't found in currentRun, a Toast appears with this text.
-                Toast toast = Toast.makeText(getContext(), "The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
-                TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
-                if (t != null) t.setGravity(Gravity.CENTER);
-                toast.show();
-            }
-        });
-    }
-
     private void addComment() {
         DateTime dateTime = new DateTime();
         String dateString = "20" + dateTime.getYearOfCentury()
@@ -92,14 +85,10 @@ public class CommentsFragment extends Fragment {
                 + "  " + addZero(dateTime.getHourOfDay())
                 + ":" + addZero(dateTime.getMinuteOfHour());
         // The comment that is supposed to be saved.
-        Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
+        Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), commentInput,
                 dateString, CurrentRun.getActiveUser().getId());
         // Saves comment to the database.
         database.saveComment(newComment, spot);
-
-        // Resets the text in the comment zone, and resets the focus
-        comment.setText("");
-        comment.clearFocus();
 
         // Refills the comments into the list
         refreshComments();
@@ -141,36 +130,87 @@ public class CommentsFragment extends Fragment {
      */
     private void initFragment(View v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.comment_recyclerView);
-        comment = (EditText) v.findViewById(R.id.postTxt);
-        send = (Button) v.findViewById(R.id.sentBtn);
-        // Starts the button as not enabled since there is no text to be used as a comment
-        send.setEnabled(false);
-        initCommentSection();
+        createCommentButton = (FloatingActionButton) v.findViewById(R.id.createCommentFAB);
+
     }
 
     /**
-     * A method that lets tells the send-button if there is text to be sent as a comment
+     * The AlertDialog box that allows the user to leave a comment.
+     * Pops up after the user presses the FAB button
      */
-    private void initCommentSection() {
-        comment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private void commentDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.DialogTheme);
+        builder.setTitle("Leave a comment");
 
-            }
+        // Set up the input
+        final EditText input = new EditText(getContext());
 
+        // Allowing multi-line for text input when leaving a comment
+        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setSingleLine(false);
+        input.setLines(5);
+        input.setMaxLines(5);
+        input.setGravity(Gravity.LEFT | Gravity.TOP);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() == 0) {
-                    send.setEnabled(false);
-                } else {
-                    send.setEnabled(true);
+            public void onClick(DialogInterface dialog, int which) {
+                commentInput = input.getText().toString();
+
+                // Adding comment to spot
+                for (Spot s: currentRun.getSpots()){
+                    if (s.getId().equals(spot.getId())){
+                        addComment();
+                        return;
+                    }
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                // If spot isn't found in currentRun, a Toast appears with this text.
+                Toast toast = Toast.makeText(getContext(),"The spot might not exist anymore, try reloading the spot", Toast.LENGTH_LONG);
+                TextView t = (TextView) toast.getView().findViewById(android.R.id.message);
+                if (t != null) t.setGravity(Gravity.CENTER);
+                toast.show();
             }
         });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        // Set the send button to initially disabled
+        final Button sendButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        sendButton.setEnabled(false);
+
+        // Adding textChangedListener to Send button - not possible to send message if
+        // text field is empty
+        input.addTextChangedListener(new TextWatcher() {
+            private void handleText() {
+                if(input.getText().length() == 0) {
+                    sendButton.setEnabled(false);
+                } else {
+                    sendButton.setEnabled(true);
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                handleText();
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Nothing to do
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Nothing to do
+            }
+        });
+
     }
+
 }
