@@ -39,6 +39,7 @@
             android:name=".ViewModel.DetailedViewActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".ViewModel.AddSpotActivity" />
+        <activity android:name=".ViewModel.MapsActivity"/>
         <activity android:name=".ViewModel.ChangeEmailActivity" />
         <activity android:name=".ViewModel.ChangePasswordActivity" />
         <activity android:name=".ViewModel.AccountPageActivity" />

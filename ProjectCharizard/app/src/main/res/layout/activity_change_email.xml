@@ -96,8 +96,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button"
         android:onClick="changeEmailButtonAction"
         android:text="Change email"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider10" />
@@ -106,14 +108,12 @@
         android:id="@+id/currentEmailView"
         android:layout_width="220dp"
         android:layout_height="20dp"
-        android:layout_marginStart="75dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/divider8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/divider7" />
 
     <EditText
@@ -121,7 +121,6 @@
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="220dp"
         android:layout_height="50dp"
-        android:layout_marginStart="93dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
@@ -130,8 +129,6 @@
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/verifyNewEmailView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
         app:layout_constraintTop_toBottomOf="@+id/divider8"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -140,7 +137,6 @@
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="220dp"
         android:layout_height="50dp"
-        android:layout_marginStart="69dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
@@ -149,7 +145,6 @@
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/divider10"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/divider9" />
 
     <TextView

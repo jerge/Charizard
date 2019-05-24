@@ -24,7 +24,7 @@ import alexa.projectcharizard.R;
 
 /**
  * The Android Activity class for the account page where the user can manage their information
- * such as username, email and password. Queries the user through dialogs for username and name,
+ * such as username, email and password. Queries the user through dialogs for username,
  * starts a new activity for when changing email or password.
  *
  * @author Stefan Chan
@@ -34,7 +34,6 @@ public class AccountPageActivity extends AppCompatActivity {
 
     // UI references
     private TextView userNameView;
-    private TextView nameView;
     private TextView emailView;
     private TextView deleteAccountView;
     private Button signOutButton;
@@ -92,7 +91,6 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     private void initViews() {
         userNameView = findViewById(R.id.userNameView);
-        nameView = findViewById(R.id.nameView);
         emailView = findViewById(R.id.emailView);
         signOutButton = findViewById(R.id.signOutButton);
         deleteAccountView = findViewById(R.id.deleteAccountText);
@@ -103,7 +101,6 @@ public class AccountPageActivity extends AppCompatActivity {
      */
     private void initTextInViews() {
         userNameView.setText(CurrentRun.getActiveUser().getUsername());
-        nameView.setText(CurrentRun.getActiveUser().getFullName());
         emailView.setText(CurrentRun.getActiveUser().getEmail());
     }
 
@@ -116,17 +113,6 @@ public class AccountPageActivity extends AppCompatActivity {
     private void changeUserName(String newUserName) {
         dataReference.child(CurrentRun.getActiveUser().getId()).child("username").setValue(newUserName);
         userNameView.setText(newUserName);
-    }
-
-    /**
-     * Calls the account class to change the name with the argument, called by
-     * showChangeNameDialog
-     *
-     * @param newName the new name
-     */
-    private void changeName(String newName) {
-        dataReference.child(CurrentRun.getActiveUser().getId()).child("fullname").setValue(newName);
-        nameView.setText(newName);
     }
 
     /**
@@ -153,39 +139,10 @@ public class AccountPageActivity extends AppCompatActivity {
     }
 
     /**
-     * Spawns a dialog where the user can enter in a new name and
-     * calls the method changeName in order to change user information
-     */
-    private void showChangeNameDialog() {
-        final EditText newNameField = new EditText(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogTheme);
-        builder.setView(newNameField);
-        builder.setTitle("Change name");
-        builder.setMessage("Type in new name");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newName = newNameField.getText().toString();
-                changeName(newName);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
-    }
-
-    /**
      * @param view the view which calls this method on click
      */
     public void changeUserNameAction(View view) {
         showChangeUserNameDialog();
-    }
-
-    /**
-     * @param view the view which calls this method on click
-     */
-    public void changeNameAction(View view) {
-        showChangeNameDialog();
     }
 
     /**

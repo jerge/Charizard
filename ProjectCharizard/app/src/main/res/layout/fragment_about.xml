@@ -99,7 +99,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_button"
                 android:text="Remove Spot"
+                android:textColor="#FAFFFFFF"
                 app:layout_constraintBottom_toTopOf="@+id/spotDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />

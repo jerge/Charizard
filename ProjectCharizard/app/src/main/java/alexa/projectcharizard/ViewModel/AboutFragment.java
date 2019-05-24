@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
@@ -85,8 +83,8 @@ public class AboutFragment extends Fragment {
      * @return The Spot found, null if no such Spot is found
      */
     private Spot getSpot(String spotId) {
-        for (Spot spot: currentRun.getSpots()){
-            if (spot.getId().equals(spotId)){
+        for (Spot spot : currentRun.getSpots()) {
+            if (spot.getId().equals(spotId)) {
                 return spot;
             }
         }
@@ -97,16 +95,15 @@ public class AboutFragment extends Fragment {
      * Initializes the GUI elements and connects listener to delete button
      */
     private void initFragment(View v) {
-        spotDescription = (TextView) v.findViewById(R.id.spotDescription);
-        spotName = (TextView) v.findViewById(R.id.spotName);
-        spotCreator = (TextView) v.findViewById(R.id.creatorText);
-        spotCategory = (TextView) v.findViewById(R.id.spotCategory);
-        removeBtn = (Button) v.findViewById(R.id.removeBtn);
+        spotDescription = v.findViewById(R.id.spotDescription);
+        spotName = v.findViewById(R.id.spotName);
+        spotCreator = v.findViewById(R.id.creatorText);
+        spotCategory = v.findViewById(R.id.spotCategory);
+        removeBtn = v.findViewById(R.id.removeBtn);
 
         // Checks if the spot is owned by the current user, if it is the remove spot button appears and becomes activated
         // Otherwise it will not appear nor be activated
         if (currentSpot.getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
-            removeBtn.setActivated(true);
             removeBtn.setVisibility(View.VISIBLE);
             removeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -117,9 +114,9 @@ public class AboutFragment extends Fragment {
                     getActivity().onBackPressed();
                 }
             });
+
         } else {
-            removeBtn.setActivated(false);
-            removeBtn.setVisibility(View.INVISIBLE);
+            removeBtn.setVisibility(View.GONE);
         }
     }
 }

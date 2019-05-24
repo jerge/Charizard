@@ -31,8 +31,8 @@
         android:id="@+id/plsbtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="62dp"
         android:background="@null"
         android:contentDescription="@string/plsbtn"
         android:scaleType="fitCenter"
@@ -82,40 +82,7 @@
             android:layout_marginTop="6dp"
             android:text="Only private"
             android:textAlignment="gravity" />
-
-        <!--<TextView-->
-            <!--android:id="@+id/text2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignStart="@id/checkbox2"-->
-            <!--android:layout_alignTop="@id/checkbox2"-->
-            <!--android:layout_marginStart="30dp"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:text="text"-->
-            <!--android:textAlignment="gravity" />-->
-
-        <!--<CheckBox-->
-            <!--android:id="@+id/checkbox2"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="30dp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/text3"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignStart="@id/checkbox3"-->
-            <!--android:layout_alignTop="@id/checkbox3"-->
-            <!--android:layout_marginStart="30dp"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:text="text"-->
-            <!--android:textAlignment="gravity" />-->
-
-        <!--<CheckBox-->
-            <!--android:id="@+id/checkbox3"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="60dp" />-->
+        
     </RelativeLayout>
 
     <android.support.design.widget.BottomNavigationView
