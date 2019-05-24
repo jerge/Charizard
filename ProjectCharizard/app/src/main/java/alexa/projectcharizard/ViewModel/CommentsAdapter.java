@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import alexa.projectcharizard.Model.Comment;
+import alexa.projectcharizard.Model.CurrentRun;
 import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
@@ -39,12 +40,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(context).inflate(R.layout.comment, viewGroup, false);
-        v.findViewById(R.id.deleteComment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return new MyViewHolder(v);
     }
 
@@ -55,18 +50,23 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, int i) {
         final int nr = i;
-        System.out.println("\n hej \n");
-        System.out.println(nr);
         myViewHolder.textBody.setText(commentList.get(i).getComment());
         myViewHolder.name.setText(commentList.get(i).getUsername());
         myViewHolder.date.setText(commentList.get(i).getDateTime());
-        myViewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Database.getInstance().deleteComment(commentList.get(nr).getId(), currentSpot);
-                commentsFragment.refreshComments();
-            }
-        });
+        // if the user owns the comment, make it possible to delete
+        if (commentList.get(i).getCreatorId().equals(CurrentRun.getActiveUser().getId())) {
+            myViewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Database.getInstance().deleteComment(commentList.get(nr).getId(), currentSpot);
+                    commentsFragment.refreshComments();
+                }
+            });
+            // Otherwise hide it
+        } else {
+            myViewHolder.deleteBtn.setVisibility(View.GONE);
+        }
+
 
     }
 

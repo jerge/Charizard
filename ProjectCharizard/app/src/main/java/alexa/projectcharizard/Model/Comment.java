@@ -13,18 +13,21 @@ public class Comment implements Serializable {
     private String comment;
     private String dateTime;
     private String id;
+    private String creatorId;
 
-    public Comment(String username, String comment, String dateTime, String id) {
+    public Comment(String username, String comment, String dateTime, String id, String creatorId) {
         this.username = username;
         this.comment = comment;
         this.dateTime = dateTime;
         this.id = id;
+        this.creatorId = creatorId;
     }
 
-    public Comment(String username, String comment, String dateTime) {
+    public Comment(String username, String comment, String dateTime, String creatorId) {
         this.username = username;
         this.comment = comment;
         this.dateTime = dateTime;
+        this.creatorId = creatorId;
     }
 
     public Comment() {
@@ -49,5 +52,9 @@ public class Comment implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
     }
 }

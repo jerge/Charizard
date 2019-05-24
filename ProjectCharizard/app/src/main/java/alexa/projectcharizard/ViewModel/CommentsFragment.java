@@ -93,7 +93,7 @@ public class CommentsFragment extends Fragment {
                 + ":" + addZero(dateTime.getMinuteOfHour());
         // The comment that is supposed to be saved.
         Comment newComment = new Comment(CurrentRun.getActiveUser().getUsername(), comment.getText().toString(),
-                dateString);
+                dateString, CurrentRun.getActiveUser().getId());
         // Saves comment to the database.
         database.saveComment(newComment, spot);
 
