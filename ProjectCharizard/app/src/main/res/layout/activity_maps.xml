@@ -25,8 +25,8 @@
         android:id="@+id/plsbtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="62dp"
         android:background="@null"
         android:contentDescription="@string/plsbtn"
         android:scaleType="fitCenter"
@@ -81,11 +81,13 @@
 
     <Button
         android:id="@+id/accountPageBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="68dp"
+        android:background="@drawable/rounded_button"
         android:text="Accountpage"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
