@@ -148,7 +148,7 @@ public class CommentsFragment extends Fragment {
         // Allowing multi-line for text input when leaving a comment
         input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.setSingleLine(false);
-        input.setLines(5);
+        input.setLines(2);
         input.setMaxLines(5);
         input.setGravity(Gravity.LEFT | Gravity.TOP);
         builder.setView(input);
