@@ -316,6 +316,9 @@ public class MapsActivity extends MapParentActivity {
                 s.getCreatorId().equals(CurrentRun.getActiveUser().getId()));
     }
 
+    /**
+     * Initiates the navigation bar at the bottom of the screen
+     */
     protected void initNavBar() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
