@@ -41,10 +41,6 @@ public class DetailedViewActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        //Sets the status bar to a white color and the elements in the status bar to a darker color
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        getWindow().setStatusBarColor(Color.WHITE);
-
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
         editBtn = findViewById(R.id.editButton);
