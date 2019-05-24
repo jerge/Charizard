@@ -38,6 +38,7 @@ public class AccountPageActivity extends AppCompatActivity {
     private TextView emailView;
     private TextView deleteAccountView;
     private Button signOutButton;
+    private BottomNavigationView navigation;
 
     // Accessing the database to update user information
     private DatabaseReference dataReference;
@@ -60,7 +61,7 @@ public class AccountPageActivity extends AppCompatActivity {
             }
         });
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
+        navigation = (BottomNavigationView) findViewById(R.id.nav_view);
         navigation.getMenu().findItem(R.id.navigation_profile).setChecked(true);
         /*navigation.setItemIconTintList(null);
         navigation.getMenu().findItem(R.id.navigation_map).setIcon(R.drawable.map_icon_inactive);
@@ -68,7 +69,6 @@ public class AccountPageActivity extends AppCompatActivity {
         */navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                System.out.println("ahhhhhhhhhhhhhhhhh");
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_profile:
                         break;
@@ -263,6 +263,13 @@ public class AccountPageActivity extends AppCompatActivity {
         editor.putString("username", "");
         editor.putString("password", "");
         editor.apply();
+    }
+
+    @Override
+    public void onBackPressed() {
+        navigation.getMenu().findItem(R.id.navigation_map).setChecked(true);
+        Intent intent = new Intent(AccountPageActivity.this, MapsActivity.class);
+        startActivity(intent);
     }
 
 }
