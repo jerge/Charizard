@@ -23,8 +23,6 @@
         android:supportsRtl="true"
         android:exported="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewModel.MapsActivity">
-        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -37,10 +35,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".ViewModel.DetailedViewActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity android:name=".ViewModel.MapsActivity"/>
+        <activity android:name=".ViewModel.DetailedViewActivity" />
         <activity android:name=".ViewModel.AddSpotActivity"/>
         <activity android:name=".ViewModel.ChangeEmailActivity" />
         <activity android:name=".ViewModel.ChangePasswordActivity" />
