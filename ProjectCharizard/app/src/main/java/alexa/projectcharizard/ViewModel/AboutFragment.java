@@ -68,7 +68,7 @@ public class AboutFragment extends Fragment {
         //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
             if (currentSpot.getCreatorId().equals(user.getId())) {
-                spotCreator.setText(user.getUsername());
+                spotCreator.setText("Added by" + user.getUsername());
                 break;
             }
         }

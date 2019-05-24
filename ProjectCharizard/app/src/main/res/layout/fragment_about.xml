@@ -14,94 +14,98 @@
             android:layout_height="match_parent"
             android:minHeight="730dp">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/frameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="24dp"
-                android:background="#FF6E73"
-                app:layout_constraintBottom_toTopOf="@+id/txtName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/parentLayout"
-                app:layout_constraintVertical_bias="0.0">
-
-                <TextView
-                    android:id="@+id/spotName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="32dp"
-                    android:gravity="bottom"
-                    android:text="Spot name"
-                    android:textColor="#fff"
-                    android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="@id/frameLayout"
-                    app:layout_constraintStart_toStartOf="@id/frameLayout"/>
-
-            </android.support.constraint.ConstraintLayout>
-
-
-
             <TextView
+                android:id="@+id/spotName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spotCategory"
-                android:text="Category"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/frameLayout"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="16dp"
-                android:textSize="20dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/creatorText"
-                android:text="Creator"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/frameLayout"
-                android:layout_marginTop="12dp"
+                android:layout_gravity="bottom"
                 android:layout_marginStart="16dp"
-                android:textSize="20dp"/>
+                android:layout_marginTop="10dp"
+                android:gravity="bottom"
+                android:text="Spot name"
+                android:textColor="#585858"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/spotCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Category"
+                android:textSize="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spotName" />
+
+            <TextView
+                android:id="@+id/creatorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:text="Added by User"
+                android:textSize="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spotCategory" />
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:background="?android:attr/listDivider"
                 android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spotCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/creatorText"
+                tools:layout_editor_absoluteX="0dp" />
 
             <TextView
                 android:id="@+id/spotDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="378dp"
+                android:layout_height="255dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="60dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:breakStrategy="simple"
-                android:text="text"
+                android:text="@string/large_text"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider" />
+                app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
             <Button
                 android:id="@+id/removeBtn"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_button"
                 android:text="Remove Spot"
-                app:layout_constraintBottom_toTopOf="@+id/spotDescription"
+                android:textColor="@color/colorWhiteBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spotDescription"
+                app:layout_constraintVertical_bias="0.908" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Spot description"
+                android:textColor="#585858"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 
