@@ -61,7 +61,11 @@ public class AccountPageActivity extends AppCompatActivity {
         });
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        navigation.getMenu().findItem(R.id.navigation_profile).setChecked(true);
+        /*navigation.setItemIconTintList(null);
+        navigation.getMenu().findItem(R.id.navigation_map).setIcon(R.drawable.map_icon_inactive);
+        navigation.getMenu().findItem(R.id.navigation_profile).setIcon(R.drawable.profile_icon_active);
+        */navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 System.out.println("ahhhhhhhhhhhhhhhhh");
@@ -69,12 +73,15 @@ public class AccountPageActivity extends AppCompatActivity {
                     case R.id.navigation_profile:
                         break;
                     case R.id.navigation_map:
+                        //menuItem.setIcon(R.drawable.map_icon_active);
+                        //navigation.getMenu().findItem(R.id.navigation_profile).setIcon(R.drawable.profile_icon_inactive);
+                        menuItem.setChecked(true);
                         Intent intent = new Intent(AccountPageActivity.this, MapsActivity.class);
                         startActivity(intent);
                         break;
                 }
                 System.out.println(menuItem);
-                return false;
+                return true;
             }
         });
 
