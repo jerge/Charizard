@@ -75,7 +75,6 @@ public class MapsActivity extends MapParentActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 
     @Override
@@ -319,7 +318,6 @@ public class MapsActivity extends MapParentActivity {
 
     protected void initNavBar() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
-        //navigation.setItemIconTintList(null);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -327,9 +325,7 @@ public class MapsActivity extends MapParentActivity {
                     case R.id.navigation_map:
                         break;
                     case R.id.navigation_profile:
-                        menuItem.setChecked(true);
-                        //menuItem.setIcon(R.drawable.profile_icon_active);
-                       // navigation.getMenu().findItem(R.id.navigation_map).setIcon(R.drawable.map_icon_inactive);
+                        menuItem.setChecked(true); //sets the clicked activity as the active tab on the navigation bar
                         Intent intent = new Intent(MapsActivity.this, AccountPageActivity.class);
                         startActivity(intent);
                         break;

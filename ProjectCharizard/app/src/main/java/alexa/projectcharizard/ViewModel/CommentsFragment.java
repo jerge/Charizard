@@ -130,7 +130,7 @@ public class CommentsFragment extends Fragment {
      */
     private void initFragment(View v) {
         recyclerView = (RecyclerView) v.findViewById(R.id.comment_recyclerView);
-        createCommentButton = null;
+        createCommentButton = v.findViewById(R.id.createCommentFAB);
 
     }
 

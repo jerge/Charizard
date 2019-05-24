@@ -60,20 +60,16 @@ public class AccountPageActivity extends AppCompatActivity {
             }
         });
 
+        //Initiates the navigation bar at the bottom
         navigation = (BottomNavigationView) findViewById(R.id.nav_view);
-        navigation.getMenu().findItem(R.id.navigation_profile).setChecked(true);
-        /*navigation.setItemIconTintList(null);
-        navigation.getMenu().findItem(R.id.navigation_map).setIcon(R.drawable.map_icon_inactive);
-        navigation.getMenu().findItem(R.id.navigation_profile).setIcon(R.drawable.profile_icon_active);
-        */navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        navigation.getMenu().findItem(R.id.navigation_profile).setChecked(true);    //sets the current activity as the active tab on the navigation bar
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.navigation_profile:
                         break;
                     case R.id.navigation_map:
-                        //menuItem.setIcon(R.drawable.map_icon_active);
-                        //navigation.getMenu().findItem(R.id.navigation_profile).setIcon(R.drawable.profile_icon_inactive);
                         menuItem.setChecked(true);
                         Intent intent = new Intent(AccountPageActivity.this, MapsActivity.class);
                         startActivity(intent);
@@ -222,6 +218,9 @@ public class AccountPageActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    /**
+     * Overrides the standard function to take the user back to the map
+     */
     @Override
     public void onBackPressed() {
         navigation.getMenu().findItem(R.id.navigation_map).setChecked(true);
