@@ -72,7 +72,6 @@ public abstract class MapParentActivity extends FragmentActivity implements OnMa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setPadding(200, 50, 0, 0);
         float initialZoomLevel = initZoom;
         LatLng initialLocation = initLoc;
 
