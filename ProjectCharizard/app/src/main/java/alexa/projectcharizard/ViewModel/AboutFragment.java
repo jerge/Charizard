@@ -56,7 +56,7 @@ public class AboutFragment extends Fragment {
         //Collects extra intent from the previous activity and edits the relevant TextViews
         spotDescription.setText(currentSpot.getDescription());
         spotName.setText(currentSpot.getName());
-        spotCategory.setText(currentSpot.getCategory().toString());
+        spotCategory.setText("Category: " + currentSpot.getCategory().toString());
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +68,7 @@ public class AboutFragment extends Fragment {
         //Gets the creator of the spot and edits the relevant TextView
         for (User user : currentRun.getUsers()) {
             if (currentSpot.getCreatorId().equals(user.getId())) {
-                spotCreator.setText("Added by" + user.getUsername());
+                spotCreator.setText("Added by user: " + user.getUsername());
                 break;
             }
         }
