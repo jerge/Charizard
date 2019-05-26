@@ -2,15 +2,15 @@
     <string name="app_name">Smultronstället</string>
 
     <!-- Strings related to login -->
-    <string name="go_to_signup"> No account? <u>Sign up here! </u></string>
+    <string name="go_to_signup"> No account yet? <b>Sign up here! </b></string>
     <string name="action_sign_in">Login</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="error_login_attempts_fail">Number of login attempts left: </string>
     <string name="prompt_name">Name</string>
     <string name="prompt_email">E-mail</string>
-    <string name="promt_signUp_button">Sign me up!</string>
-    <string name="already_signed_up">Already signed up?</string>
+    <string name="promt_signUp_button">Sign up</string>
+    <string name="already_signed_up">Already signed up? <b>Log in here!</b></string>
     <string name="action_sign_up_page">Haven\'t got an account yet? Sign up here</string>
     <string name="contentdescription_logo">The logo of the application</string>
     <string name="wrong_credentials">The combination of username and password does not match!</string>
