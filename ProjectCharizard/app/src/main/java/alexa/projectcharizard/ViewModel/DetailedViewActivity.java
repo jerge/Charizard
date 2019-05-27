@@ -22,6 +22,9 @@ import alexa.projectcharizard.Model.Database;
 import alexa.projectcharizard.Model.Spot;
 import alexa.projectcharizard.R;
 
+// The code for making the collapsing toolbar scroll is:
+// app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+
 public class DetailedViewActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
