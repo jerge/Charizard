@@ -95,6 +95,7 @@ public class MapsActivity extends MapParentActivity {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
+        mMap.setPadding(150, 50, 0, 350);
         spotDetailViewAdapter = new SpotDetailViewAdapter(this, currentRun.getSpots());
         mMap.setInfoWindowAdapter(spotDetailViewAdapter);
 

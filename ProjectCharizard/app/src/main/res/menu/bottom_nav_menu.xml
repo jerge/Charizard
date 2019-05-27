@@ -11,6 +11,6 @@
         android:id="@+id/navigation_profile"
         android:icon="@drawable/profile_icon_inactive"
         android:color="@drawable/nvm_profile_icon_selector"
-        android:title="Profile settings" />
+        android:title="Account" />
 
 </menu>

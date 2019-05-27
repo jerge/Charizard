@@ -10,8 +10,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/comment_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="390dp"
+        android:layout_marginTop="3dp"
         app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
@@ -22,7 +22,7 @@
         android:layout_margin="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/comment_icon_only"
+        android:src="@drawable/add_comment_icon_only"
         app:backgroundTint="#FF6E73"
         app:layout_anchor="@id/comment_recyclerView"
         app:layout_anchorGravity="bottom|right|end"
