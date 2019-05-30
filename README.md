@@ -16,7 +16,7 @@ A JSON file will also be present in the Documents folder if the link does not wo
 * Alexander Selmanovic is called Semlan@aselmanovic
 * Stefan Chan is called Stefan Chan@stefanchan3
 ## Reflections and Reviews
-These exist mostly in the Documents folder under specific names, but hopefully they exist in our canvas group.
+These exist in the Documents folder under specific names but perhaps with false timestamps.
 
 # Git usernames
 Due to some small messup we have gotten different Authors for the same people, but they will be described here to be able to interpret the gitinspector file.
